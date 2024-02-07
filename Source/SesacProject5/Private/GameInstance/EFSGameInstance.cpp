@@ -82,6 +82,7 @@ void UEFSGameInstance::FindSessionAndJoin()
 		IOnlineSessionPtr SessionPtrRef = SubsystemRef->GetSessionInterface();
 		if (SessionPtrRef == nullptr) return;
 
+		UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::FindSessionAndJoin"));
 		SessionSearch = MakeShareable(new FOnlineSessionSearch);
 		// SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, false, EOnlineComparisonOp::Equals);
 		SessionSearch->QuerySettings.SearchParams.Empty();
@@ -128,8 +129,10 @@ void UEFSGameInstance::OnFindSessionComplete(bool bWasSuccess)
 		{
 			IOnlineSessionPtr SessionPtrRef = SubsystemRef->GetSessionInterface();
 			if (SessionPtrRef == nullptr) return;
+
+			UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::OnFindSessionComplete) Result Result Count : %d"), SessionSearch->SearchResults.Num());
 			
-			if (SessionSearch->SearchResults.Num() > 0 && SessionSearch->SearchResults[0].IsValid())
+			if (SessionSearch->SearchResults.Num() > 0)
 			{
 				SessionPtrRef->OnJoinSessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnJoinSessionComplete);
 				SessionPtrRef->JoinSession(0, FName("MainSession"), SessionSearch->SearchResults[0]);	
