@@ -67,6 +67,8 @@ void UEFSGameInstance::CreateEOSSession(bool bIsDedicatedServer, bool bIsLanServ
 		SessionCreationInfo.bUseLobbiesIfAvailable = false;
 		SessionCreationInfo.bUsesPresence = false;
 		SessionCreationInfo.bShouldAdvertise = true;
+		SessionCreationInfo.bAllowJoinInProgress = true;
+		SessionCreationInfo.bAllowJoinViaPresence = true;
 		
 		SessionCreationInfo.Set(SEARCH_KEYWORDS, FString("RandomHi"), EOnlineDataAdvertisementType::ViaOnlineService);
 
