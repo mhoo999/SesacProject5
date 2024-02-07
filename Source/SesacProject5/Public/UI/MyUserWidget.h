@@ -46,5 +46,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
 	UButton* btn_workBench;
 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
+	UButton* btn_back;
 };
