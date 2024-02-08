@@ -56,22 +56,18 @@ void UEFSGameInstance::CreateEOSSession(bool bIsDedicatedServer, bool bIsLanServ
 {
 	if (IOnlineSubsystem* SubsystemRef = Online::GetSubsystem(GetWorld()))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::CreateEOSSession) Subsystem Name : %s"), *SubsystemRef->GetSubsystemName().ToString());
 		IOnlineSessionPtr SessionPtrRef = SubsystemRef->GetSessionInterface();
 		if (SessionPtrRef == nullptr) return;
 
 		FOnlineSessionSettings SessionCreationInfo;
 		SessionCreationInfo.bIsDedicated = bIsDedicatedServer;
-		SessionCreationInfo.bAllowInvites = true;
+		SessionCreationInfo.bAllowInvites = false; // before true
 		SessionCreationInfo.bIsLANMatch = bIsLanServer;
 		SessionCreationInfo.NumPublicConnections = NumberOfPublicConnections;
-		SessionCreationInfo.bUseLobbiesIfAvailable = false;
-		SessionCreationInfo.bUsesPresence = false;
 		SessionCreationInfo.bShouldAdvertise = true;
-		SessionCreationInfo.bAllowJoinInProgress = true;
-		SessionCreationInfo.bAllowJoinViaPresence = true;
 		
 		SessionCreationInfo.Set(SEARCH_KEYWORDS, FString("RandomHi"), EOnlineDataAdvertisementType::ViaOnlineService);
-
 		SessionPtrRef->OnCreateSessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnCreateSessionComplete);
 		SessionPtrRef->CreateSession(0, FName("MainSession"), SessionCreationInfo);
 	}
@@ -84,12 +80,11 @@ void UEFSGameInstance::FindSessionAndJoin()
 		IOnlineSessionPtr SessionPtrRef = SubsystemRef->GetSessionInterface();
 		if (SessionPtrRef == nullptr) return;
 
-		UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::FindSessionAndJoin"));
 		SessionSearch = MakeShareable(new FOnlineSessionSearch);
-		// SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, false, EOnlineComparisonOp::Equals);
+		
 		SessionSearch->QuerySettings.SearchParams.Empty();
 		SessionSearch->bIsLanQuery = false;
-		SessionSearch->MaxSearchResults = 20;
+		SessionSearch->MaxSearchResults = 50;
 		SessionPtrRef->OnFindSessionsCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnFindSessionComplete);
 		SessionPtrRef->FindSessions(0, SessionSearch.ToSharedRef());
 	}
@@ -113,7 +108,7 @@ void UEFSGameInstance::DestroySession()
 
 void UEFSGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
-	if (bWasSuccessful)
+	if (bWasSuccessful) 
 	{
 		GetWorld()->ServerTravel(LevelURL + FString("?listen"));
 	}
