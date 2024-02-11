@@ -110,7 +110,7 @@ void AEOSPlayerController::HandleJoinSessionCompleted(FName SessionName, EOnJoin
 		UE_LOG(LogTemp, Log, TEXT("Joined session."));
 		if (GEngine)
 		{
-			ConnectString = "127.0.0.1:7777";
+			//ConnectString = "127.0.0.1:7777";
 			FURL DedicatedServerURL(nullptr, *ConnectString, TRAVEL_Absolute);
 			FString DedicatedServerJoinError;
 			auto DedicatedServerJoinStatus = GEngine->Browse(GEngine->GetWorldContextFromWorldChecked(GetWorld()), DedicatedServerURL, DedicatedServerJoinError);
