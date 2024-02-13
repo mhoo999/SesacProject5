@@ -26,29 +26,34 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
 
-	bool IsCrouched() const;
+	bool IsSprint() const;
 
 	void MoveAction(const FInputActionValue& Value);
 	void LookAction(const FInputActionValue& Value);
 	void CrouchAction(const FInputActionValue& Value);
+	void SprintStartAction(const FInputActionValue& Value);
+	void SprintEndAction(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_Crouch();
+	void ServerRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+	
+	
 private:
+	bool bIsSprint;
+	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Move;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Look;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Crouch;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_Sprint;
 
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	ACharacter* OwningCharacter;
-
-	UPROPERTY(Replicated, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
-	bool bIsCrouched = false;
 };
