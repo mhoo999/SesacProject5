@@ -11,7 +11,7 @@ AGameLiftGameMode::AGameLiftGameMode()
 void AGameLiftGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-/*
+	
 #if WITH_GAMELIFT
 	auto InitSDKOutcome = Aws::GameLift::Server::InitSDK();
 
@@ -97,7 +97,6 @@ void AGameLiftGameMode::BeginPlay()
 		auto ProcessReadyOutcome = Aws::GameLift::Server::ProcessReady(*Params);
 	}	
 #endif
-*/
 
 	Aws::GameLift::Outcome;
 }

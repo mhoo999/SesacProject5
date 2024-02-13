@@ -8,7 +8,11 @@ public class SesacProject5 : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameLiftServerSDK" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "GameLiftServerSDK",
+			"Networking", "Sockets"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
