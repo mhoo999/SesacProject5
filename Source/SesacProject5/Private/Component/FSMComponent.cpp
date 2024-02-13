@@ -22,7 +22,7 @@ void UFSMComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 }
 
 void UFSMComponent::ExecuteBehavior()
-{
+{	
 	IFSMInterface::ExecuteBehavior();
 
 	UE_LOG(LogTemp, Warning, TEXT("hello"));
