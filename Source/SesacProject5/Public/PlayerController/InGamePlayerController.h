@@ -15,5 +15,5 @@ class SESACPROJECT5_API AInGamePlayerController : public APlayerController
 	GENERATED_BODY()
 
 protected:
-	virtual void OnNetCleanup(UNetConnection* Connection) override;
+	//virtual void OnNetCleanup(UNetConnection* Connection) override;
 };
