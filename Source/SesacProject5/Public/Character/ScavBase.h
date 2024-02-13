@@ -18,6 +18,4 @@ class SESACPROJECT5_API AScavBase : public ACharacterBase
 public:
 	AScavBase();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="MySettings|Component")
-	UFSMComponent* FSMComp;
 };

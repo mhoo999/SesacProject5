@@ -3,9 +3,13 @@
 
 #include "Character/ScavBase.h"
 
-#include "Component/FSMComponent.h"
+#include "AIController/HoonsAIController.h"
 
 AScavBase::AScavBase()
 {
-	FSMComp = CreateDefaultSubobject<UFSMComponent>(FName("FSM Component"));
+	static ConstructorHelpers::FClassFinder<AHoonsAIController> HoonsAIController(TEXT("/Game/YMH/Blueprint/BP_AIController_YMH.BP_AIController_YMH_C"));
+	if (HoonsAIController.Succeeded())
+	{
+		AIControllerClass = HoonsAIController.Class;
+	}
 }

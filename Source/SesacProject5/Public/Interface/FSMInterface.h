@@ -6,6 +6,9 @@
 #include "UObject/Interface.h"
 #include "FSMInterface.generated.h"
 
+class AAIController;
+class APawn;
+
 UINTERFACE(MinimalAPI)
 class UFSMInterface : public UInterface
 {
@@ -17,5 +20,5 @@ class SESACPROJECT5_API IFSMInterface
 	GENERATED_BODY()
 
 public:
-	virtual void ExecuteBehavior();
+	virtual void ExecuteBehavior(AAIController* aiController, FVector RandomLocation, APawn* ai)=0;
 };

@@ -2,25 +2,23 @@
 
 
 #include "AIController/HoonsAIController.h"
+#include "Component/FSM_Patrol_Component.h"
 
-#include "Component/FSMComponent.h"
+AHoonsAIController::AHoonsAIController()
+{
+	FSMPatrolComp = CreateDefaultSubobject<UFSM_Patrol_Component>(TEXT("Patrol Component"));
+}
+
+void AHoonsAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ai = Cast<APawn>(GetPawn());
+}
 
 void AHoonsAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	APawn* ControlledPawn = GetPawn();
-	if (ControlledPawn)
-	{
-		auto FSMcomp = Cast<UFSMComponent>(ControlledPawn->GetComponentByClass(UFSMComponent::StaticClass()));
-
-		if (FSMcomp)
-		{
-			IFSMInterface* FSM = Cast<IFSMInterface>(FSMcomp);
-			if (FSM)
-			{
-				FSM->ExecuteBehavior();
-			}
-		}
-	}
+	FSMInterface->ExecuteBehavior(this, RandomLocation, ai);
 }
