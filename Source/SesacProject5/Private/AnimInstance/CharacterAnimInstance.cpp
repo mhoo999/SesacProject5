@@ -3,6 +3,9 @@
 
 #include "AnimInstance/CharacterAnimInstance.h"
 
+#include "KismetAnimationLibrary.h"
+#include "Component/MoveComponent.h"
+
 void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
@@ -12,6 +15,7 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (APawn* Pawn = TryGetPawnOwner())
 	{
 		MoveSpeed = Pawn->GetVelocity().Length();
+		MoveDirection = UKismetAnimationLibrary::CalculateDirection(Pawn->GetVelocity(), Pawn->GetActorRotation());
+		bIsCrouched = Pawn->GetComponentByClass<UMoveComponent>()->IsCrouched();
 	}
-
 }

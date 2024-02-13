@@ -5,13 +5,15 @@
 
 #include "GameInstance/EFSGameInstance.h"
 
-void AInGamePlayerController::OnNetCleanup(UNetConnection* Connection)
-{
-	UEFSGameInstance* GameInstance = GetGameInstance<UEFSGameInstance>();
-	if (GameInstance)
-	{
-		GameInstance->DestroySession();
-	}
 
-	Super::OnNetCleanup(Connection);
-}
+
+// void AInGamePlayerController::OnNetCleanup(UNetConnection* Connection)
+// {
+// 	UEFSGameInstance* GameInstance = GetGameInstance<UEFSGameInstance>();
+// 	if (GameInstance)
+// 	{
+// 		GameInstance->DestroySession();
+// 	}
+//
+// 	Super::OnNetCleanup(Connection);
+// }

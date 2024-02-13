@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UInputMappingContext;
+class UMoveComponent;
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class SESACPROJECT5_API ACharacterBase : public ACharacter
 {
@@ -25,4 +30,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	USpringArmComponent* SpringArmComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UCameraComponent* CameraComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UMoveComponent* MoveComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputMappingContext* DefaultIMC;
 };
