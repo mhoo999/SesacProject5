@@ -41,10 +41,13 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
-	IFSMInterface* FSMInterface;
-	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Patrol_Component* FSMPatrolComp;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|AI", meta=(AllowAbstract))
+	UAIPerceptionComponent* AIPerception;
+	
+	IFSMInterface* FSMInterface;
 
 	UPROPERTY()
 	APawn* ai;

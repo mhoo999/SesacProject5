@@ -3,10 +3,12 @@
 
 #include "AIController/HoonsAIController.h"
 #include "Component/FSM_Patrol_Component.h"
+#include "Perception/AIPerceptionComponent.h"
 
 AHoonsAIController::AHoonsAIController()
 {
 	FSMPatrolComp = CreateDefaultSubobject<UFSM_Patrol_Component>(TEXT("Patrol Component"));
+	AIPerception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
 }
 
 void AHoonsAIController::BeginPlay()
