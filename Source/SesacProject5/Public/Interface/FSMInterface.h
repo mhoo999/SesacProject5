@@ -20,5 +20,5 @@ class SESACPROJECT5_API IFSMInterface
 	GENERATED_BODY()
 
 public:
-	virtual void ExecuteBehavior(AAIController* aiController, FVector RandomLocation, APawn* ai)=0;
+	virtual void ExecuteBehavior(AAIController* aiController, APawn* ai)=0;
 };

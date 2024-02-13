@@ -22,7 +22,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void ExecuteBehavior(AAIController* aiController, FVector RandomLocation, APawn* ai) override;
+	virtual void ExecuteBehavior(AAIController* aiController, APawn* ai) override;
 
 	bool UpdateRandomLocation(FVector origin, float radius, FVector& outLocation) const;
+
+	FVector RandomLocation;
 };

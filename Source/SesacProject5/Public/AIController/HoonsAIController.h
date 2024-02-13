@@ -48,6 +48,4 @@ private:
 
 	UPROPERTY()
 	APawn* ai;
-
-	FVector RandomLocation;
 };

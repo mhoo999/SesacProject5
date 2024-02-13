@@ -17,7 +17,7 @@ void UFSM_Patrol_Component::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UFSM_Patrol_Component::ExecuteBehavior(AAIController* aiController, FVector RandomLocation, APawn* ai)
+void UFSM_Patrol_Component::ExecuteBehavior(AAIController* aiController, APawn* ai)
 {
 	FPathFollowingRequestResult result;
 	result.Code = aiController->MoveToLocation(RandomLocation);
