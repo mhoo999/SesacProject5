@@ -5,6 +5,7 @@
 
 #include "KismetAnimationLibrary.h"
 #include "Component/MoveComponent.h"
+#include "GameFramework/Character.h"
 
 void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -16,6 +17,8 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		MoveSpeed = Pawn->GetVelocity().Length();
 		MoveDirection = UKismetAnimationLibrary::CalculateDirection(Pawn->GetVelocity(), Pawn->GetActorRotation());
-		bIsCrouched = Pawn->GetComponentByClass<UMoveComponent>()->IsCrouched();
+		bIsCrouched = Cast<ACharacter>(Pawn)->bIsCrouched;
+
+		// UE_LOG(LogTemp, Log, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) MoveSpeed : %f"), MoveSpeed);
 	}
 }
