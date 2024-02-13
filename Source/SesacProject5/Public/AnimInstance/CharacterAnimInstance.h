@@ -18,4 +18,8 @@ public:
 private:
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float MoveSpeed;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float MoveDirection;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsCrouched = false;
 };
