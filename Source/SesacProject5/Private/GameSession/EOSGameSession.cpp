@@ -8,6 +8,7 @@
 #include "OnlineSubsystemUtils.h"
 #include "GameFramework/PlayerState.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 void AEOSGameSession::BeginPlay()
 {
@@ -292,7 +293,7 @@ void AEOSGameSession::HandleRegisterPlayerCompleted(FName EOSSessionName,
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Falied to register player! (From Callback)"));
+			UE_LOG(LogTemp, Warning, TEXT("Falied to register player! (From Callback)")); 
 		}
 
 		Session->ClearOnRegisterPlayersCompleteDelegate_Handle(RegisterPlayerDelegateHandle);

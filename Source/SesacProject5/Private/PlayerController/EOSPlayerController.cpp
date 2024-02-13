@@ -108,9 +108,19 @@ void AEOSPlayerController::HandleJoinSessionCompleted(FName SessionName, EOnJoin
 	if (Result == EOnJoinSessionCompleteResult::Success)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Joined session."));
+
+		FString JoinAddress;
+		Session->GetResolvedConnectString(SessionName, JoinAddress);
+		UE_LOG(LogTemp, Warning, TEXT("Joined Address : %s"), *JoinAddress);
+		if (!JoinAddress.IsEmpty())
+		{
+			ClientTravel(JoinAddress, TRAVEL_Absolute);
+		}
+		
+		/*
 		if (GEngine)
 		{
-			ConnectString = "127.0.0.1:7777";
+			//ConnectString = "127.0.0.1:7777";
 			FURL DedicatedServerURL(nullptr, *ConnectString, TRAVEL_Absolute);
 			FString DedicatedServerJoinError;
 			auto DedicatedServerJoinStatus = GEngine->Browse(GEngine->GetWorldContextFromWorldChecked(GetWorld()), DedicatedServerURL, DedicatedServerJoinError);
@@ -119,6 +129,7 @@ void AEOSPlayerController::HandleJoinSessionCompleted(FName SessionName, EOnJoin
 				UE_LOG(LogTemp, Error, TEXT("Failed to browse for dedicated server. Error is : %s"), *DedicatedServerJoinError);
 			}
 		}
+		*/
 	}
 	Session->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionDelegateHandle);
 	JoinSessionDelegateHandle.Reset();

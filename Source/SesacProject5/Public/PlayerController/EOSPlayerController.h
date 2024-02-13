@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../../../../../../UnrealEngine-release/UnrealEngine-release/Engine/Plugins/Online/OnlineSubsystem/Source/Public/Interfaces/OnlineSessionInterface.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "EOSPlayerController.generated.h"
 
