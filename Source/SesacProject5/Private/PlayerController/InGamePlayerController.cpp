@@ -2,18 +2,21 @@
 
 
 #include "PlayerController/InGamePlayerController.h"
+#include "UI/InGame/InGameWidget.h"
 
-#include "GameInstance/EFSGameInstance.h"
+void AInGamePlayerController::BeginPlay()
+{
+	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("AInGamePlayerController::BeginPlay"));
 
-
-// void AInGamePlayerController::OnNetCleanup(UNetConnection* Connection)
-// {
-// 	UEFSGameInstance* GameInstance = GetGameInstance<UEFSGameInstance>();
-// 	if (GameInstance)
-// 	{
-// 		GameInstance->DestroySession();
-// 	}
-//
-// 	Super::OnNetCleanup(Connection);
-// }
+	if (IsLocalController())
+	{
+		if (InGameWidgetClass)
+		{
+			InGameWidget = CreateWidget<UInGameWidget>(this, InGameWidgetClass);
+			InGameWidget->AddToViewport();
+			InGameWidget->InitWidget(GetPawn());
+		}
+	}
+}

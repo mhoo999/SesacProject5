@@ -6,7 +6,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Component/InteractComponent.h"
 #include "Component/MoveComponent.h"
+#include "Component/WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -23,6 +25,8 @@ ACharacterBase::ACharacterBase()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>(TEXT("MoveComponent"));
+	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 100.f;
@@ -33,12 +37,6 @@ ACharacterBase::ACharacterBase()
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-// Called every frame
-void ACharacterBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
 	if (APlayerController* PC = GetController<APlayerController>())
 	{
@@ -52,6 +50,12 @@ void ACharacterBase::Tick(float DeltaTime)
 	}
 }
 
+// Called every frame
+void ACharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 // Called to bind functionality to input
 void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -62,5 +66,7 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		MoveComponent->SetupPlayerInputComponent(EnhancedInputComponent);
+		InteractComponent->SetupPlayerInputComponent(EnhancedInputComponent);
+		WeaponComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 	}
 }
