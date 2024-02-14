@@ -72,7 +72,3 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		WeaponComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 	}
 }
-
-void ACharacterBase::FriendIdentification()
-{
-}
