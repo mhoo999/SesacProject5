@@ -3,17 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UWeaponComponent;
+class UInteractComponent;
 class UInputMappingContext;
 class UMoveComponent;
 class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class SESACPROJECT5_API ACharacterBase : public ACharacter, public IGenericTeamAgentInterface
+class SESACPROJECT5_API ACharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -40,12 +41,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UMoveComponent* MoveComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInteractComponent* InteractComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UWeaponComponent* WeaponComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;
-
-	// ---------------------- AI 피아식별 ----------------------------
-public:
-	FGenericTeamId TeamId;
-
-	virtual void FriendIdentification();
-	// ---------------------- AI 피아식별 ----------------------------
 };
