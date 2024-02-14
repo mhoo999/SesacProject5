@@ -19,6 +19,4 @@ public:
 	AScavBase();
 
 	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
-
-	virtual void FriendIdentification() override;
 };

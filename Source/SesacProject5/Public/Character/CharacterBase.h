@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -14,7 +15,7 @@ class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class SESACPROJECT5_API ACharacterBase : public ACharacter
+class SESACPROJECT5_API ACharacterBase : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -46,4 +47,8 @@ private:
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings")
+	int32 TeamId;
 };

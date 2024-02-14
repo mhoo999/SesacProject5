@@ -21,10 +21,3 @@ void AScavBase::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotatio
 	OutLocation = GetMesh()->GetSocketLocation("eyes");
 	OutRotation = GetMesh()->GetSocketRotation("eyes") + FRotator(0, 90, 0);
 }
-
-void AScavBase::FriendIdentification()
-{
-	Super::FriendIdentification();
-
-	UE_LOG(LogTemp, Warning, TEXT("Friend"));
-}
