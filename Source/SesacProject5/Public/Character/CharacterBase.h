@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -12,7 +13,7 @@ class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class SESACPROJECT5_API ACharacterBase : public ACharacter
+class SESACPROJECT5_API ACharacterBase : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -40,4 +41,11 @@ private:
 	UMoveComponent* MoveComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;
+
+	// ---------------------- AI 피아식별 ----------------------------
+public:
+	FGenericTeamId TeamId;
+
+	virtual void FriendIdentification();
+	// ---------------------- AI 피아식별 ----------------------------
 };

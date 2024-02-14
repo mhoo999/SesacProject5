@@ -3,9 +3,10 @@
 
 #include "Component/FSM_Patrol_Component.h"
 
-#include "NavigationSystem.h"
+#include "AIController/AIPatrolWaypoint.h"
 #include "AIController/HoonsAIController.h"
-#include "Navigation/PathFollowingComponent.h"
+#include "Character/CharacterBase.h"
+#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {
@@ -15,30 +16,64 @@ UFSM_Patrol_Component::UFSM_Patrol_Component()
 void UFSM_Patrol_Component::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
 }
 
-void UFSM_Patrol_Component::ExecuteBehavior(AAIController* aiController, APawn* ai)
+void UFSM_Patrol_Component::ExecutePatrol()
 {
-	FPathFollowingRequestResult result;
-	result.Code = aiController->MoveToLocation(RandomLocation);
-	if (result != EPathFollowingRequestResult::RequestSuccessful)
+	if (waypointArray.Num() == 0)
 	{
-		UpdateRandomLocation(ai->GetActorLocation(), 500, RandomLocation);
+		UE_LOG(LogTemp, Warning, TEXT("waypoint list is empty"));
+		return;
+	}
+
+	auto aiController = Cast<AHoonsAIController>(GetOwner());
+	auto ai = Cast<ACharacterBase>(aiController->GetPawn());
+	
+	AActor* NextWaypoint = waypointArray[CurrentWaypointIndex];
+
+	if (NextWaypoint && aiController)
+	{
+		aiController->MoveToActor(NextWaypoint, AcceptanceRadius, true, true, false, 0, true);
+
+		float dist = FVector::Dist(NextWaypoint->GetActorLocation(), ai->GetActorLocation());
+		if (dist <= 100)
+		{
+			CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointArray.Num();
+			UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentWaypointIndex);
+		}
 	}
 }
 
-bool UFSM_Patrol_Component::UpdateRandomLocation(FVector origin, float radius, FVector& outLocation) const
+void UFSM_Patrol_Component::ExecuteSearch()
 {
-	auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-	FNavLocation loc;
+}
 
-	bool result = ns->GetRandomReachablePointInRadius(origin, radius, loc);
+void UFSM_Patrol_Component::ExecuteChase()
+{
+}
 
-	if (result)
-	{
-		outLocation = loc.Location;
-		return true;
-	}
+void UFSM_Patrol_Component::ExecuteAttack()
+{
+}
 
-	return false;
+void UFSM_Patrol_Component::ExecuteRetreatFiring()
+{
+}
+
+void UFSM_Patrol_Component::ExecuteAdvanceFiring()
+{
+}
+
+void UFSM_Patrol_Component::ExecuteEvade()
+{
+}
+
+void UFSM_Patrol_Component::ExecuteCamping()
+{
+}
+
+void UFSM_Patrol_Component::ExecuteSelfHealing()
+{
 }

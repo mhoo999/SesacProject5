@@ -6,6 +6,9 @@
 #include "AIController.h"
 #include "HoonsAIController.generated.h"
 
+class UAISenseConfig_Sight;
+struct FAIStimulus;
+class ACharacterBase;
 class IFSMInterface;
 class UFSM_Patrol_Component;
 /**
@@ -41,14 +44,26 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	IFSMInterface* FSMInterface;
+	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Patrol_Component* FSMPatrolComp;
 
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|AI", meta=(AllowAbstract))
 	UAIPerceptionComponent* AIPerception;
 	
-	IFSMInterface* FSMInterface;
+	UPROPERTY(VisibleAnywhere, meta=(AllowAbstract))
+	EEnemystate state;
 
-	UPROPERTY()
-	APawn* ai;
+public:
+	UPROPERTY(BlueprintReadWrite)
+	ACharacterBase* Agent;
+
+	UFUNCTION()
+	void OnPerception(AActor* actor, FAIStimulus stimulus);
+
+	// A Sight Sense config for our AI
+	UAISenseConfig_Sight* sight;
+
+	virtual void OnPossess(APawn* InPawn) override;
 };
