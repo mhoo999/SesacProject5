@@ -31,6 +31,8 @@ ACharacterBase::ACharacterBase()
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 100.f;
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	TeamId = FGenericTeamId(0);
 }
 
 // Called when the game starts or when spawned
@@ -69,4 +71,8 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		InteractComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 		WeaponComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 	}
+}
+
+void ACharacterBase::FriendIdentification()
+{
 }

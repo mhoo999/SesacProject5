@@ -17,7 +17,8 @@ class SESACPROJECT5_API AScavBase : public ACharacterBase
 
 public:
 	AScavBase();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="MySettings|Component")
-	UFSMComponent* FSMComp;
+
+	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
+
+	virtual void FriendIdentification() override;
 };

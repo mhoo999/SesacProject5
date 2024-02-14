@@ -11,7 +11,7 @@ public class SesacProject5 : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "GameLiftServerSDK",
-			"Networking", "Sockets", "EnhancedInput"
+			"Networking", "Sockets", "EnhancedInput", "AIModule", "NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "AnimGraphRuntime" });
