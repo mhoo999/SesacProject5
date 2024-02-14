@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UWeaponComponent;
+class UInteractComponent;
 class UInputMappingContext;
 class UMoveComponent;
 class USpringArmComponent;
@@ -38,6 +40,10 @@ private:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UMoveComponent* MoveComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInteractComponent* InteractComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;
 };

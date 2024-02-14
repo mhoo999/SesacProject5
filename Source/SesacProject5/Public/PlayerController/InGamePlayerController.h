@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "InGamePlayerController.generated.h"
 
+class UInGameWidget;
 /**
  * 
  */
@@ -14,6 +15,15 @@ class SESACPROJECT5_API AInGamePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
 protected:
 	//virtual void OnNetCleanup(UNetConnection* Connection) override;
+
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TSubclassOf<UInGameWidget> InGameWidgetClass;
+	UPROPERTY()
+	UInGameWidget* InGameWidget;
 };
