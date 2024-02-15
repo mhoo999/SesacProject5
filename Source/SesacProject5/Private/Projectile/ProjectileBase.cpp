@@ -3,6 +3,7 @@
 
 #include "Projectile/ProjectileBase.h"
 
+#include "Component/HealthComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -13,6 +14,7 @@ AProjectileBase::AProjectileBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
+	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
 	SetRootComponent(CollisionComponent);
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -45,9 +47,12 @@ void AProjectileBase::Tick(float DeltaTime)
 }
 
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s"), *OtherActor->GetActorNameOrLabel());
+	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
+	{
+		HealthComponent->ApplyDamage(ProjectileInfo, SweepResult.BoneName);
+	}
 
 	Destroy();
 }
