@@ -20,7 +20,7 @@ class SESACPROJECT5_API IFSMInterface
 	GENERATED_BODY()
 
 public:
-	virtual void ExecuteBehavior(AActor* target) = 0;
+	virtual void ExecuteBehavior() = 0;
 	virtual void StopExecute() = 0;
 	virtual void SenseNewActor(AActor* NewActor) = 0;
 };

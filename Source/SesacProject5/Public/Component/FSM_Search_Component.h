@@ -8,6 +8,9 @@
 #include "FSM_Search_Component.generated.h"
 
 
+class AHoonsAIController;
+class ACharacterBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Search_Component : public UActorComponent, public IFSMInterface
 {
@@ -20,7 +23,17 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void ExecuteBehavior(AActor* target) override;
+	virtual void ExecuteBehavior() override;
 	virtual void StopExecute() override;
 	virtual void SenseNewActor(AActor* NewActor) override;
+
+	UPROPERTY(BlueprintReadWrite)
+	ACharacterBase* ai;
+
+	UPROPERTY(BlueprintReadWrite)
+	AHoonsAIController* ac;
+
+	AActor* target;
+
+	FVector dest;
 };

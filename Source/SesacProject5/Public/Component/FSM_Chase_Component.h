@@ -7,6 +7,7 @@
 #include "Interface/FSMInterface.h"
 #include "FSM_Chase_Component.generated.h"
 
+class UWeaponComponent;
 class ACharacterBase;
 class AHoonsAIController;
 
@@ -24,7 +25,7 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	virtual void ExecuteBehavior(AActor* target) override;
+	virtual void ExecuteBehavior() override;
 	virtual void StopExecute() override;
 	virtual void SenseNewActor(AActor* NewActor) override;
 
@@ -35,5 +36,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	AHoonsAIController* ac;
 
-	float attackDist;
+	AActor* target;
+	
+	UPROPERTY()
+	UWeaponComponent* WeaponComp;
 };

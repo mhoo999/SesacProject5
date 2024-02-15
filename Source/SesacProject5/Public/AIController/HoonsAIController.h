@@ -83,9 +83,10 @@ public:
 
 	void SetContext(EEnemystate next);
 
-	UPROPERTY(BlueprintReadWrite)
-	ACharacterBase* target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings|ETC")
+	float missTime = 10.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings")
-	float AttackDist = 500.f;
+	IFSMInterface* GetFSM();
+
+	void printLog();
 };

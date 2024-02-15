@@ -23,7 +23,7 @@ void UFSM_Patrol_Component::BeginPlay()
 	ai = Cast<ACharacterBase>(ac->GetPawn());
 }
 
-void UFSM_Patrol_Component::ExecuteBehavior(AActor* target)
+void UFSM_Patrol_Component::ExecuteBehavior()
 {
 	if (waypointArray.Num() == 0)
 	{
@@ -53,6 +53,12 @@ void UFSM_Patrol_Component::StopExecute()
 
 void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 {
-	ac->SetContext(EEnemystate::chase);
+	if (NewActor == nullptr)
+	{
+		return;
+	}
+	
+	ac->SetContext(EEnemystate::search);
+	ac->GetFSM()->SenseNewActor(NewActor);
 }
 

@@ -25,7 +25,7 @@ protected:
 
 public:
 
-	virtual void ExecuteBehavior(AActor* target) override;
+	virtual void ExecuteBehavior() override;
 	virtual void StopExecute() override;
 	virtual void SenseNewActor(AActor* NewActor) override;
 

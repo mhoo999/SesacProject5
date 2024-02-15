@@ -30,9 +30,9 @@ AHoonsAIController::AHoonsAIController()
 	AIPerception->SetDominantSense(sight->GetSenseImplementation());
 	AIPerception->SetDominantSense(hearing->GetSenseImplementation());
 
-	sight->SightRadius = 1000.f;
+	sight->SightRadius = 1500.f;
 	sight->LoseSightRadius = sight->SightRadius + 500.f;
-	sight->PeripheralVisionAngleDegrees = 90.f;
+	sight->PeripheralVisionAngleDegrees = 65.f;
 	sight->DetectionByAffiliation.bDetectNeutrals = true;
 	sight->DetectionByAffiliation.bDetectFriendlies = true;
 }
@@ -51,7 +51,8 @@ void AHoonsAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	FSMInterface->ExecuteBehavior(target);
+	FSMInterface->ExecuteBehavior();
+	printLog();
 }
 
 void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
@@ -61,15 +62,23 @@ void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	{
 		return;
 	}
+
+	// SetFocus 센싱 성공 ? chr 반환 : nullptr 반환
 	SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
 	
 	UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
 
-	// 캐릭터, 아이템 등 인식 가능하도록 개선 필요
-	if (ai->TeamId != chr->TeamId && chr->TeamId != 255)
+	if (chr)
 	{
-		target = chr;
 		FSMInterface->SenseNewActor(chr);
+
+		// // 일정 시간 이후, 새로운 SenseNewActor가 없을 경우, FSMInterface에 nullptr을 전달
+		// FTimerHandle handle;
+		// GetWorld()->GetTimerManager().ClearTimer(handle);
+		// GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&]
+		// {
+		// 	FSMInterface->SenseNewActor(nullptr);
+		// }), missTime, false, missTime);
 	}
 }
 
@@ -100,5 +109,20 @@ void AHoonsAIController::SetContext(EEnemystate next)
 	case EEnemystate::selfHealing:
 		break;
 	}
+	state = next;
+}
+
+IFSMInterface* AHoonsAIController::GetFSM()
+{
+	return FSMInterface;
+}
+
+void AHoonsAIController::printLog()
+{
+	FString StateString = UEnum::GetValueAsString(state);
+
+	FString CleanStateString = StateString.Mid(StateString.Find(TEXT("."), ESearchCase::IgnoreCase, ESearchDir::FromEnd) + 1);
+		
+	DrawDebugString(GetWorld(), ai->GetActorLocation(), CleanStateString, nullptr, FColor::Yellow, 0, true, 1);
 }
 
