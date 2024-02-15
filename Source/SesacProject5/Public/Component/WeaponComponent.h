@@ -34,6 +34,8 @@ public:
 	void StartFireAction(const FInputActionValue& Value);
 	void EndFireAction(const FInputActionValue& Value);
 
+	float GetWeaponAttackRange() const;
+
 private:
 	UPROPERTY(Replicated, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* Weapon;

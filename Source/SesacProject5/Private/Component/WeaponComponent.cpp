@@ -80,3 +80,8 @@ void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
 		WeaponInterface->StopFire();
 	}
 }
+
+float UWeaponComponent::GetWeaponAttackRange() const
+{
+	return 1000.f;
+}
