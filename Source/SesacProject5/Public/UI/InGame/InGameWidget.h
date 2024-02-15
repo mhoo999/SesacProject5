@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InGameWidget.generated.h"
 
+class UHealthWidget;
 class UInteractWidget;
 /**
  * 
@@ -21,4 +22,6 @@ public:
 private:
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UInteractWidget* InteractWidget;
+	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
+	UHealthWidget* HealthWidget;
 };
