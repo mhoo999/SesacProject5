@@ -9,13 +9,24 @@
 /**
  * 
  */
+class UWeaponComponent;
 UCLASS()
 class SESACPROJECT5_API UCharacterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeInitializeAnimation() override; 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void AnimNotify_FireBullet();
 private:
+	UPROPERTY()
+	ACharacter* PlayerCharacter;
+	UPROPERTY()
+	UWeaponComponent* WeaponComponent;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float PitchAngle;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float MoveSpeed;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))

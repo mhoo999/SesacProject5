@@ -15,13 +15,7 @@ UHealthComponent::UHealthComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-}
-
-void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UHealthComponent, HeadHealth);
+	HealthArray.Init(FHealth(), (uint8)EBodyParts::SIZE);
 }
 
 // Called when the game starts
@@ -46,49 +40,21 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UHealthComponent::ApplyDamage(FProjectileInfo ProjectileInfo, FName BoneName)
 {
-	if (BoneName.IsEqual("neck_01") || BoneName.IsEqual("head") || BoneName.IsEqual("eyebrows") || BoneName.IsEqual("eyes"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Head"));
-	}
-	else if (BoneName.IsEqual("Pelvis") || BoneName.IsEqual("spine_01"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Stomach"));
-		StomachHealth.Health -= 10.f;
-	}
-	else if (BoneName.IsEqual("spine_02") || BoneName.IsEqual("spine_03"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Thorax"));
-		ThoraxHealth.Health -= 10.f;
-	}
-	else if (BoneName.IsEqual("clavicle_l") || BoneName.IsEqual("UpperArm_L") || BoneName.IsEqual("lowerarm_l") || BoneName.IsEqual("Hand_L"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Arm_L")); 
-	}
-	else if (BoneName.IsEqual("clavicle_r") || BoneName.IsEqual("UpperArm_R") || BoneName.IsEqual("lowerarm_r") || BoneName.IsEqual("Hand_R"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Arm_R")); 
-	}
-	else if (BoneName.IsEqual("Thigh_L") || BoneName.IsEqual("calf_l") || BoneName.IsEqual("Foot_L") || BoneName.IsEqual("ball_l"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Leg_L")); 
-	}
-	else if (BoneName.IsEqual("Thigh_R") || BoneName.IsEqual("calf_r") || BoneName.IsEqual("Foot_R") || BoneName.IsEqual("ball_r"))
-	{
-		// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Leg_R")); 
-	}
+	if (BodyPartsMap.Contains(BoneName) == false) return;
+	uint8 BodyPartsIndex = (uint8)BodyPartsMap[BoneName];
+	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %d"), *BoneName.ToString(), BodyPartsIndex);
+	HealthArray[BodyPartsIndex].Health -= 10.f;
+	ClientRPC_ApplyDamage(BodyPartsIndex, 10.f);
 }
 
-void UHealthComponent::OnRep_HeadHealth()
+FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)
 {
-	OnHeadHealthChanged.ExecuteIfBound(HeadHealth.Health, HeadHealth.MaxHealth);
+	return HealthArray[(uint8)BodyParts];
 }
 
-void UHealthComponent::OnRep_ThoraxHealth()
+void UHealthComponent::ClientRPC_ApplyDamage_Implementation(uint8 BodyParts, float Damage)
 {
-	OnThoraxHealthChanged.ExecuteIfBound(ThoraxHealth.Health, ThoraxHealth.MaxHealth);
-}
-
-void UHealthComponent::OnRep_StomachHealth()
-{
-	OnStomachHealthChanged.ExecuteIfBound(StomachHealth.Health, StomachHealth.MaxHealth);
+	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
+	HealthArray[BodyParts].Health -= Damage;
+	HealthArray[BodyParts].UpdateHealth();
 }

@@ -4,21 +4,37 @@
 #include "AnimInstance/CharacterAnimInstance.h"
 
 #include "KismetAnimationLibrary.h"
-#include "Component/MoveComponent.h"
+#include "Component/WeaponComponent.h"
 #include "GameFramework/Character.h"
+
+void UCharacterAnimInstance::NativeInitializeAnimation()
+{
+	Super::NativeInitializeAnimation();
+
+	PlayerCharacter = Cast<ACharacter>(TryGetPawnOwner());
+	if (PlayerCharacter)
+	{
+		WeaponComponent = PlayerCharacter->GetComponentByClass<UWeaponComponent>();
+	}
+}
 
 void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	// MoveSpeed = TryGetPawnOwner()->GetVelocity().Length();
-
-	if (APawn* Pawn = TryGetPawnOwner())
+	if (PlayerCharacter)
 	{
-		MoveSpeed = Pawn->GetVelocity().Length();
-		MoveDirection = UKismetAnimationLibrary::CalculateDirection(Pawn->GetVelocity(), Pawn->GetActorRotation());
-		bIsCrouched = Cast<ACharacter>(Pawn)->bIsCrouched;
+		MoveSpeed = PlayerCharacter->GetVelocity().Length();
+		MoveDirection = UKismetAnimationLibrary::CalculateDirection(PlayerCharacter->GetVelocity(), PlayerCharacter->GetActorRotation());
+		bIsCrouched = PlayerCharacter->bIsCrouched;
 
-		// UE_LOG(LogTemp, Log, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) MoveSpeed : %f"), MoveSpeed);
+		PitchAngle = FMath::Clamp(-PlayerCharacter->GetBaseAimRotation().GetNormalized().Pitch, -60.f, 60.f);
 	}
+}
+
+void UCharacterAnimInstance::AnimNotify_FireBullet()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::AnimNotify_FireBullet"));
+	
+	WeaponComponent->FireBullet();
 }
