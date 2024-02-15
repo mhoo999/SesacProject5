@@ -18,24 +18,24 @@ void UFSM_Patrol_Component::BeginPlay()
 	Super::BeginPlay();
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
+
+	ac = Cast<AHoonsAIController>(GetOwner());
+	ai = Cast<ACharacterBase>(ac->GetPawn());
 }
 
-void UFSM_Patrol_Component::ExecutePatrol()
+void UFSM_Patrol_Component::ExecuteBehavior(AActor* target)
 {
 	if (waypointArray.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("waypoint list is empty"));
 		return;
 	}
-
-	auto aiController = Cast<AHoonsAIController>(GetOwner());
-	auto ai = Cast<ACharacterBase>(aiController->GetPawn());
 	
 	AActor* NextWaypoint = waypointArray[CurrentWaypointIndex];
 
-	if (NextWaypoint && aiController)
+	if (NextWaypoint && ac)
 	{
-		aiController->MoveToActor(NextWaypoint, AcceptanceRadius, true, true, false, 0, true);
+		ac->MoveToActor(NextWaypoint, AcceptanceRadius, true, true, false, 0, true);
 
 		float dist = FVector::Dist(NextWaypoint->GetActorLocation(), ai->GetActorLocation());
 		if (dist <= 100)
@@ -46,34 +46,13 @@ void UFSM_Patrol_Component::ExecutePatrol()
 	}
 }
 
-void UFSM_Patrol_Component::ExecuteSearch()
+void UFSM_Patrol_Component::StopExecute()
 {
+	ac->StopMovement();
 }
 
-void UFSM_Patrol_Component::ExecuteChase()
+void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 {
+	ac->SetContext(EEnemystate::chase);
 }
 
-void UFSM_Patrol_Component::ExecuteAttack()
-{
-}
-
-void UFSM_Patrol_Component::ExecuteRetreatFiring()
-{
-}
-
-void UFSM_Patrol_Component::ExecuteAdvanceFiring()
-{
-}
-
-void UFSM_Patrol_Component::ExecuteEvade()
-{
-}
-
-void UFSM_Patrol_Component::ExecuteCamping()
-{
-}
-
-void UFSM_Patrol_Component::ExecuteSelfHealing()
-{
-}

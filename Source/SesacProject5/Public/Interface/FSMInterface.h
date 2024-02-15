@@ -20,13 +20,7 @@ class SESACPROJECT5_API IFSMInterface
 	GENERATED_BODY()
 
 public:
-	virtual void ExecutePatrol()=0;
-	virtual void ExecuteSearch()=0;
-	virtual void ExecuteChase()=0;
-	virtual void ExecuteAttack()=0;
-	virtual void ExecuteRetreatFiring()=0;
-	virtual void ExecuteAdvanceFiring()=0;
-	virtual void ExecuteEvade()=0;
-	virtual void ExecuteCamping()=0;
-	virtual void ExecuteSelfHealing()=0;
+	virtual void ExecuteBehavior(AActor* target) = 0;
+	virtual void StopExecute() = 0;
+	virtual void SenseNewActor(AActor* NewActor) = 0;
 };

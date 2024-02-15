@@ -6,6 +6,10 @@
 #include "AIController.h"
 #include "HoonsAIController.generated.h"
 
+class UAISenseConfig_Hearing;
+class UFSM_Attack_Component;
+class UFSM_Chase_Component;
+class UFSM_Search_Component;
 class UAISenseConfig_Sight;
 struct FAIStimulus;
 class ACharacterBase;
@@ -49,21 +53,39 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Patrol_Component* FSMPatrolComp;
 
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UFSM_Search_Component* FSMSearchComp;
+	
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UFSM_Chase_Component* FSMChaseComp;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UFSM_Attack_Component* FSMAttackComp;
+	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|AI", meta=(AllowAbstract))
 	UAIPerceptionComponent* AIPerception;
 	
 	UPROPERTY(VisibleAnywhere, meta=(AllowAbstract))
 	EEnemystate state;
 
+	// A Sight Sense config for our AI
+	UAISenseConfig_Sight* sight;
+	UAISenseConfig_Hearing* hearing;
+
 public:
 	UPROPERTY(BlueprintReadWrite)
-	ACharacterBase* Agent;
+	ACharacterBase* ai;
 
 	UFUNCTION()
 	void OnPerception(AActor* actor, FAIStimulus stimulus);
 
-	// A Sight Sense config for our AI
-	UAISenseConfig_Sight* sight;
-
 	virtual void OnPossess(APawn* InPawn) override;
+
+	void SetContext(EEnemystate next);
+
+	UPROPERTY(BlueprintReadWrite)
+	ACharacterBase* target;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings")
+	float AttackDist = 500.f;
 };

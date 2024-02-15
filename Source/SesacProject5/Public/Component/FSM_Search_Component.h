@@ -20,13 +20,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void ExecutePatrol() override;
-	virtual void ExecuteSearch() override;
-	virtual void ExecuteChase() override;
-	virtual void ExecuteAttack() override;
-	virtual void ExecuteRetreatFiring() override;
-	virtual void ExecuteAdvanceFiring() override;
-	virtual void ExecuteEvade() override;
-	virtual void ExecuteCamping() override;
-	virtual void ExecuteSelfHealing() override;
+	virtual void ExecuteBehavior(AActor* target) override;
+	virtual void StopExecute() override;
+	virtual void SenseNewActor(AActor* NewActor) override;
 };
