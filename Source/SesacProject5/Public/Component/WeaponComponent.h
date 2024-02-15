@@ -23,22 +23,28 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
+
+	// Called every frame
+    	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void FireBullet();
 
 	void StartFireAction(const FInputActionValue& Value);
 	void EndFireAction(const FInputActionValue& Value);
 
 	float GetWeaponAttackRange() const;
 
+	UFUNCTION()
+	void OnRep_Weapon();
+
 private:
-	UPROPERTY(Replicated, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(ReplicatedUsing = "OnRep_Weapon", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* Weapon;
+	IWeaponInterface* WeaponInterface;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Fire;

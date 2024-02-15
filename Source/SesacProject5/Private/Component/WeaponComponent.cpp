@@ -52,10 +52,16 @@ void UWeaponComponent::BeginPlay()
 			Weapon = Gun;
 			Gun->AttachToComponent(GetOwner<ACharacter>()->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("GunSocket"));
 			Gun->SetOwner(GetOwner());
+			Gun->OnRep_Owner();
+			WeaponInterface = Gun;
 		}
 	}
 }
 
+void UWeaponComponent::FireBullet() 
+{
+	WeaponInterface->FireBullet();
+}
 
 // Called every frame
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -67,21 +73,20 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::StartFireAction(const FInputActionValue& Value)
 {
-	if (IWeaponInterface* WeaponInterface = Cast<IWeaponInterface>(Weapon))
-	{
-		WeaponInterface->StartFire();
-	}
+	WeaponInterface->StartFire();
 }
 
 void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
 {
-	if (IWeaponInterface* WeaponInterface = Cast<IWeaponInterface>(Weapon))
-	{
-		WeaponInterface->StopFire();
-	}
+	WeaponInterface->StopFire();
 }
 
 float UWeaponComponent::GetWeaponAttackRange() const
 {
 	return 1000.f;
+}
+
+void UWeaponComponent::OnRep_Weapon()
+{
+	WeaponInterface = Cast<IWeaponInterface>(Weapon);
 }
