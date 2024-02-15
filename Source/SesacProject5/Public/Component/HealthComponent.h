@@ -6,15 +6,37 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+UENUM()
+enum class EBodyParts : uint8
+{
+	NONE,
+	HEAD,
+	THORAX,
+	STOMACH,
+	LEFTARM,
+	RIGHTARM,
+	LEFTLEG,
+	RIGHTLEG,
+	SIZE
+};
+
 USTRUCT(BlueprintType)
 struct FHealth
 {
 	GENERATED_BODY()
 
+	void UpdateHealth()
+	{
+		OnHealthChanged.ExecuteIfBound(Health, MaxHealth);
+	}
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health;
+	
+	DECLARE_DELEGATE_TwoParams(FDele_Single_Two_Float_Float, float, float);
+	FDele_Single_Two_Float_Float OnHealthChanged;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -26,8 +48,6 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -38,25 +58,14 @@ public:
 
 	void ApplyDamage(struct FProjectileInfo ProjectileInfo, FName BoneName);
 
-	UFUNCTION()
-	void OnRep_HeadHealth();
-	UFUNCTION()
-	void OnRep_ThoraxHealth();
-	UFUNCTION()
-	void OnRep_StomachHealth();
+	UFUNCTION(Client, Reliable)
+	void ClientRPC_ApplyDamage(uint8 BodyParts, float Damage);
+
+	FHealth& GetHealth(EBodyParts BodyParts);
+	
 private:
-	UPROPERTY(EditAnywhere, ReplicatedUsing = "OnRep_HeadHealth", Meta = (AllowPrivateAccess))
-	FHealth HeadHealth;
-	DECLARE_DELEGATE_TwoParams(FDele_Single_Two_Float_Float, float, float);
-	FDele_Single_Two_Float_Float OnHeadHealthChanged;
-
-	UPROPERTY(EditAnywhere, ReplicatedUsing = "OnRep_ThoraxHealth", Meta = (AllowPrivateAccess))
-	FHealth ThoraxHealth;
-	DECLARE_DELEGATE_TwoParams(FDele_Single_Two_Float_Float, float, float);
-	FDele_Single_Two_Float_Float OnThoraxHealthChanged;
-
-	UPROPERTY(EditAnywhere, ReplicatedUsing = "OnRep_StomachHealth", Meta = (AllowPrivateAccess))
-	FHealth StomachHealth;
-	DECLARE_DELEGATE_TwoParams(FDele_Single_Two_Float_Float, float, float);
-	FDele_Single_Two_Float_Float OnStomachHealthChanged;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TArray<FHealth> HealthArray;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TMap<FName, EBodyParts> BodyPartsMap;
 };
