@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UHealthComponent;
 class UWeaponComponent;
 class UInteractComponent;
 class UInputMappingContext;
@@ -46,6 +47,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UHealthComponent* HealthComponent;
+
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;
 
 public:

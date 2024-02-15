@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Component/HealthComponent.h"
 #include "Component/InteractComponent.h"
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
@@ -27,6 +28,7 @@ ACharacterBase::ACharacterBase()
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>(TEXT("MoveComponent"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 100.f;

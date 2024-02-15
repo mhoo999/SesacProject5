@@ -9,6 +9,12 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 
+USTRUCT()
+struct FProjectileInfo
+{
+	GENERATED_BODY()
+};
+
 UCLASS()
 class SESACPROJECT5_API AProjectileBase : public AActor
 {
@@ -25,11 +31,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	UFUNCTION()
 	void OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	FProjectileInfo ProjectileInfo;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	USphereComponent* CollisionComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
