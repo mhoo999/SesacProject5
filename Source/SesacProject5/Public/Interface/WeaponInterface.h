@@ -25,4 +25,6 @@ public:
 
 	virtual void StartFire() = 0;
 	virtual void StopFire() = 0;
+
+	virtual void FireBullet() {};
 };

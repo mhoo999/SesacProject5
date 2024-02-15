@@ -28,13 +28,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void StartFire() override;
 	virtual void StopFire() override;
+	virtual void FireBullet() override;
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_FireBullet();
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_Fire();
+	void ServerRPC_StartFire();
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_StopFire();
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_StartFire();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_StopFire();
+
+	virtual void OnRep_Owner() override;
+
 private:
+	UPROPERTY()
+	ACharacter* OwningCharacter;
 	UPROPERTY()
 	bool bIsTriggered = false;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
@@ -47,4 +59,8 @@ private:
 	USkeletalMeshComponent* SkeletalMeshComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UArrowComponent* FireArrowComponent;
+
+	// Montage
+	UPROPERTY(EditDefaultsOnly, Category = "Animation", Meta = (AllowPrivateAccess))
+	UAnimMontage* FireMontage;
 };
