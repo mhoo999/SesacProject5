@@ -29,6 +29,7 @@ public:
 	FText GetInteractionName() const;
 
 private:
+	IInteractInterface* InteractActor;
 	int32 SelectIndex;
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UTextBlock* TB_Name;
@@ -36,5 +37,4 @@ private:
 	UVerticalBox* VB_InteractionSlot;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<UInteractionSlotWidget> InteractionSlotWidgetClass;
-	
 };

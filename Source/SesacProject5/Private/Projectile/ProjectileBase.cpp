@@ -49,8 +49,10 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) Debug 1"));
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) Debug 2"));
 		HealthComponent->ApplyDamage(ProjectileInfo, SweepResult.BoneName);
 	}
 

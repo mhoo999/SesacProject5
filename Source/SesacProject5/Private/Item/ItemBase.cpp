@@ -51,7 +51,7 @@ void AItemBase::Interact(ACharacter* InteractCharacter, FText InteractionName)
 	}
 }
 
-const TArray<FText>& AItemBase::GetInteractionNameArray() const
+const TArray<FText>& AItemBase::GetInteractionNameArray()
 {
 	return ItemData.InteractionNameArray;
 }
