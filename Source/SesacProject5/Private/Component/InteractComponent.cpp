@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "Interface/InteractInterface.h"
+#include "UI/InGame/InteractWidget.h"
 
 // Sets default values for this component's properties
 UInteractComponent::UInteractComponent()
@@ -21,6 +22,7 @@ UInteractComponent::UInteractComponent()
 void UInteractComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &UInteractComponent::InteractAction);
+	PlayerInputComponent->BindAction(IA_SelectInteraction, ETriggerEvent::Triggered, this, &UInteractComponent::SelectInteractionAction);
 }
 
 
@@ -74,15 +76,37 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	OnInteractActorChanged.ExecuteIfBound(nullptr);
 }
 
-void UInteractComponent::ServerRPC_Interact_Implementation(AActor* InteractTarget)
+void UInteractComponent::SetInteractWidget(UInteractWidget* NewInteractWidget)
 {
-	Cast<IInteractInterface>(InteractTarget)->Interact(OwningCharacter, FString());
+	InteractWidget = NewInteractWidget;
+}
+
+void UInteractComponent::ServerRPC_Interact_Implementation(AActor* InteractTarget, const FText& InteractionName)
+{
+	Cast<IInteractInterface>(InteractTarget)->Interact(OwningCharacter, InteractionName);
 }
 
 void UInteractComponent::InteractAction(const FInputActionValue& Value)
 {
-	if (InteractActor)
+	if (InteractActor && InteractWidget)
 	{
-		ServerRPC_Interact(InteractActor);	
+		ServerRPC_Interact(InteractActor, InteractWidget->GetInteractionName());	
+	}
+}
+
+void UInteractComponent::SelectInteractionAction(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UInteractComponent::SelectInteractionAction) Value : %f"), Value.Get<float>());
+
+	if (InteractActor && InteractWidget)
+	{
+		if (Value.Get<float>() == 1.0f)
+		{
+			InteractWidget->SelectUp();
+		}
+		else
+		{
+			InteractWidget->SelectDown();
+		}
 	}
 }

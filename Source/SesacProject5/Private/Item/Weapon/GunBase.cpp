@@ -74,8 +74,6 @@ void AGunBase::StopFire()
 
 void AGunBase::FireBullet()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AGunBase::FireBullet) Debug1"));
-
 	if (OwningCharacter->IsLocallyControlled())
 	{
 		OwningCharacter->AddControllerPitchInput(FMath::RandRange(-0.f, -1.f));
@@ -84,7 +82,6 @@ void AGunBase::FireBullet()
 	
 	if (BulletClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AGunBase::FireBullet) Debug2"));
 		AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(BulletClass, FireArrowComponent->GetComponentLocation(), FireArrowComponent->GetComponentRotation());
 	}
 }
@@ -95,10 +92,8 @@ void AGunBase::ServerRPC_FireBullet_Implementation()
 
 void AGunBase::MultiRPC_StartFire_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("MultiRPC_StartFire_Implementation) Debug 1"));
 	if (OwningCharacter && FireMontage)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiRPC_StartFire_Implementation) Debug 2"));
 		OwningCharacter->PlayAnimMontage(FireMontage);
 	}
 }
@@ -107,7 +102,6 @@ void AGunBase::MultiRPC_StopFire_Implementation()
 {
 	if (OwningCharacter && FireMontage)
     {
-		UE_LOG(LogTemp, Warning, TEXT("MultiRPC_StopFire_Implementation"));
     	OwningCharacter->StopAnimMontage(FireMontage);
     }
 }
