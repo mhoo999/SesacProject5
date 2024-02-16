@@ -3,7 +3,7 @@
 
 #include "Component/FSM_Patrol_Component.h"
 
-#include "AIController/AIPatrolWaypoint.h"
+#include "AIComponent/AIPatrolWaypoint.h"
 #include "AIController/HoonsAIController.h"
 #include "Character/CharacterBase.h"
 #include "Kismet/GameplayStatics.h"
