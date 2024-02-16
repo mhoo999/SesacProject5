@@ -17,7 +17,7 @@ void UFSM_Patrol_Component::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
+	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
 }
 
 void UFSM_Patrol_Component::ExecuteBehavior()
