@@ -11,6 +11,7 @@ class UCameraComponent;
 struct FInputActionValue;
 class UInputAction;
 class UEnhancedInputComponent;
+class UInteractWidget;
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UInteractComponent : public UActorComponent
 {
@@ -30,17 +31,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	// Setter
+	void SetInteractWidget(UInteractWidget* NewInteractWidget);
+
 	// RPC
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_Interact(AActor* InteractTarget); 
+	void ServerRPC_Interact(AActor* InteractTarget, const FText& InteractionName); 
 
 private:
 	void InteractAction(const FInputActionValue& Value);
+	void SelectInteractionAction(const FInputActionValue& Value);
 
 private:
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	UInputAction* IA_Interact;
-
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* InteractActor;
 
@@ -51,6 +53,14 @@ private:
 	
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	float TraceDistance = 1000.f;
+
+	UPROPERTY()
+	UInteractWidget* InteractWidget;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
+	UInputAction* IA_Interact;
+	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
+	UInputAction* IA_SelectInteraction;
 
 public:
 	DECLARE_DELEGATE_OneParam(FDele_Interact, IInteractInterface*);
