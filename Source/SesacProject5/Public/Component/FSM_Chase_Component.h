@@ -7,6 +7,7 @@
 #include "Interface/FSMInterface.h"
 #include "FSM_Chase_Component.generated.h"
 
+class IWeaponInterface;
 class UWeaponComponent;
 class ACharacterBase;
 class AHoonsAIController;
@@ -40,4 +41,13 @@ public:
 	
 	UPROPERTY()
 	UWeaponComponent* WeaponComp;
+
+	FVector PlayerPartLocation;
+	FHitResult hitResult;
+	bool bCanSeeTarget;
+	
+	FVector dest;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float missingTime = 10.0f;
 };
