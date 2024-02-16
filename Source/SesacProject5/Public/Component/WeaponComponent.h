@@ -20,7 +20,7 @@ public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
 

@@ -23,6 +23,9 @@ class SESACPROJECT5_API IInteractInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void Interact(ACharacter* InteractCharacter, FText InteractionName) = 0;
-	virtual const TArray<FText>& GetInteractionNameArray() const = 0;
+	virtual const TArray<FText>& GetInteractionNameArray() = 0;
 	virtual FText GetActorName() const = 0;
+
+	DECLARE_DELEGATE_OneParam(FDele_InteractInterface, IInteractInterface*);
+	FDele_InteractInterface OnInteractActorChanged;
 };
