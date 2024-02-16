@@ -29,17 +29,21 @@ void UFSM_Chase_Component::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UFSM_Chase_Component::ExecuteBehavior()
 {
-	// 발견한 플레이어에게 이동
-	ac->MoveToActor(target, 10.f, true, true, false, 0, true);
-	
-	FVector AILocation = ai->GetActorLocation();
-	FVector PlayerLocation = target->GetActorLocation();
+	FVector AIEyeLocation = ai->GetMesh()->GetSocketLocation("eyes");
+	FVector PlayerPartLocation = target->GetActorLocation();
+
+	// 추후 플레이어 Health 파트를 부위별로 돌면서 사격 가능한 부분을 PlayerPartLocation에 저장하고 사격 개시
+	// 파트별로 우선순위를 정해 보이는 부분 중 가장 점수가 높은 파트를 1순위로 저장
+	// for (auto part : )
 
 	FHitResult hitResult;
-	bool bCanSeePlayer = GetWorld()->LineTraceSingleByChannel(hitResult, AILocation, PlayerLocation, ECC_Visibility);
+	GetWorld()->LineTraceSingleByChannel(hitResult, AIEyeLocation, PlayerPartLocation, ECC_Visibility);
+	DrawDebugLine(GetWorld(), AIEyeLocation, PlayerPartLocation, FColor::Magenta, false, 0.5f, 0, 2.0f);
 
+	UE_LOG(LogTemp, Warning, TEXT("%p"), hitResult.GetActor());
+	
 	// 시야에 보인다면 공격 거리 까지 이동
-	if (bCanSeePlayer && hitResult.GetActor() == target)
+	if (hitResult.GetActor() == target)
 	{
 		float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
 		float attackDist = WeaponComp->GetWeaponAttackRange();
@@ -48,7 +52,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		if (dist <= attackDist)
 		{
 			ac->StopMovement();
-			ac->SetContext(EEnemystate::attack);
+			UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+			// WeaponComp->StartFireAction();
 			ac->GetFSM()->SenseNewActor(target);
 		}
 	}
