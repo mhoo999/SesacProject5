@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FSM_Component.h"
 #include "Components/ActorComponent.h"
 #include "Interface/FSMInterface.h"
 #include "FSM_Chase_Component.generated.h"
@@ -13,7 +14,7 @@ class ACharacterBase;
 class AHoonsAIController;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SESACPROJECT5_API UFSM_Chase_Component : public UActorComponent, public IFSMInterface
+class SESACPROJECT5_API UFSM_Chase_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()
 
@@ -31,23 +32,6 @@ public:
 	virtual void SenseNewActor(AActor* NewActor) override;
 
 public:
-	UPROPERTY(BlueprintReadWrite)
-	ACharacterBase* ai;
-
-	UPROPERTY(BlueprintReadWrite)
-	AHoonsAIController* ac;
-
-	AActor* target;
-	
-	UPROPERTY()
-	UWeaponComponent* WeaponComp;
-
-	FVector PlayerPartLocation;
-	FHitResult hitResult;
-	bool bCanSeeTarget;
-	
-	FVector dest;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float missingTime = 10.0f;
 

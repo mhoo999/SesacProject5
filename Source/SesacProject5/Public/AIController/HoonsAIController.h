@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "HoonsAIController.generated.h"
 
+class UFSM_Component;
 class UAISenseConfig_Hearing;
 class UFSM_Attack_Component;
 class UFSM_Chase_Component;
@@ -25,7 +26,6 @@ enum class EEnemystate : uint8
 	patrol				UMETA(DisplayName = "Patrol"),
 	search				UMETA(DisplayName = "Search"),
 	chase				UMETA(DisplayName = "Chase"),
-	attack				UMETA(DisplayName = "Attack"),
 	retreatFiring		UMETA(DisplayName = "Retreat Firing"),
 	AdvanceFiring		UMETA(DisplayName = "Advance Firing"),
 	evade				UMETA(DisplayName = "Evade"),
@@ -49,6 +49,9 @@ public:
 
 private:
 	IFSMInterface* FSMInterface;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UFSM_Component* FSMComp;
 	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Patrol_Component* FSMPatrolComp;
@@ -58,9 +61,6 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Chase_Component* FSMChaseComp;
-
-	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
-	UFSM_Attack_Component* FSMAttackComp;
 	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|AI", meta=(AllowAbstract))
 	UAIPerceptionComponent* AIPerception;

@@ -3,32 +3,53 @@
 
 #include "Component/FSM_Component.h"
 
-// Sets default values for this component's properties
+#include "AIController/HoonsAIController.h"
+#include "Character/CharacterBase.h"
+#include "Component/WeaponComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 UFSM_Component::UFSM_Component()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
-
-// Called when the game starts
 void UFSM_Component::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+
+	ac = Cast<AHoonsAIController>(GetOwner());
+	ai = Cast<ACharacterBase>(ac->GetPawn());
+	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
 }
 
-
-// Called every frame
-void UFSM_Component::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+bool UFSM_Component::bFocusTarget() const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	// 추후 플레이어 Health 파트를 부위별로 돌면서 사격 가능한 부분을 PlayerPartLocation에 저장하고 사격 개시
+	// 파트별로 우선순위를 정해 보이는 부분 중 가장 점수가 높은 파트를 1순위로 저장
+	// for (auto part : )
+	
+	// FHitResult hitResult;
+	FVector AIEyeLocation = ai->GetMesh()->GetSocketLocation("eyes");
+	FVector PlayerPartLocation = target->GetActorLocation();
+	// bool bCanSeeTarget = GetWorld()->LineTraceSingleByChannel(hitResult, AIEyeLocation, PlayerPartLocation, ECC_Visibility);
+	TArray<FHitResult> OutHits;
+	bool bTarget = false;
+	if (UKismetSystemLibrary::SphereTraceMulti(GetWorld(), AIEyeLocation, PlayerPartLocation,
+			sightRadius, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, {},
+			EDrawDebugTrace::ForOneFrame, OutHits, true))
+	{
+		for (auto it : OutHits)
+		{
+			if (it.GetActor() == target)
+			{
+				bTarget = true;
+			}
+		}
+	}
+	
+	// DrawDebugLine(GetWorld(), AIEyeLocation, PlayerPartLocation, FColor::Magenta, false, 0.1f, 0, 10.0f);
+	
+	return bTarget;
 }
 

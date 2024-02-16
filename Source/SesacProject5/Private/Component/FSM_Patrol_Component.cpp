@@ -18,16 +18,13 @@ void UFSM_Patrol_Component::BeginPlay()
 	Super::BeginPlay();
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
-
-	ac = Cast<AHoonsAIController>(GetOwner());
-	ai = Cast<ACharacterBase>(ac->GetPawn());
 }
 
 void UFSM_Patrol_Component::ExecuteBehavior()
 {
 	if (waypointArray.Num() == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("waypoint list is empty"));
+		// UE_LOG(LogTemp, Warning, TEXT("waypoint list is empty"));
 		return;
 	}
 	

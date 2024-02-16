@@ -4,7 +4,6 @@
 #include "AIController/HoonsAIController.h"
 
 #include "Character/CharacterBase.h"
-#include "Component/FSM_Attack_Component.h"
 #include "Component/FSM_Chase_Component.h"
 #include "Component/FSM_Patrol_Component.h"
 #include "Component/FSM_Search_Component.h"
@@ -14,10 +13,10 @@
 
 AHoonsAIController::AHoonsAIController()
 {
+	FSMComp = CreateDefaultSubobject<UFSM_Component>(TEXT("FSM Component"));
 	FSMPatrolComp = CreateDefaultSubobject<UFSM_Patrol_Component>(TEXT("Patrol Component"));
 	FSMSearchComp = CreateDefaultSubobject<UFSM_Search_Component>(TEXT("Search Component"));
 	FSMChaseComp = CreateDefaultSubobject<UFSM_Chase_Component>(TEXT("Chase Component"));
-	FSMAttackComp = CreateDefaultSubobject<UFSM_Attack_Component>(TEXT("Attack Component"));
 	AIPerception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
 	
 	// create a sight and hearing sense
@@ -66,7 +65,7 @@ void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	// SetFocus 센싱 성공 ? chr 반환 : nullptr 반환
 	SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
 	
-	UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
+	// UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
 
 	if (chr)
 	{
@@ -89,7 +88,6 @@ void AHoonsAIController::SetContext(EEnemystate next)
 	case EEnemystate::patrol:			FSMInterface = FSMPatrolComp;			break;
 	case EEnemystate::search:			FSMInterface = FSMSearchComp;			break;
 	case EEnemystate::chase:			FSMInterface = FSMChaseComp;			break;
-	case EEnemystate::attack:			FSMInterface = FSMAttackComp;			break;
 	case EEnemystate::retreatFiring:
 		break;
 	case EEnemystate::AdvanceFiring:
