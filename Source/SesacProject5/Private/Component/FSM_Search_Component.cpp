@@ -3,7 +3,7 @@
 
 #include "Component/FSM_Search_Component.h"
 
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 
 UFSM_Search_Component::UFSM_Search_Component()

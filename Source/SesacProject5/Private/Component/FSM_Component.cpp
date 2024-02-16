@@ -3,7 +3,7 @@
 
 #include "Component/FSM_Component.h"
 
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "Component/WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,7 +18,7 @@ void UFSM_Component::BeginPlay()
 	Super::BeginPlay();
 
 
-	ac = Cast<AHoonsAIController>(GetOwner());
+	ac = Cast<AEOSAIController>(GetOwner());
 	ai = Cast<ACharacterBase>(ac->GetPawn());
 	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
 }

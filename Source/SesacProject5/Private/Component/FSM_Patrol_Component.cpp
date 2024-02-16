@@ -3,10 +3,8 @@
 
 #include "Component/FSM_Patrol_Component.h"
 
-#include "AIComponent/AIPatrolWaypoint.h"
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
-#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {

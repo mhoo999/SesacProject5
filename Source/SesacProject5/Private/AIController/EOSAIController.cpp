@@ -1,7 +1,7 @@
 // copyright by LootingEmployment
 
 
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 
 #include "Character/CharacterBase.h"
 #include "Component/FSM_Chase_Component.h"
@@ -11,7 +11,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
 
-AHoonsAIController::AHoonsAIController()
+AEOSAIController::AEOSAIController()
 {
 	FSMComp = CreateDefaultSubobject<UFSM_Component>(TEXT("FSM Component"));
 	FSMPatrolComp = CreateDefaultSubobject<UFSM_Patrol_Component>(TEXT("Patrol Component"));
@@ -36,7 +36,7 @@ AHoonsAIController::AHoonsAIController()
 	sight->DetectionByAffiliation.bDetectFriendlies = true;
 }
 
-void AHoonsAIController::BeginPlay()
+void AEOSAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -46,7 +46,7 @@ void AHoonsAIController::BeginPlay()
 	ai = Cast<ACharacterBase>(GetPawn());
 }
 
-void AHoonsAIController::Tick(float DeltaSeconds)
+void AEOSAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
@@ -54,7 +54,7 @@ void AHoonsAIController::Tick(float DeltaSeconds)
 	printLog();
 }
 
-void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
+void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 {
 	ACharacterBase* chr = Cast<ACharacterBase>(actor);
 	if (chr == nullptr)
@@ -73,14 +73,14 @@ void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	}
 }
 
-void AHoonsAIController::OnPossess(APawn* InPawn)
+void AEOSAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	// register the onPerceptionUpdated function to fire whenever the AIPerception get's updated
-	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &AHoonsAIController::OnPerception);
+	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &AEOSAIController::OnPerception);
 }
 
-void AHoonsAIController::SetContext(EEnemystate next)
+void AEOSAIController::SetContext(EEnemystate next)
 {
 	FSMInterface->StopExecute();
 	
@@ -102,12 +102,12 @@ void AHoonsAIController::SetContext(EEnemystate next)
 	state = next;
 }
 
-IFSMInterface* AHoonsAIController::GetFSM()
+IFSMInterface* AEOSAIController::GetFSM()
 {
 	return FSMInterface;
 }
 
-void AHoonsAIController::printLog()
+void AEOSAIController::printLog()
 {
 	FString StateString = UEnum::GetValueAsString(state);
 

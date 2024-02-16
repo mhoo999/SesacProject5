@@ -4,7 +4,7 @@
 #include "Component/FSM_Chase_Component.h"
 
 #include "InputActionValue.h"
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "Component/WeaponComponent.h"
 
