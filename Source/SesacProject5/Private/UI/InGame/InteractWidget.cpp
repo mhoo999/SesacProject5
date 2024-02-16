@@ -3,6 +3,7 @@
 
 #include "UI/InGame/InteractWidget.h"
 
+#include "GameFramework/Character.h"
 #include "Component/InteractComponent.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
@@ -22,10 +23,14 @@ void UInteractWidget::UpdateWidget(IInteractInterface* NewInteractActor)
 {
 	
 	if (NewInteractActor == nullptr)
-	{ 
+	{
+		if (InteractActor) InteractActor->OnInteractActorChanged.Unbind();
 		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
+
+	InteractActor = NewInteractActor;
+	InteractActor->OnInteractActorChanged.BindUObject(this, &UInteractWidget::UpdateWidget);
 	
 	SetVisibility(ESlateVisibility::Visible);
 	TB_Name->SetText(NewInteractActor->GetActorName());

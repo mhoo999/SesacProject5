@@ -37,7 +37,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void Interact(ACharacter* InteractCharacter, FText InteractionName) override;
-	virtual const TArray<FText>& GetInteractionNameArray() const override;
+	virtual const TArray<FText>& GetInteractionNameArray() override;
 	virtual FText GetActorName() const override;
 
 private:
