@@ -50,4 +50,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float missingTime = 10.0f;
+
+	FTimerHandle handle;
 };

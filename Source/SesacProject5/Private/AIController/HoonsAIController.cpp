@@ -71,14 +71,6 @@ void AHoonsAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	if (chr)
 	{
 		FSMInterface->SenseNewActor(chr);
-
-		// // 일정 시간 이후, 새로운 SenseNewActor가 없을 경우, FSMInterface에 nullptr을 전달
-		// FTimerHandle handle;
-		// GetWorld()->GetTimerManager().ClearTimer(handle);
-		// GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&]
-		// {
-		// 	FSMInterface->SenseNewActor(nullptr);
-		// }), missTime, false, missTime);
 	}
 }
 

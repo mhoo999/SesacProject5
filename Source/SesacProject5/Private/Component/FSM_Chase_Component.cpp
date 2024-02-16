@@ -41,25 +41,36 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		PlayerPartLocation = target->GetActorLocation();
 		bCanSeeTarget = GetWorld()->LineTraceSingleByChannel(hitResult, AIEyeLocation, PlayerPartLocation, ECC_Visibility);
 		DrawDebugLine(GetWorld(), AIEyeLocation, PlayerPartLocation, FColor::Magenta, false, 0.5f, 0, 2.0f);
-		UE_LOG(LogTemp, Warning, TEXT("%p"), hitResult.GetActor());
+		// UE_LOG(LogTemp, Warning, TEXT("%p"), hitResult.GetActor());
 	}
 	
 	// 시야에 타겟이 보인다면 공격
 	if (bCanSeeTarget && hitResult.GetActor() == target)
 	{
-		// float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
-		// float attackDist = WeaponComp->GetWeaponAttackRange();
+		float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
+		float attackDist = WeaponComp->GetWeaponAttackRange();
+
+		UE_LOG(LogTemp, Warning, TEXT("Dist : %f, AttackDist : %f"), dist, attackDist);
 		
-		ac->StopMovement();
-		UE_LOG(LogTemp, Warning, TEXT("Fire!"));
-		WeaponComp->StartFireAction(FInputActionValue());
-		ac->GetFSM()->SenseNewActor(target);
+		if (dist <= attackDist)
+		{
+			ac->StopMovement();
+			WeaponComp->StartFireAction(FInputActionValue());
+			UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+			ac->GetFSM()->SenseNewActor(target);
+		}
+		else
+		{
+			ac->MoveToActor(target, attackDist - 100.0f, true, true, true);
+		}
 
 		dest = target->GetActorLocation();
 	}
 	// 보이지 않는다면 마지막으로 발견한 타겟의 위치로 이동, 일정 시간 동안 안 보이면 patrol 상태로 변경
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
+
 		WeaponComp->EndFireAction(FInputActionValue());
 		SenseNewActor(nullptr);
 		ac->MoveToLocation(dest, 0.f, true, true);
@@ -75,9 +86,6 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 {
 	if (NewActor == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Missing..."))
-		
-		FTimerHandle handle;
 		GetWorld()->GetTimerManager().ClearTimer(handle);
 		GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&]
 		{
@@ -87,6 +95,7 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 	}
 	else
 	{
+		GetWorld()->GetTimerManager().ClearTimer(handle);
 		target = NewActor;
 	}
 }
