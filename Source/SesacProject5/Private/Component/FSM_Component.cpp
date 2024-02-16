@@ -30,12 +30,13 @@ bool UFSM_Component::bFocusTarget() const
 	// for (auto part : )
 	
 	// FHitResult hitResult;
-	FVector AIEyeLocation = ai->GetMesh()->GetSocketLocation("eyes");
+	// FVector AIEyeLocation = ai->GetMesh()->GetSocketLocation("eyes");
+	FVector AILocation = ai->GetActorLocation();
 	FVector PlayerPartLocation = target->GetActorLocation();
 	// bool bCanSeeTarget = GetWorld()->LineTraceSingleByChannel(hitResult, AIEyeLocation, PlayerPartLocation, ECC_Visibility);
 	TArray<FHitResult> OutHits;
 	bool bTarget = false;
-	if (UKismetSystemLibrary::SphereTraceMulti(GetWorld(), AIEyeLocation, PlayerPartLocation,
+	if (UKismetSystemLibrary::SphereTraceMulti(GetWorld(), AILocation, PlayerPartLocation,
 			sightRadius, UEngineTypes::ConvertToTraceType(ECC_Visibility), false, {},
 			EDrawDebugTrace::ForOneFrame, OutHits, true))
 	{
