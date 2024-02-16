@@ -7,8 +7,8 @@
 #include "FSM_Component.generated.h"
 
 
+class AEOSAIController;
 class UWeaponComponent;
-class AHoonsAIController;
 class ACharacterBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -29,7 +29,7 @@ public:
 	ACharacterBase* ai;
 
 	UPROPERTY(BlueprintReadWrite)
-	AHoonsAIController* ac;
+	AEOSAIController* ac;
 
 	UPROPERTY()
 	UWeaponComponent* WeaponComp;

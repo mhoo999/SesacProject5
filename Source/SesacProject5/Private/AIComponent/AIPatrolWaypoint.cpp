@@ -1,7 +1,7 @@
 // copyright by LootingEmployment
 
 
-#include "AIController/AIPatrolWaypoint.h"
+#include "AIComponent/AIPatrolWaypoint.h"
 
 AAIPatrolWaypoint::AAIPatrolWaypoint()
 {

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "HoonsAIController.generated.h"
+#include "EOSAIController.generated.h"
 
 class UFSM_Component;
 class UAISenseConfig_Hearing;
@@ -34,12 +34,12 @@ enum class EEnemystate : uint8
 };
 
 UCLASS()
-class SESACPROJECT5_API AHoonsAIController : public AAIController
+class SESACPROJECT5_API AEOSAIController : public AAIController
 {
 	GENERATED_BODY()
 
 public:
-	AHoonsAIController();
+	AEOSAIController();
 
 protected:
 	virtual void BeginPlay() override;

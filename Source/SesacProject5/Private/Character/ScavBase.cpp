@@ -3,14 +3,14 @@
 
 #include "Character/ScavBase.h"
 
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 
 AScavBase::AScavBase()
 {
-	static ConstructorHelpers::FClassFinder<AHoonsAIController> HoonsAIController(TEXT("/Game/YMH/Blueprint/BP_AIController_YMH.BP_AIController_YMH_C"));
-	if (HoonsAIController.Succeeded())
+	static ConstructorHelpers::FClassFinder<AEOSAIController> EOSAIController(TEXT("/Game/YMH/Blueprint/BP_AIController_YMH.BP_AIController_YMH_C"));
+	if (EOSAIController.Succeeded())
 	{
-		AIControllerClass = HoonsAIController.Class;
+		AIControllerClass = EOSAIController.Class;
 	}
 
 	TeamId = FGenericTeamId(1);

@@ -3,10 +3,8 @@
 
 #include "Component/FSM_Patrol_Component.h"
 
-#include "AIController/AIPatrolWaypoint.h"
-#include "AIController/HoonsAIController.h"
+#include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
-#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {
@@ -17,7 +15,7 @@ void UFSM_Patrol_Component::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
+	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
 }
 
 void UFSM_Patrol_Component::ExecuteBehavior()
