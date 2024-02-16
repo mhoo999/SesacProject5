@@ -3,6 +3,9 @@
 
 #include "Component/FSM_Search_Component.h"
 
+#include "AIController/HoonsAIController.h"
+#include "Character/CharacterBase.h"
+
 UFSM_Search_Component::UFSM_Search_Component()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -12,41 +15,39 @@ UFSM_Search_Component::UFSM_Search_Component()
 void UFSM_Search_Component::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
-void UFSM_Search_Component::ExecutePatrol()
+void UFSM_Search_Component::ExecuteBehavior()
 {
+	// 감지된 구역으로 이동
+	targetLastLoc = target->GetActorLocation();
+	ac->MoveToLocation(targetLastLoc, 50.f, true, true);
+	
+	// newActor의 TeamId가 본인의 TeamId와 다를 경우, Chase 상태로 전환
+	ACharacterBase* chr = Cast<ACharacterBase>(target);
+	if (ai->TeamId != chr->TeamId && chr->TeamId != 255)
+	{
+		ac->SetContext(EEnemystate::chase);
+		ac->GetFSM()->SenseNewActor(target);
+	}
+	else // Enemy가 아닐 경우, Patrol 상태로 전환
+	{
+		ac->SetContext(EEnemystate::patrol);
+		ac->GetFSM()->SenseNewActor(nullptr);
+	}
 }
 
-void UFSM_Search_Component::ExecuteSearch()
+void UFSM_Search_Component::StopExecute()
 {
+	ac->StopMovement();
 }
 
-void UFSM_Search_Component::ExecuteChase()
+void UFSM_Search_Component::SenseNewActor(AActor* NewActor)
 {
-}
+	if (NewActor == nullptr)
+	{
+		ac->SetContext(EEnemystate::patrol);
+	}
 
-void UFSM_Search_Component::ExecuteAttack()
-{
-}
-
-void UFSM_Search_Component::ExecuteRetreatFiring()
-{
-}
-
-void UFSM_Search_Component::ExecuteAdvanceFiring()
-{
-}
-
-void UFSM_Search_Component::ExecuteEvade()
-{
-}
-
-void UFSM_Search_Component::ExecuteCamping()
-{
-}
-
-void UFSM_Search_Component::ExecuteSelfHealing()
-{
+	target = NewActor;
 }

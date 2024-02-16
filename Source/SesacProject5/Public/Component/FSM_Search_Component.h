@@ -3,13 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FSM_Component.h"
 #include "Components/ActorComponent.h"
 #include "Interface/FSMInterface.h"
 #include "FSM_Search_Component.generated.h"
 
 
+class AHoonsAIController;
+class ACharacterBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SESACPROJECT5_API UFSM_Search_Component : public UActorComponent, public IFSMInterface
+class SESACPROJECT5_API UFSM_Search_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()
 
@@ -20,13 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void ExecutePatrol() override;
-	virtual void ExecuteSearch() override;
-	virtual void ExecuteChase() override;
-	virtual void ExecuteAttack() override;
-	virtual void ExecuteRetreatFiring() override;
-	virtual void ExecuteAdvanceFiring() override;
-	virtual void ExecuteEvade() override;
-	virtual void ExecuteCamping() override;
-	virtual void ExecuteSelfHealing() override;
+	virtual void ExecuteBehavior() override;
+	virtual void StopExecute() override;
+	virtual void SenseNewActor(AActor* NewActor) override;
 };
