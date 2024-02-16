@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "CharacterAnimInstance.generated.h"
 
+class UHealthComponent;
 /**
  * 
  */
@@ -21,10 +22,14 @@ public:
 	UFUNCTION()
 	void AnimNotify_FireBullet();
 private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TArray<UAnimMontage*> DeathMontageArray;
 	UPROPERTY()
 	ACharacter* PlayerCharacter;
 	UPROPERTY()
 	UWeaponComponent* WeaponComponent;
+	UPROPERTY()
+	UHealthComponent* HealthComponent;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float PitchAngle;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
@@ -33,4 +38,6 @@ private:
 	float MoveDirection;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	bool bIsCrouched = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsDead = false;
 };

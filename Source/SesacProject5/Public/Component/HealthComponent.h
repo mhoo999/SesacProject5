@@ -52,18 +52,24 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void ApplyDamage(struct FProjectileInfo ProjectileInfo, FName BoneName);
 
 	UFUNCTION(Client, Reliable)
-	void ClientRPC_ApplyDamage(uint8 BodyParts, float Damage);
+	void ClientRPC_ApplyDamage(uint8 BodyParts, float Damage); 
 
 	FHealth& GetHealth(EBodyParts BodyParts);
+
+	// Getter
+	bool IsDead() const;
 	
 private:
+	UPROPERTY(Replicated, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	bool bIsDead = false;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<FHealth> HealthArray;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
