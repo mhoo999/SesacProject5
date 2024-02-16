@@ -5,6 +5,7 @@
 
 #include <Kismet/GameplayStatics.h>
 
+#include "ContentBrowserDataSource.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -37,17 +38,25 @@ void AItemBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AItemBase::Interact(ACharacter* InteractCharacter, FString InteractionName)
+void AItemBase::Interact(ACharacter* InteractCharacter, FText InteractionName)
 {
-	Destroy();
+	// UE_LOG(LogTemp, Warning, TEXT("AItemBase::Interact) %s : %s"), *this->GetActorNameOrLabel(), *InteractionName.ToString());
+	// Destroy();
+
+	FString Interaction = InteractionName.ToString();
+
+	if (Interaction.Equals("Get"))
+	{
+		Destroy();
+	}
 }
 
-const TArray<FString>& AItemBase::GetInteractionNameArray() const
+const TArray<FText>& AItemBase::GetInteractionNameArray() const
 {
-	return InteractionNameArray;
+	return ItemData.InteractionNameArray;
 }
 
 FText AItemBase::GetActorName() const
 {
-	return TempItemName;
+	return FText::FromName(ItemData.Name);
 }
