@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interface/DamageInterface.h"
 #include "ProjectileBase.generated.h"
 
 class UProjectileMovementComponent;
@@ -16,7 +17,7 @@ struct FProjectileInfo
 };
 
 UCLASS()
-class SESACPROJECT5_API AProjectileBase : public AActor
+class SESACPROJECT5_API AProjectileBase : public AActor, public IDamageInterface
 {
 	GENERATED_BODY()
 	
@@ -34,6 +35,9 @@ public:
 	
 	UFUNCTION()
 	void OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	virtual EDamageType GetDamageType() const override;
+	virtual float GetDamage() const override;
+	virtual AActor* GetIndicator() const override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
