@@ -7,6 +7,7 @@
 #include "Component/FSM_Chase_Component.h"
 #include "Component/FSM_Patrol_Component.h"
 #include "Component/FSM_Search_Component.h"
+#include "Component/HealthComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -78,6 +79,7 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 
 	ai = Cast<ACharacterBase>(GetPawn());
 	InitDelegate.Broadcast();
+	ai->GetComponentByClass<UHealthComponent>();
 }
 
 void AEOSAIController::SetContext(EEnemystate next)

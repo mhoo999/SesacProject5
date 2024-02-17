@@ -32,7 +32,7 @@ void AAISpawnManager::MakeScave()
 
 	if (SpawnActor)
 	{
-		SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray00);
+		SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray);
 	}
 }
 

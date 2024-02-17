@@ -24,13 +24,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
-	TArray<AActor*> waypointArray00;
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
-	TArray<AActor*> waypointArray01;
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
-	TArray<AActor*> waypointArray02;
+	TArray<AActor*> waypointArray;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AScavBase> ScavFactory;
