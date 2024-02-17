@@ -3,9 +3,10 @@
 
 #include "Component/FSM_Component.h"
 
+#include "Component/WeaponComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
-#include "Component/WeaponComponent.h"
+#include "Interface/FSMInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 UFSM_Component::UFSM_Component()
@@ -13,14 +14,18 @@ UFSM_Component::UFSM_Component()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UFSM_Component::Init()
+{
+	ai = Cast<ACharacterBase>(ac->GetPawn());
+	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
+}
+
 void UFSM_Component::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	ac = Cast<AEOSAIController>(GetOwner());
-	ai = Cast<ACharacterBase>(ac->GetPawn());
-	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
+	ac->InitDelegate.AddUObject(this, &UFSM_Component::Init);
 }
 
 bool UFSM_Component::bFocusTarget() const
@@ -52,5 +57,12 @@ bool UFSM_Component::bFocusTarget() const
 	// DrawDebugLine(GetWorld(), AIEyeLocation, PlayerPartLocation, FColor::Magenta, false, 0.1f, 0, 10.0f);
 	
 	return bTarget;
+}
+
+void UFSM_Component::bAttacked(AActor* attacker)
+{
+	ac->GetFSM()->StopExecute();
+	ac->SetContext(EEnemystate::chase);
+	ac->GetFSM()->SenseNewActor(attacker);
 }
 
