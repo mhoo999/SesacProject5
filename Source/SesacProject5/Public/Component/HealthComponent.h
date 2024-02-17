@@ -54,6 +54,7 @@ protected:
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -64,14 +65,18 @@ public:
 
 	FHealth& GetHealth(EBodyParts BodyParts);
 
-	// Getter
-	bool IsDead() const;
+	UFUNCTION()
+	void OnRep_IsDead();
 	
 private:
-	UPROPERTY(Replicated, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(ReplicatedUsing = "OnRep_IsDead", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	bool bIsDead = false;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<FHealth> HealthArray;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<FName, EBodyParts> BodyPartsMap;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Die, bool);
+	FDele_Die OnIsDeadChanged;
 };

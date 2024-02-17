@@ -65,11 +65,13 @@ void AGunBase::Tick(float DeltaTime)
 void AGunBase::StartFire()
 {
 	ServerRPC_StartFire();
+	OwningCharacter->PlayAnimMontage(FireMontage);
 }
 
 void AGunBase::StopFire()
 {
 	ServerRPC_StopFire();
+	OwningCharacter->StopAnimMontage(FireMontage);
 }
 
 void AGunBase::FireBullet()
@@ -80,7 +82,7 @@ void AGunBase::FireBullet()
 		OwningCharacter->AddControllerYawInput(FMath::RandRange(-1.0f, 1.0f));
 	}
 	
-	if (BulletClass)
+	if (HasAuthority())
 	{
 		AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(BulletClass, FireArrowComponent->GetComponentLocation(), FireArrowComponent->GetComponentRotation());
 	}
@@ -92,7 +94,7 @@ void AGunBase::ServerRPC_FireBullet_Implementation()
 
 void AGunBase::MultiRPC_StartFire_Implementation()
 {
-	if (OwningCharacter && FireMontage)
+	if (OwningCharacter->IsLocallyControlled() == false && FireMontage)
 	{
 		OwningCharacter->PlayAnimMontage(FireMontage);
 	}
@@ -100,7 +102,7 @@ void AGunBase::MultiRPC_StartFire_Implementation()
 
 void AGunBase::MultiRPC_StopFire_Implementation()
 {
-	if (OwningCharacter && FireMontage)
+	if (OwningCharacter->IsLocallyControlled() == false && FireMontage)
     {
     	OwningCharacter->StopAnimMontage(FireMontage);
     }
@@ -108,12 +110,16 @@ void AGunBase::MultiRPC_StopFire_Implementation()
 
 void AGunBase::ServerRPC_StopFire_Implementation()
 {
+	
+	if (false == bIsTriggered) return;
 	bIsTriggered = false;
 	MultiRPC_StopFire();
 }
 
 void AGunBase::ServerRPC_StartFire_Implementation()
 {
+	if (true == bIsTriggered) return;
+	UE_LOG(LogTemp, Warning, TEXT("AGunBase::ServerRPC_StartFire_Implementation"));
 	bIsTriggered = true;
 	MultiRPC_StartFire();
 }
