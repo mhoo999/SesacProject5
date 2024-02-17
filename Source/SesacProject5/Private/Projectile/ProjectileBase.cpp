@@ -54,8 +54,23 @@ void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* Over
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) Debug 2"));
-		HealthComponent->ApplyDamage(ProjectileInfo, SweepResult.BoneName);
+		HealthComponent->ApplyDamage(this, SweepResult.BoneName);
 	}
 
 	Destroy();
+}
+
+EDamageType AProjectileBase::GetDamageType() const
+{
+	return EDamageType::Bullet;
+}
+
+float AProjectileBase::GetDamage() const
+{
+	return 10.f;
+}
+
+AActor* AProjectileBase::GetIndicator() const
+{
+	return GetOwner();
 }
