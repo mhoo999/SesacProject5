@@ -19,8 +19,13 @@ public:
 	virtual void NativeInitializeAnimation() override; 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	virtual void NativeBeginPlay() override;
+
 	UFUNCTION()
 	void AnimNotify_FireBullet();
+
+	UFUNCTION()
+	void UpdateIsDead(bool bNewIsDead);
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DeathMontageArray;
