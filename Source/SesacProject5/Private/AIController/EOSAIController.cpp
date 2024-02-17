@@ -52,6 +52,15 @@ void AEOSAIController::Tick(float DeltaSeconds)
 	printLog();
 }
 
+void AEOSAIController::ChangeDead(bool bNewIsDead)
+{
+	if (bNewIsDead)
+	{
+		FSMInterface->StopExecute();
+		SetActorTickEnabled(false);
+	}
+}
+
 void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 {
 	ACharacterBase* chr = Cast<ACharacterBase>(actor);
@@ -79,7 +88,7 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 
 	ai = Cast<ACharacterBase>(GetPawn());
 	InitDelegate.Broadcast();
-	ai->GetComponentByClass<UHealthComponent>();
+	ai->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AEOSAIController::ChangeDead);
 }
 
 void AEOSAIController::SetContext(EEnemystate next)

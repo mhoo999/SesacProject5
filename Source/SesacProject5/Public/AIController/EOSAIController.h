@@ -73,6 +73,8 @@ private:
 	UAISenseConfig_Sight* sight;
 	UAISenseConfig_Hearing* hearing;
 
+	void ChangeDead(bool bNewIsDead);
+
 public:
 	UPROPERTY(BlueprintReadWrite)
 	ACharacterBase* ai;
