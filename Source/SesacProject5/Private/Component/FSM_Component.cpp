@@ -6,6 +6,7 @@
 #include "Component/WeaponComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
+#include "Interface/FSMInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 UFSM_Component::UFSM_Component()
@@ -56,5 +57,12 @@ bool UFSM_Component::bFocusTarget() const
 	// DrawDebugLine(GetWorld(), AIEyeLocation, PlayerPartLocation, FColor::Magenta, false, 0.1f, 0, 10.0f);
 	
 	return bTarget;
+}
+
+void UFSM_Component::bAttacked(AActor* attacker)
+{
+	ac->GetFSM()->StopExecute();
+	ac->SetContext(EEnemystate::chase);
+	ac->GetFSM()->SenseNewActor(attacker);
 }
 

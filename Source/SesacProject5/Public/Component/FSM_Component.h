@@ -25,6 +25,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	bool bFocusTarget() const;
+
+	void bAttacked(AActor* attacker);
 	
 public:
 	UPROPERTY(BlueprintReadWrite)
