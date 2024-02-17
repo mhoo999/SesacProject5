@@ -20,6 +20,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
 	UWidgetSwitcher* widgetSwitcher;
 
+	virtual void NativeConstruct() override;
 
 public:
 	// -------------------------------- main menu -------------------------------------
@@ -30,7 +31,9 @@ public:
 	UButton* btn_exit;
 
 	UFUNCTION()
-	void gotoLobby();
+	void MovetoLobby();
+	UFUNCTION()
+	void ExitGame();
 
 public:
 	// -------------------------------- lobby -------------------------------------
@@ -41,11 +44,22 @@ public:
 	UButton* btn_city;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
-	UButton* btn_movetoSesac;
+	UButton* btn_movetoField;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
 	UButton* btn_workBench;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(BindWidget))
 	UButton* btn_back;
+	
+	UFUNCTION()
+	void OpenInventory();
+	UFUNCTION()
+	void OpenCityTab();
+	UFUNCTION()
+	void MovetoField();
+	UFUNCTION()
+	void OpenWorkBenchTab();
+	UFUNCTION()
+	void MovetoTitle();
 };
