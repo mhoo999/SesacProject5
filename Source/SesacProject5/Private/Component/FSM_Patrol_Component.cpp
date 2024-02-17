@@ -14,8 +14,6 @@ UFSM_Patrol_Component::UFSM_Patrol_Component()
 void UFSM_Patrol_Component::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolWaypoint::StaticClass(), waypointArray);
 }
 
 void UFSM_Patrol_Component::ExecuteBehavior()
@@ -25,7 +23,7 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 		// UE_LOG(LogTemp, Warning, TEXT("waypoint list is empty"));
 		return;
 	}
-	
+
 	AActor* NextWaypoint = waypointArray[CurrentWaypointIndex];
 
 	if (NextWaypoint && ac)

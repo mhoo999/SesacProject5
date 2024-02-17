@@ -3,25 +3,36 @@
 
 #include "AIComponent/AISpawnManager.h"
 
-// Sets default values
+#include "AIController/EOSAIController.h"
+#include "Character/ScavBase.h"
+
 AAISpawnManager::AAISpawnManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts or when spawned
 void AAISpawnManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	MakeScave();
 }
 
-// Called every frame
 void AAISpawnManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AAISpawnManager::MakeScave()
+{
+	FVector SpawnLoc = this->GetActorLocation();
+	AScavBase* SpawnActor = GetWorld()->SpawnActor<AScavBase>(ScavFactory, SpawnLoc, FRotator::ZeroRotator);
+
+	if (SpawnActor)
+	{
+		SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray00);
+	}
 }
 

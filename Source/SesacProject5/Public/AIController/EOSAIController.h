@@ -20,6 +20,8 @@ class UFSM_Patrol_Component;
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE(FInitDelegate);
+
 UENUM(BlueprintType)
 enum class EEnemystate : uint8
 {
@@ -41,6 +43,8 @@ class SESACPROJECT5_API AEOSAIController : public AAIController
 public:
 	AEOSAIController();
 
+	FInitDelegate InitDelegate;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -50,9 +54,6 @@ public:
 private:
 	IFSMInterface* FSMInterface;
 
-	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
-	UFSM_Component* FSMComp;
-	
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UFSM_Patrol_Component* FSMPatrolComp;
 
@@ -89,4 +90,6 @@ public:
 	IFSMInterface* GetFSM();
 
 	void printLog();
+
+	void SetWaypoint(TArray<AActor*> waypointArray);
 };

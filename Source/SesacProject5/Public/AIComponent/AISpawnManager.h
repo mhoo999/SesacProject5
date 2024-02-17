@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "AISpawnManager.generated.h"
 
+class AScavBase;
+
 UCLASS()
 class SESACPROJECT5_API AAISpawnManager : public AActor
 {
@@ -22,5 +24,16 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
-	TArray<AActor*> waypointArray;
+	TArray<AActor*> waypointArray00;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
+	TArray<AActor*> waypointArray01;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
+	TArray<AActor*> waypointArray02;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AScavBase> ScavFactory;
+
+	void MakeScave();
 };

@@ -14,6 +14,8 @@ AScavBase::AScavBase()
 	}
 
 	TeamId = FGenericTeamId(1);
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AScavBase::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const
