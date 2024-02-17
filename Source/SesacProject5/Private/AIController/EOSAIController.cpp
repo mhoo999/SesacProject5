@@ -7,13 +7,13 @@
 #include "Component/FSM_Chase_Component.h"
 #include "Component/FSM_Patrol_Component.h"
 #include "Component/FSM_Search_Component.h"
+#include "Component/HealthComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 AEOSAIController::AEOSAIController()
 {
-	FSMComp = CreateDefaultSubobject<UFSM_Component>(TEXT("FSM Component"));
 	FSMPatrolComp = CreateDefaultSubobject<UFSM_Patrol_Component>(TEXT("Patrol Component"));
 	FSMSearchComp = CreateDefaultSubobject<UFSM_Search_Component>(TEXT("Search Component"));
 	FSMChaseComp = CreateDefaultSubobject<UFSM_Chase_Component>(TEXT("Chase Component"));
@@ -42,8 +42,6 @@ void AEOSAIController::BeginPlay()
 
 	FSMInterface = FSMPatrolComp;
 	state = EEnemystate::patrol;
-
-	ai = Cast<ACharacterBase>(GetPawn());
 }
 
 void AEOSAIController::Tick(float DeltaSeconds)
@@ -52,6 +50,15 @@ void AEOSAIController::Tick(float DeltaSeconds)
 
 	FSMInterface->ExecuteBehavior();
 	printLog();
+}
+
+void AEOSAIController::ChangeDead(bool bNewIsDead)
+{
+	if (bNewIsDead)
+	{
+		FSMInterface->StopExecute();
+		SetActorTickEnabled(false);
+	}
 }
 
 void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
@@ -78,6 +85,10 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 	// register the onPerceptionUpdated function to fire whenever the AIPerception get's updated
 	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &AEOSAIController::OnPerception);
+
+	ai = Cast<ACharacterBase>(GetPawn());
+	InitDelegate.Broadcast();
+	ai->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AEOSAIController::ChangeDead);
 }
 
 void AEOSAIController::SetContext(EEnemystate next)
@@ -110,9 +121,16 @@ IFSMInterface* AEOSAIController::GetFSM()
 void AEOSAIController::printLog()
 {
 	FString StateString = UEnum::GetValueAsString(state);
-
 	FString CleanStateString = StateString.Mid(StateString.Find(TEXT("."), ESearchCase::IgnoreCase, ESearchDir::FromEnd) + 1);
-		
-	DrawDebugString(GetWorld(), ai->GetActorLocation(), CleanStateString, nullptr, FColor::Yellow, 0, true, 1);
+
+	if (ai)
+	{
+		DrawDebugString(GetWorld(), ai->GetActorLocation(), CleanStateString, nullptr, FColor::Yellow, 0, true, 1);
+	}
+}
+
+void AEOSAIController::SetWaypoint(TArray<AActor*> waypointArray)
+{
+	FSMPatrolComp->waypointArray = waypointArray;
 }
 
