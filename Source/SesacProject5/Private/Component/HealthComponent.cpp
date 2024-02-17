@@ -61,13 +61,16 @@ void UHealthComponent::ApplyDamage(FProjectileInfo ProjectileInfo, FName BoneNam
 		HealthArray[BodyPartsIndex].Health -= 10.f;
 		if (HealthArray[BodyPartsIndex].Health <= 0.f)
 		{
+			UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Is Dead!"));
 			// Destroy Parts
 			if (BodyPartsMap[BoneName] == EBodyParts::HEAD || BodyPartsMap[BoneName] == EBodyParts::THORAX)
 			{
 				bIsDead = true;
+				OnRep_IsDead();
 			}
 		}
 	}
+
 	ClientRPC_ApplyDamage(BodyPartsIndex, 10.f);
 }
 
@@ -76,14 +79,19 @@ FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)
 	return HealthArray[(uint8)BodyParts];
 }
 
-bool UHealthComponent::IsDead() const
+void UHealthComponent::OnRep_IsDead()
 {
-	return bIsDead;
+	OnIsDeadChanged.Broadcast(bIsDead);
 }
 
 void UHealthComponent::ClientRPC_ApplyDamage_Implementation(uint8 BodyParts, float Damage)
 {
 	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
-	HealthArray[BodyParts].Health -= Damage;
+
+	// Todo : Dedi Server 쓰면 If문 없애고 그냥 안에꺼 실행
+	if (GetOwner()->HasAuthority() == false)
+	{
+		HealthArray[BodyParts].Health -= Damage;
+	}
 	HealthArray[BodyParts].UpdateHealth();
 }

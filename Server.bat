@@ -1,1 +1,1 @@
-"F:\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe" "F:\Git\SesacProject5\SesacProject5.uproject" /Game/OSH/Level/L_EOS -server -log -epicapp="ServerArtifact"
+"F:\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe" "F:\Git\SesacProject5\SesacProject5.uproject" /Game/OSH/Level/L_Laboratory_OSH -server -log -epicapp="ServerArtifact"

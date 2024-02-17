@@ -3,6 +3,7 @@
 
 #include "AnimInstance/CharacterAnimInstance.h"
 
+#include "AIController.h"
 #include "KismetAnimationLibrary.h"
 #include "Component/HealthComponent.h"
 #include "Component/WeaponComponent.h"
@@ -32,21 +33,6 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	
 	if (PlayerCharacter)
 	{
-		if (HealthComponent->IsDead() == true)
-		{
-			if (APlayerController* PlayerController =  PlayerCharacter->GetController<APlayerController>())
-			{
-				if (PlayerController->IsLocalController())
-				{
-					PlayerCharacter->DisableInput(PlayerController);
-				} 
-			}
-			UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) Play Death Montage"));
-			StopAllMontages(0.f);
-			bIsDead = true;
-			Montage_Play(DeathMontageArray[FMath::RandRange(0, DeathMontageArray.Num()-1)]);
-		}
-		
 		MoveSpeed = PlayerCharacter->GetVelocity().Length();
 		MoveDirection = UKismetAnimationLibrary::CalculateDirection(PlayerCharacter->GetVelocity(), PlayerCharacter->GetActorRotation());
 		bIsCrouched = PlayerCharacter->bIsCrouched;
@@ -55,7 +41,28 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
+void UCharacterAnimInstance::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	if (HealthComponent)
+	{
+		HealthComponent->OnIsDeadChanged.AddUObject(this, &UCharacterAnimInstance::UpdateIsDead);
+	}
+}
+
 void UCharacterAnimInstance::AnimNotify_FireBullet()
 {
 	WeaponComponent->FireBullet();
+}
+
+void UCharacterAnimInstance::UpdateIsDead(bool bNewIsDead)
+{
+	if (bNewIsDead)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) Play Death Montage"));
+		StopAllMontages(0.f);
+		bIsDead = true;
+		Montage_Play(DeathMontageArray[FMath::RandRange(0, DeathMontageArray.Num()-1)]);
+	}
 }
