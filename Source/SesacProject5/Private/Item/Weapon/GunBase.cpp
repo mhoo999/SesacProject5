@@ -64,6 +64,8 @@ void AGunBase::Tick(float DeltaTime)
 
 void AGunBase::StartFire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("start Fire"));
+
 	ServerRPC_StartFire();
 	OwningCharacter->PlayAnimMontage(FireMontage);
 }

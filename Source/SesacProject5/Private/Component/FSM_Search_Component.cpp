@@ -19,6 +19,8 @@ void UFSM_Search_Component::BeginPlay()
 
 void UFSM_Search_Component::ExecuteBehavior()
 {
+	if (target == nullptr) return;
+	
 	// 감지된 구역으로 이동
 	targetLastLoc = target->GetActorLocation();
 	ac->MoveToLocation(targetLastLoc, 50.f, true, true);

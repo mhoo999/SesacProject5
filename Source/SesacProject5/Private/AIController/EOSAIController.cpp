@@ -70,6 +70,7 @@ void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	}
 
 	// SetFocus 센싱 성공 ? chr 반환 : nullptr 반환
+	// 0219 (&& ai->TeamId != chr->TeamId && chr->TeamId != 255) 추가하여 적일 경우에만 chr 반환하도록 수정 
 	SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
 	
 	// UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
@@ -83,11 +84,19 @@ void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 void AEOSAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	UE_LOG(LogTemp, Warning, TEXT("AEOSAIController::OnPossess) Pawn : %s"), *InPawn->GetActorNameOrLabel());
 	// register the onPerceptionUpdated function to fire whenever the AIPerception get's updated
 	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &AEOSAIController::OnPerception);
 
 	ai = Cast<ACharacterBase>(GetPawn());
-	InitDelegate.Broadcast();
+	TArray<UActorComponent*> ComponentArray = this->K2_GetComponentsByClass(UFSM_Component::StaticClass());
+	UE_LOG(LogTemp, Warning, TEXT("ComponentArray : %d"), ComponentArray.Num());
+	for (auto Iter : ComponentArray)
+	{
+		Cast<UFSM_Component>(Iter)->Init(InPawn);
+	}
+	// InitDelegate.Broadcast();
 	ai->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AEOSAIController::ChangeDead);
 }
 
