@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UEscapeComponent;
 class UHealthComponent;
 class UWeaponComponent;
 class UInteractComponent;
@@ -48,6 +49,8 @@ private:
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UHealthComponent* HealthComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UEscapeComponent* EscapeComponent;
 
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
