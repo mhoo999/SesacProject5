@@ -3,6 +3,7 @@
 
 #include "Item/Weapon/GunBase.h"
 
+#include "AIController.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
 #include "Projectile/ProjectileBase.h"
@@ -95,10 +96,14 @@ void AGunBase::ServerRPC_FireBullet_Implementation()
 
 void AGunBase::MultiRPC_StartFire_Implementation()
 {
-	if (OwningCharacter->IsLocallyControlled() == false && FireMontage)
-	{
-		OwningCharacter->PlayAnimMontage(FireMontage);
-	}
+	UE_LOG(LogTemp, Warning, TEXT("AGunBase::MultiRPC_StartFire_Implementation"));
+	OwningCharacter->PlayAnimMontage(FireMontage);
+	
+	// if (OwningCharacter->IsLocallyControlled() == false)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("AGunBase::MultiRPC_StartFire_Implementation"));
+	// 	OwningCharacter->PlayAnimMontage(FireMontage);
+	// }
 }
 
 void AGunBase::MultiRPC_StopFire_Implementation()
