@@ -30,7 +30,7 @@ void UHealthComponent::BeginPlay()
 		SetIsReplicated(true);
 	}
 
-	HealthMap[EBodyParts::HEAD] = HeadHealth;
+	// HealthMap[EBodyParts::HEAD] = HeadHealth;
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
