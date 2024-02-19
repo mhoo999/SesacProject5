@@ -19,7 +19,7 @@ class SESACPROJECT5_API UFSM_Component : public UActorComponent
 public:	
 	UFSM_Component();
 
-	void Init();
+	virtual void Init();
 
 protected:
 	virtual void BeginPlay() override;

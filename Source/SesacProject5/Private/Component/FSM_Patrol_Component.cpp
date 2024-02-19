@@ -16,6 +16,34 @@ void UFSM_Patrol_Component::BeginPlay()
 	Super::BeginPlay();
 }
 
+bool UFSM_Patrol_Component::IsAtDestination()
+{
+	if (NextWaypoint == nullptr) return false;
+	
+	float dist = FVector::Dist(NextWaypoint->GetActorLocation(), ai->GetActorLocation());
+	return dist <= 100;
+}
+
+void UFSM_Patrol_Component::PerfomLookAround()
+{
+	ai->GetMesh()->GetAnimInstance()->Montage_Play(lookAroundMontage);
+}
+
+void UFSM_Patrol_Component::SetNextDestination()
+{
+	if (!bHasNextWaypoint)
+	{
+		bHasNextWaypoint = true;
+		NextWaypoint = waypointArray[CurrentWaypointIndex];
+		CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointArray.Num();
+	}
+}
+
+void UFSM_Patrol_Component::MoveToDestination()
+{
+	ac->MoveToActor(NextWaypoint, AcceptanceRadius, true, true, false, 0, true);
+}
+
 void UFSM_Patrol_Component::ExecuteBehavior()
 {
 	if (waypointArray.Num() == 0)
@@ -24,18 +52,33 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 		return;
 	}
 
-	AActor* NextWaypoint = waypointArray[CurrentWaypointIndex];
-
-	if (NextWaypoint && ac)
+	NextWaypoint = waypointArray[CurrentWaypointIndex];
+	
+	if (IsAtDestination())
 	{
-		ac->MoveToActor(NextWaypoint, AcceptanceRadius, true, true, false, 0, true);
-
-		float dist = FVector::Dist(NextWaypoint->GetActorLocation(), ai->GetActorLocation());
-		if (dist <= 100)
+		if (!bHasPerformedLookAround)
 		{
-			CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointArray.Num();
-			UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentWaypointIndex);
+			PerfomLookAround();
+			bHasPerformedLookAround = true;
 		}
+		else
+		{
+			if (LookAroundTimerhandle.IsValid()) return;
+
+			
+			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, FTimerDelegate::CreateLambda([&]
+			{
+				GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
+				bHasPerformedLookAround = false;
+				SetNextDestination();
+				// UE_LOG(LogTemp, Warning, TEXT("NextWayPoint : %p"), NextWaypoint);
+			}), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
+		}
+	}
+	else
+	{
+		bHasNextWaypoint = false;
+		MoveToDestination();
 	}
 }
 
