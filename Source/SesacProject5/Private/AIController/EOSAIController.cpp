@@ -85,13 +85,13 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	UE_LOG(LogTemp, Warning, TEXT("AEOSAIController::OnPossess) Pawn : %s"), *InPawn->GetActorNameOrLabel());
+	// UE_LOG(LogTemp, Warning, TEXT("AEOSAIController::OnPossess) Pawn : %s"), *InPawn->GetActorNameOrLabel());
 	// register the onPerceptionUpdated function to fire whenever the AIPerception get's updated
 	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &AEOSAIController::OnPerception);
 
 	ai = Cast<ACharacterBase>(GetPawn());
 	TArray<UActorComponent*> ComponentArray = this->K2_GetComponentsByClass(UFSM_Component::StaticClass());
-	UE_LOG(LogTemp, Warning, TEXT("ComponentArray : %d"), ComponentArray.Num());
+	// UE_LOG(LogTemp, Warning, TEXT("ComponentArray : %d"), ComponentArray.Num());
 	for (auto Iter : ComponentArray)
 	{
 		Cast<UFSM_Component>(Iter)->Init(InPawn);

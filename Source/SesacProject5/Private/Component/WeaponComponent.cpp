@@ -73,7 +73,6 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::StartFireAction(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("start Fire Action"));
 	WeaponInterface->StartFire();
 }
 
