@@ -30,6 +30,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	{
 		float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
 		float attackDist = WeaponComp->GetWeaponAttackRange();
+
+		// UE_LOG(LogTemp, Warning, TEXT("Dist : %f, attackDist : %f"), dist, attackDist);
 		
 		if (dist <= attackDist)
 		{
@@ -39,6 +41,7 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		}
 		else
 		{
+			WeaponComp->EndFireAction(FInputActionValue());
 			ac->MoveToActor(target, attackDist - 100.0f, true, true, true);
 		}
 
