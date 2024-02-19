@@ -53,6 +53,7 @@ void UCharacterAnimInstance::NativeBeginPlay()
 
 void UCharacterAnimInstance::AnimNotify_FireBullet()
 {
+	UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::AnimNotify_FireBullet"));
 	WeaponComponent->FireBullet();
 }
 
