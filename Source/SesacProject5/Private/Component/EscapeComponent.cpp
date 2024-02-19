@@ -3,6 +3,8 @@
 
 #include "Component/EscapeComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values for this component's properties
 UEscapeComponent::UEscapeComponent()
 {
@@ -20,7 +22,11 @@ void UEscapeComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	if (GetOwner()->HasAuthority())
+	{
+		SetIsReplicated(true);
+	}
+	EscapeTime = MaxEscapeTime;
 }
 
 
@@ -30,13 +36,57 @@ void UEscapeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	if (false == bIsEscaping) return;
+	
+	EscapeTime -= DeltaTime;
+	if (EscapeTime <= 0.f)
+	{
+		EscapeTime = 0.f;
+
+		ClientRPC_Escape();
+	}
+	OnRep_EscapeTime();
+}
+
+void UEscapeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(UEscapeComponent, bIsEscaping, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UEscapeComponent, EscapeTime, COND_OwnerOnly);
 }
 
 void UEscapeComponent::StartEscape()
 {
+	if (true == bIsEscaping) return;
+	bIsEscaping = true;
+	OnRep_IsEscaping();
+	UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::StartEscape"));
 }
 
 void UEscapeComponent::EndEscape()
 {
-	
+if (false == bIsEscaping) return;
+	bIsEscaping = false;
+	OnRep_IsEscaping();
+	UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::EndEscape"));
+	EscapeTime = MaxEscapeTime;
+}
+
+void UEscapeComponent::ClientRPC_Escape_Implementation()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::ClientRPC_Escape_Implementation"));
+	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
+}
+
+void UEscapeComponent::OnRep_IsEscaping()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::OnRep_IsEscaping"));
+	OnIsEscapingChanged.ExecuteIfBound(bIsEscaping);
+}
+
+void UEscapeComponent::OnRep_EscapeTime()
+{
+	OnEscapeTimeChanged.ExecuteIfBound(EscapeTime);
 }

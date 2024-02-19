@@ -41,6 +41,7 @@ void AExitBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* Overlapped
 	// UE_LOG(LogTemp, Warning, TEXT("AExitBase::OnComponentBeginOverlap) OtherActor Name :%s"), *OtherActor->GetActorNameOrLabel());
 	if (UEscapeComponent* EscapeComponent = OtherActor->GetComponentByClass<UEscapeComponent>())
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("AExitBase::OnCollisionComponentBeginOverlap) %s ,%s, %s"), *GetActorNameOrLabel(), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName());
 		EscapeComponent->StartEscape();
 	}
 }
@@ -50,6 +51,7 @@ void AExitBase::OnCollisionComponentEndOverlap(UPrimitiveComponent* OverlappedCo
 {
 	if (UEscapeComponent* EscapeComponent = OtherActor->GetComponentByClass<UEscapeComponent>())
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("AExitBase::OnCollisionComponentEndOverlap) %s ,%s, %s"), *GetActorNameOrLabel(), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName());
 		EscapeComponent->EndEscape();
 	}
 }
