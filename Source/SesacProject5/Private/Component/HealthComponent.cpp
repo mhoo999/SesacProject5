@@ -29,6 +29,8 @@ void UHealthComponent::BeginPlay()
 	{
 		SetIsReplicated(true);
 	}
+
+	HealthMap[EBodyParts::HEAD] = HeadHealth;
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -47,31 +49,49 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	
 }
 
-void UHealthComponent::ApplyDamage(FProjectileInfo ProjectileInfo, FName BoneName)
+void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 {
 	if (bIsDead || BodyPartsMap.Contains(BoneName) == false) return;
-	uint8 BodyPartsIndex = (uint8)BodyPartsMap[BoneName];
-	// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %d"), *BoneName.ToString(), BodyPartsIndex);
-	if (HealthArray[BodyPartsIndex].Health == 0.f)
-	{
-		// Damage to Destroyed Parts
-	}
-	else
-	{
-		HealthArray[BodyPartsIndex].Health -= 10.f;
-		if (HealthArray[BodyPartsIndex].Health <= 0.f)
-		{
-			UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Is Dead!"));
-			// Destroy Parts
-			if (BodyPartsMap[BoneName] == EBodyParts::HEAD || BodyPartsMap[BoneName] == EBodyParts::THORAX)
-			{
-				bIsDead = true;
-				OnRep_IsDead();
-			}
-		}
-	}
+	
+	// Todo : At Inventory or Equipment Component, Find Equipment for Block or Ricochet Chance or Reduce Damage
+	
+	EBodyParts HittedBodyParts = BodyPartsMap[BoneName];
 
-	ClientRPC_ApplyDamage(BodyPartsIndex, 10.f);
+	OnAttacked.Broadcast(Cast<IDamageInterface>(DamageActor)->GetIndicator());
+	
+	// uint8 BodyPartsIndex = (uint8)HittedBodyParts;
+	// // UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %d"), *BoneName.ToString(), BodyPartsIndex);
+	// if (HealthArray[BodyPartsIndex].Health == 0.f)
+	// {
+	// 	// Damage to Destroyed Parts
+	// 	float DamageModifier = BlackOutDamageModifireMap[HittedBodyParts];
+	//
+	// 	for (int i = 1; i < (uint8)EBodyParts::SIZE; ++i)
+	// 	{
+	// 		if (i == BodyPartsIndex) continue;
+	//
+	// 		Body
+	// 	}
+	// }
+	// else
+	// {
+	// 	HealthArray[BodyPartsIndex].Health -= 10.f;
+	// 	if (HealthArray[BodyPartsIndex].Health <= 0.f)
+	// 	{
+	// 		UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Is Dead!"));
+	// 		// Destroy Parts
+	// 		if (BodyPartsMap[BoneName] == EBodyParts::HEAD || BodyPartsMap[BoneName] == EBodyParts::THORAX)
+	// 		{
+	// 			bIsDead = true;
+	// 			OnRep_IsDead();
+	// 		}
+	// 	}
+	// 	ClientRPC_ApplyDamage(BodyPartsIndex, 10.f);
+	// }
+}
+
+void UHealthComponent::ReduceHealth(uint8 BodyPartsIndex, float Damage)
+{
 }
 
 FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)

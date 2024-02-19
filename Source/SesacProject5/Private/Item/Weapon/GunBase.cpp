@@ -85,6 +85,7 @@ void AGunBase::FireBullet()
 	if (HasAuthority())
 	{
 		AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(BulletClass, FireArrowComponent->GetComponentLocation(), FireArrowComponent->GetComponentRotation());
+		Bullet->SetOwner(GetOwner());
 	}
 }
 

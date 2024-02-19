@@ -58,7 +58,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ApplyDamage(struct FProjectileInfo ProjectileInfo, FName BoneName);
+	void ApplyDamage(AActor* DamageActor, FName BoneName);
+
+	void ReduceHealth(uint8 BodyPartsIndex, float Damage);
 
 	UFUNCTION(Client, Reliable)
 	void ClientRPC_ApplyDamage(uint8 BodyParts, float Damage); 
@@ -75,8 +77,18 @@ private:
 	TArray<FHealth> HealthArray;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<FName, EBodyParts> BodyPartsMap;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TMap<EBodyParts, float> BlackOutDamageModifireMap;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TMap<EBodyParts, FHealth> HealthMap;
+
+	UPROPERTY()
+	FHealth HeadHealth;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Die, bool);
 	FDele_Die OnIsDeadChanged;
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Attacked, AActor*);
+	FDele_Attacked OnAttacked;
 };
