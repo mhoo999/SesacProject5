@@ -1,1 +1,1 @@
-"F:\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe" "F:\Git\SesacProject5\SesacProject5.uproject" -game -log -windowed -epicapp="ClientArtifact"
+"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe" "C:\Users\mhoo9\Documents\Unreal Projects\SesacProject5\SesacProject5.uproject" /Game/YMH/Level/Title_YMH -game -log -windowed -epicapp="ClientArtifact"
