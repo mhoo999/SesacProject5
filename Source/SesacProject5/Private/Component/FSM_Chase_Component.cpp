@@ -3,6 +3,8 @@
 
 #include "Component/FSM_Chase_Component.h"
 
+#include <ThirdParty/ShaderConductor/ShaderConductor/External/SPIRV-Headers/include/spirv/unified1/spirv.h>
+
 #include "InputActionValue.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
@@ -35,12 +37,22 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		
 		if (dist <= attackDist)
 		{
-			ac->StopMovement();
-			WeaponComp->StartFireAction(FInputActionValue());
-			ac->GetFSM()->SenseNewActor(target);
+			ac->SetFocalPoint(target->GetActorLocation() + FVector(500, 0, 0));
+			if (bIsAttacking == false)
+			{
+				bIsAttacking = true;
+				ac->StopMovement();
+				WeaponComp->StartFireAction(FInputActionValue());
+				// ac->GetFSM()->SenseNewActor(target);
+			}
+			else
+			{
+				ai->FaceRotation(ai->GetControlRotation() + FRotator(10, 0, 0));
+			}
 		}
 		else
 		{
+			bIsAttacking = false;
 			WeaponComp->EndFireAction(FInputActionValue());
 			ac->MoveToActor(target, attackDist - 100.0f, true, true, true);
 		}
