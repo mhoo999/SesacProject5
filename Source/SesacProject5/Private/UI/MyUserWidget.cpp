@@ -47,6 +47,7 @@ void UMyUserWidget::OpenCityTab()
 void UMyUserWidget::MovetoField()
 {
 	widgetSwitcher->SetActiveWidgetIndex(2);
+	
 }
 
 void UMyUserWidget::OpenWorkBenchTab()
