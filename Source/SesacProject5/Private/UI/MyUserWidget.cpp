@@ -47,7 +47,12 @@ void UMyUserWidget::OpenCityTab()
 void UMyUserWidget::MovetoField()
 {
 	widgetSwitcher->SetActiveWidgetIndex(2);
-	
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
+	{
+		GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH", true);
+	}), 5.0f, false, 5.f);
 }
 
 void UMyUserWidget::OpenWorkBenchTab()
