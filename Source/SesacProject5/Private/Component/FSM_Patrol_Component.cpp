@@ -85,6 +85,7 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 void UFSM_Patrol_Component::StopExecute()
 {
 	ac->StopMovement();
+	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
 }
 
 void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
