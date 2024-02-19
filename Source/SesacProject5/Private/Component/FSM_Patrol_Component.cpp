@@ -71,7 +71,6 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 				GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
 				bHasPerformedLookAround = false;
 				SetNextDestination();
-				// UE_LOG(LogTemp, Warning, TEXT("NextWayPoint : %p"), NextWaypoint);
 			}), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
 		}
 	}
@@ -92,6 +91,7 @@ void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 {
 	if (NewActor == nullptr)
 	{
+		target = nullptr;
 		return;
 	}
 	
