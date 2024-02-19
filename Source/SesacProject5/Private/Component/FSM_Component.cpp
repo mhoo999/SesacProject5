@@ -17,7 +17,7 @@ UFSM_Component::UFSM_Component()
 void UFSM_Component::Init(APawn* pawn)
 {
 	ai = Cast<ACharacterBase>(pawn);
-	UE_LOG(LogTemp,	Warning, TEXT("UFSM_Component::Init) AI : %s"), *ai->GetActorNameOrLabel());
+	// UE_LOG(LogTemp,	Warning, TEXT("UFSM_Component::Init) AI : %s"), *ai->GetActorNameOrLabel());
 	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
 }
 
@@ -25,7 +25,6 @@ void UFSM_Component::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning,TEXT("begin"));
 	ac = Cast<AEOSAIController>(GetOwner());
 }
 
