@@ -4,7 +4,6 @@
 #include "Component/HealthComponent.h"
 
 #include "GameFramework/Character.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "Projectile/ProjectileBase.h"
 
@@ -30,7 +29,7 @@ void UHealthComponent::BeginPlay()
 		SetIsReplicated(true);
 	}
 
-	// HealthMap[EBodyParts::HEAD] = HeadHealth;
+	OwningCharacter = GetOwner<ACharacter>();
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -52,14 +51,24 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 {
 	if (bIsDead || BodyPartsMap.Contains(BoneName) == false) return;
+
+	IDamageInterface* DamageInterface =  Cast<IDamageInterface>(DamageActor);
+	if (DamageInterface == nullptr) return;
+	
+	OnAttacked.Broadcast(DamageInterface->GetIndicator());
 	
 	// Todo : At Inventory or Equipment Component, Find Equipment for Block or Ricochet Chance or Reduce Damage
-	
+
 	EBodyParts HittedBodyParts = BodyPartsMap[BoneName];
 
-	OnAttacked.Broadcast(Cast<IDamageInterface>(DamageActor)->GetIndicator());
+	UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::ApplyDamage) %s"), *UEnum::GetValueAsString(HittedBodyParts));
 	
-	// uint8 BodyPartsIndex = (uint8)HittedBodyParts;
+	ClientRPC_ApplyDamage(HittedBodyParts, DamageInterface->GetDamage());
+	if (OwningCharacter->IsLocallyControlled() == false)
+	{
+		ClientRPC_ApplyDamage_Implementation(HittedBodyParts, DamageInterface->GetDamage());
+	}
+	
 	// // UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %d"), *BoneName.ToString(), BodyPartsIndex);
 	// if (HealthArray[BodyPartsIndex].Health == 0.f)
 	// {
@@ -104,14 +113,38 @@ void UHealthComponent::OnRep_IsDead()
 	OnIsDeadChanged.Broadcast(bIsDead);
 }
 
-void UHealthComponent::ClientRPC_ApplyDamage_Implementation(uint8 BodyParts, float Damage)
+void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, float Damage)
 {
 	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
 
-	// Todo : Dedi Server 쓰면 If문 없애고 그냥 안에꺼 실행
-	if (GetOwner()->HasAuthority() == false)
+	uint8 BodyPartsIndex = (uint8)BodyParts;
+	
+	
+	if (HealthArray[BodyPartsIndex].Health <= 0.f)
 	{
-		HealthArray[BodyParts].Health -= Damage;
+		if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
+		{
+			if (OwningCharacter->HasAuthority())
+			{
+				bIsDead = true;
+				OnRep_IsDead();
+			}
+		}
 	}
-	HealthArray[BodyParts].UpdateHealth();
+	else
+	{
+		HealthArray[BodyPartsIndex].Health -= Damage;
+
+		if (HealthArray[BodyPartsIndex].Health <= 0.f)
+		{
+			HealthArray[BodyPartsIndex].Health = 0.f;
+			if ((BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX) && OwningCharacter->HasAuthority())
+			{
+				bIsDead = true;
+				OnRep_IsDead();
+			}
+		}
+	}
+	
+	HealthArray[BodyPartsIndex].UpdateHealth();
 }

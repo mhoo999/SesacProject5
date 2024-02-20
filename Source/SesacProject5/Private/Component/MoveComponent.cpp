@@ -128,5 +128,8 @@ void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSp
 
 void UMoveComponent::MultiRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
 {
-	OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+	if (OwningCharacter)
+	{
+		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+	}
 }

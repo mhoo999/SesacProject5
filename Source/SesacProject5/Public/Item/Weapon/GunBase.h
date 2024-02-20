@@ -28,9 +28,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void StartFire() override;
 	virtual void StopFire() override;
-	virtual void FireBullet() override;
+	virtual void FireBullet(FVector TargetLocation) override;
+
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_FireBullet();
+	void ServerRPC_FireBullet(FVector TargetLocation, FVector FromLocation);
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_StartFire();

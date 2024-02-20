@@ -23,8 +23,13 @@ ACharacterBase::ACharacterBase()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 
+
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	ArmMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ArmMeshComponent"));
+	ArmMeshComponent->SetupAttachment(CameraComponent);
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>(TEXT("MoveComponent"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
@@ -54,6 +59,13 @@ void ACharacterBase::BeginPlay()
 			}
 		}
 	}
+
+	if (GetController<APlayerController>() && IsLocallyControlled())
+	{
+		// Todo : First Person
+		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("eyes"));
+		//SpringArmComponent->SetRelativeLocation(FVector(0, 0, 20));
+	}
 }
 
 // Called every frame
@@ -75,4 +87,9 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		InteractComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 		WeaponComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 	}
+}
+
+FVector ACharacterBase::GetCameraLocation() const
+{
+	return CameraComponent->GetComponentLocation();
 }
