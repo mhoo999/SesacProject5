@@ -3,12 +3,10 @@
 
 #include "AnimInstance/CharacterAnimInstance.h"
 
-#include "AIController.h"
 #include "KismetAnimationLibrary.h"
 #include "Component/HealthComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/Character.h"
-#include "Net/UnrealNetwork.h"
 
 void UCharacterAnimInstance::NativeInitializeAnimation()
 {
@@ -53,15 +51,16 @@ void UCharacterAnimInstance::NativeBeginPlay()
 
 void UCharacterAnimInstance::AnimNotify_FireBullet()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::AnimNotify_FireBullet"));
+	// UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::AnimNotify_FireBullet"));
 	WeaponComponent->FireBullet();
 }
 
 void UCharacterAnimInstance::UpdateIsDead(bool bNewIsDead)
 {
+	UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) Play Death Montage"));
 	if (bNewIsDead)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) Play Death Montage"));
+		// UE_LOG(LogTemp, Warning, TEXT("UCharacterAnimInstance::NativeUpdateAnimation) Play Death Montage"));
 		StopAllMontages(0.f);
 		bIsDead = true;
 		Montage_Play(DeathMontageArray[FMath::RandRange(0, DeathMontageArray.Num()-1)]);

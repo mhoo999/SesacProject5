@@ -26,5 +26,5 @@ public:
 	virtual void StartFire() = 0;
 	virtual void StopFire() = 0;
 
-	virtual void FireBullet() {};
+	virtual void FireBullet(FVector TargetLocation) = 0;
 };

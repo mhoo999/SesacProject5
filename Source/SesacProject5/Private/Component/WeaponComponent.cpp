@@ -6,8 +6,8 @@
 #include "EnhancedInputComponent.h"
 #include "Interface/WeaponInterface.h"
 
+#include "Character/CharacterBase.h"
 // Todo : Delete this after test
-#include "GameFramework/Character.h"
 #include "Item/Weapon/GunBase.h"
 #include "Net/UnrealNetwork.h"
 
@@ -40,10 +40,11 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	OwningCharacter = GetOwner<ACharacterBase>();
 
 	// Todo : Delete
 	// Debug Test Spawn Gun;
-	if (GetOwner()->HasAuthority())
+	if (OwningCharacter->HasAuthority())
 	{
 		SetIsReplicated(true);
 		if (GunClass)
@@ -60,7 +61,11 @@ void UWeaponComponent::BeginPlay()
 
 void UWeaponComponent::FireBullet() 
 {
-	WeaponInterface->FireBullet();
+	if (OwningCharacter->IsLocallyControlled())
+	{
+		WeaponInterface->FireBullet(GetFocusLocation());
+		AddRecoil();
+	}
 }
 
 // Called every frame
@@ -89,4 +94,13 @@ float UWeaponComponent::GetWeaponAttackRange() const
 void UWeaponComponent::OnRep_Weapon()
 {
 	WeaponInterface = Cast<IWeaponInterface>(Weapon);
+}
+
+FVector UWeaponComponent::GetFocusLocation() const
+{
+	return FVector();
+}
+
+void UWeaponComponent::AddRecoil()
+{
 }

@@ -65,8 +65,14 @@ void AGunBase::Tick(float DeltaTime)
 
 void AGunBase::StartFire()
 {
-	ServerRPC_StartFire();
-	OwningCharacter->PlayAnimMontage(FireMontage);
+	if (HasAuthority())
+	{
+		ServerRPC_StartFire_Implementation();
+	}
+	else
+	{
+		ServerRPC_StartFire();	
+	}
 }
 
 void AGunBase::StopFire()
@@ -75,35 +81,34 @@ void AGunBase::StopFire()
 	OwningCharacter->StopAnimMontage(FireMontage);
 }
 
-void AGunBase::FireBullet()
+void AGunBase::FireBullet(FVector TargetLocation)
 {
-	if (OwningCharacter->IsLocallyControlled())
-	{
-		OwningCharacter->AddControllerPitchInput(FMath::RandRange(-0.f, -1.f));
-		OwningCharacter->AddControllerYawInput(FMath::RandRange(-1.0f, 1.0f));
-	}
-	
 	if (HasAuthority())
 	{
-		AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(BulletClass, FireArrowComponent->GetComponentLocation(), FireArrowComponent->GetComponentRotation());
+		ServerRPC_FireBullet_Implementation(TargetLocation, FireArrowComponent->GetComponentLocation());
+	}
+	else
+	{
+		ServerRPC_FireBullet(TargetLocation, FireArrowComponent->GetComponentLocation());
+	}
+}
+
+void AGunBase::ServerRPC_FireBullet_Implementation(FVector TargetLocation, FVector FromLocation)
+{
+	FVector FireDirection = TargetLocation - FireArrowComponent->GetComponentLocation();
+
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	if (AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(BulletClass, FromLocation, FRotationMatrix::MakeFromX(FireDirection).Rotator(), Params))
+	{
 		Bullet->SetOwner(GetOwner());
 	}
 }
 
-void AGunBase::ServerRPC_FireBullet_Implementation()
-{
-}
-
 void AGunBase::MultiRPC_StartFire_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AGunBase::MultiRPC_StartFire_Implementation"));
+	// UE_LOG(LogTemp, Warning, TEXT("AGunBase::MultiRPC_StartFire_Implementation"));
 	OwningCharacter->PlayAnimMontage(FireMontage);
-	
-	// if (OwningCharacter->IsLocallyControlled() == false)
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("AGunBase::MultiRPC_StartFire_Implementation"));
-	// 	OwningCharacter->PlayAnimMontage(FireMontage);
-	// }
 }
 
 void AGunBase::MultiRPC_StopFire_Implementation()
@@ -125,7 +130,7 @@ void AGunBase::ServerRPC_StopFire_Implementation()
 void AGunBase::ServerRPC_StartFire_Implementation()
 {
 	if (true == bIsTriggered) return;
-	UE_LOG(LogTemp, Warning, TEXT("AGunBase::ServerRPC_StartFire_Implementation"));
+	// UE_LOG(LogTemp, Warning, TEXT("AGunBase::ServerRPC_StartFire_Implementation"));
 	bIsTriggered = true;
 	MultiRPC_StartFire();
 }
