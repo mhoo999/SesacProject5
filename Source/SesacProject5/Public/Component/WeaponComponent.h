@@ -10,6 +10,7 @@
 struct FInputActionValue;
 class UInputAction;
 class IWeaponInterface;
+class ACharacterBase;
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UWeaponComponent : public UActorComponent
@@ -41,6 +42,12 @@ public:
 	UFUNCTION()
 	void OnRep_Weapon();
 
+	virtual FVector GetFocusLocation() const;
+	virtual void AddRecoil();
+
+protected:
+	UPROPERTY()
+	ACharacterBase* OwningCharacter;
 private:
 	UPROPERTY(ReplicatedUsing = "OnRep_Weapon", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* Weapon;

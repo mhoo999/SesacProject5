@@ -63,7 +63,7 @@ public:
 	void ReduceHealth(uint8 BodyPartsIndex, float Damage);
 
 	UFUNCTION(Client, Reliable)
-	void ClientRPC_ApplyDamage(uint8 BodyParts, float Damage); 
+	void ClientRPC_ApplyDamage(EBodyParts BodyParts, float Damage); 
 
 	FHealth& GetHealth(EBodyParts BodyParts);
 
@@ -71,6 +71,8 @@ public:
 	void OnRep_IsDead();
 	
 private:
+	UPROPERTY()
+	ACharacter* OwningCharacter;
 	UPROPERTY(ReplicatedUsing = "OnRep_IsDead", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	bool bIsDead = false;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
@@ -79,12 +81,6 @@ private:
 	TMap<FName, EBodyParts> BodyPartsMap;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<EBodyParts, float> BlackOutDamageModifireMap;
-
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	TMap<EBodyParts, FHealth> HealthMap;
-
-	UPROPERTY()
-	FHealth HeadHealth;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Die, bool);

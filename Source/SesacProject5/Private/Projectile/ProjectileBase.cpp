@@ -33,7 +33,7 @@ void AProjectileBase::BeginPlay()
 
 	if (HasAuthority())
 	{
-		SetLifeSpan(1.f);
+		// SetLifeSpan(1.f);
 		SetReplicates(true);
 
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnCollisionComponentBeginOverlap);
@@ -49,11 +49,9 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap"));
-	// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) Debug 1"));
+	// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap"));
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) Debug 2"));
 		HealthComponent->ApplyDamage(this, SweepResult.BoneName);
 	}
 
