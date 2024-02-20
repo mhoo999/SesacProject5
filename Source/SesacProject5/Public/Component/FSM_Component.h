@@ -8,7 +8,7 @@
 
 
 class AEOSAIController;
-class UWeaponComponent;
+class UAIWeaponComponent;
 class ACharacterBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -24,7 +24,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	bool bFocusTarget() const;
+	// bool bFocusTarget() const;
 
 	void bAttacked(AActor* attacker);
 	
@@ -36,7 +36,7 @@ public:
 	AEOSAIController* ac;
 
 	UPROPERTY()
-	UWeaponComponent* WeaponComp;
+	UAIWeaponComponent* WeaponComp;
 	
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	TArray<AActor*> waypointArray;
