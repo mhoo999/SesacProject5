@@ -37,7 +37,7 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		
 		if (dist <= attackDist)
 		{
-			ac->SetFocalPoint(target->GetActorLocation() + FVector(500, 0, 0));
+			// ac->SetFocalPoint(target->GetActorLocation() + FVector(500, 0, 0));
 			if (bIsAttacking == false)
 			{
 				bIsAttacking = true;

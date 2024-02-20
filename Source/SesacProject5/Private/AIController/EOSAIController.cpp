@@ -73,6 +73,7 @@ void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 
 	// SetFocus 센싱 성공 ? chr 반환 : nullptr 반환
 	// 0219 (&& ai->TeamId != chr->TeamId && chr->TeamId != 255) 추가하여 적일 경우에만 chr 반환하도록 수정 
+	SetFocus(stimulus.WasSuccessfullySensed() && ai->TeamId != chr->TeamId && chr->TeamId != 255 ? chr  : nullptr);
 	// SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
 	
 	// UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));

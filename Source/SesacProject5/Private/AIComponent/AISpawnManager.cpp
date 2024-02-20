@@ -27,12 +27,15 @@ void AAISpawnManager::Tick(float DeltaTime)
 
 void AAISpawnManager::MakeScave()
 {
-	FVector SpawnLoc = this->GetActorLocation();
-	AScavBase* SpawnActor = GetWorld()->SpawnActor<AScavBase>(ScavFactory, SpawnLoc, FRotator::ZeroRotator);
-
-	if (SpawnActor)
+	if (HasAuthority())
 	{
-		SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray);
+		FVector SpawnLoc = this->GetActorLocation();
+		AScavBase* SpawnActor = GetWorld()->SpawnActor<AScavBase>(ScavFactory, SpawnLoc, FRotator::ZeroRotator);
+
+		if (SpawnActor)
+		{
+			SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray);
+		}
 	}
 }
 
