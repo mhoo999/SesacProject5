@@ -91,7 +91,6 @@ void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 {
 	if (NewActor == nullptr)
 	{
-		target = nullptr;
 		return;
 	}
 	

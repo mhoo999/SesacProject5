@@ -2,15 +2,11 @@
 
 
 #include "Component/FSM_Chase_Component.h"
-
-#include <ThirdParty/ShaderConductor/ShaderConductor/External/SPIRV-Headers/include/spirv/unified1/spirv.h>
-
 #include "InputActionValue.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "Component/AIWeaponComponent.h"
 #include "Component/WeaponComponent.h"
-#include "Engine/SkeletalMeshSocket.h"
 
 UFSM_Chase_Component::UFSM_Chase_Component()
 {
@@ -51,14 +47,18 @@ void UFSM_Chase_Component::ExecuteBehavior()
 				WeaponComp->StartFireAction(FInputActionValue());
 				// ac->GetFSM()->SenseNewActor(target);
 			}
-			else
-			{
-				ai->FaceRotation(ai->GetControlRotation() + FRotator(10, 0, 0));
-			}
+			// else
+			// {
+			// 	ai->FaceRotation(ai->GetControlRotation() + FRotator(10, 0, 0));
+			// }
 		}
 		else
 		{
-			bIsAttacking = false;
+			if (bIsAttacking)
+			{
+				bIsAttacking = false;
+			}
+			
 			WeaponComp->EndFireAction(FInputActionValue());
 			ac->MoveToActor(target, attackDist - 100.0f, true, true, true);
 		}
@@ -70,8 +70,13 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
 
+		if (bIsAttacking)
+		{
+			bIsAttacking = false;
+		}
+		
 		WeaponComp->EndFireAction(FInputActionValue());
-		SenseNewActor(nullptr);
+		// SenseNewActor(nullptr);
 		ac->MoveToLocation(targetLastLoc, 0.f, true, true);
 	}
 }
@@ -102,21 +107,11 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetLocation)
 {
 	if (targetActor == nullptr) return false;
-	
-	// FVector targetLoc;
 
 	ACharacter* TargetCharacter = Cast<ACharacter>(targetActor);
-
 	if (TargetCharacter == nullptr) return false;
-
 	
-	// USkeletalMeshComponent* SkeletalMeshComponent = targetActor->FindComponentByClass<USkeletalMeshComponent>();
-	// const TArray<USkeletalMeshSocket*>& Sockets = SkeletalMeshComponent->SkeletalMesh->GetMeshOnlySocketList();
-	// const TArray<USkeletalMeshSocket*>& Sockets = SkeletalMeshComponent->GetSkeletalMeshAsset()->GetMeshOnlySocketList();
 	TArray<FName> Sockets = TargetCharacter->GetMesh()->GetAllSocketNames();
-
-	UE_LOG(LogTemp, Warning, TEXT("%d"), Sockets.Num());
-	// UE_LOG(LogTemp, Warning, TEXT("%s"), fstr Sockets);
 
 	TargetPart currentTarget = {"NONE", 4, true};
 	
@@ -132,7 +127,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 		{
 			if (SocketName.Equals("spine_03") && checkResult.GetActor() == targetActor)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("in Socket Iter == spine_03"));
+				// UE_LOG(LogTemp, Warning, TEXT("in Socket Iter == spine_03"));
 				TargetPart THORAX {"THORAX", 1, true, SocketLocation};
 				if (THORAX.priority < currentTarget.priority)
 				{
