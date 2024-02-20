@@ -36,4 +36,6 @@ public:
 	float missingTime = 10.0f;
 
 	FTimerHandle handle;
+
+	bool bIsAttacking;
 };
