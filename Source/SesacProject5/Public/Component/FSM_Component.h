@@ -24,7 +24,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	bool bFocusTarget() const;
+	// bool bFocusTarget() const;
 
 	void bAttacked(AActor* attacker);
 	

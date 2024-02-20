@@ -52,6 +52,6 @@ public:
 
 	bool bIsAttacking;
 	
-	FVector FocusTargetPart(AActor*);
+	bool FocusTargetPart(AActor* targetActor, FVector& TargetLocation);
 
 };
