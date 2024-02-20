@@ -8,6 +8,7 @@
 #include "InputActionValue.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
+#include "Component/AIWeaponComponent.h"
 #include "Component/WeaponComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 
@@ -41,10 +42,9 @@ void UFSM_Chase_Component::ExecuteBehavior()
 			// ac->SetFocalPoint(target->GetActorLocation() + FVector(500, 0, 0));
 			if (bIsAttacking == false)
 			{
-				FocusTargetPart(target);
-				
 				bIsAttacking = true;
 				ac->StopMovement();
+				WeaponComp->SetFocusLocation(FocusTargetPart(target));
 				WeaponComp->StartFireAction(FInputActionValue());
 				// ac->GetFSM()->SenseNewActor(target);
 			}

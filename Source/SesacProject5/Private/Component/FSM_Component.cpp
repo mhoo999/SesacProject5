@@ -3,7 +3,7 @@
 
 #include "Component/FSM_Component.h"
 
-#include "Component/WeaponComponent.h"
+#include "Component/AIWeaponComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "Interface/FSMInterface.h"
@@ -18,7 +18,7 @@ void UFSM_Component::Init(APawn* pawn)
 {
 	ai = Cast<ACharacterBase>(pawn);
 	// UE_LOG(LogTemp,	Warning, TEXT("UFSM_Component::Init) AI : %s"), *ai->GetActorNameOrLabel());
-	WeaponComp = ai->GetComponentByClass<UWeaponComponent>();
+	WeaponComp = ai->GetComponentByClass<UAIWeaponComponent>();
 }
 
 void UFSM_Component::BeginPlay()

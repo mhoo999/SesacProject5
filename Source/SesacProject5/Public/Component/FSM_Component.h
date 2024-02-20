@@ -8,7 +8,7 @@
 
 
 class AEOSAIController;
-class UWeaponComponent;
+class UAIWeaponComponent;
 class ACharacterBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -36,7 +36,7 @@ public:
 	AEOSAIController* ac;
 
 	UPROPERTY()
-	UWeaponComponent* WeaponComp;
+	UAIWeaponComponent* WeaponComp;
 	
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	TArray<AActor*> waypointArray;
