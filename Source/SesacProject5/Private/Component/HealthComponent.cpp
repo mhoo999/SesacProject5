@@ -61,7 +61,7 @@ void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 
 	EBodyParts HittedBodyParts = BodyPartsMap[BoneName];
 
-	UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::ApplyDamage) %s"), *UEnum::GetValueAsString(HittedBodyParts));
+	// UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::ApplyDamage) %s"), *UEnum::GetValueAsString(HittedBodyParts));
 	
 	ClientRPC_ApplyDamage(HittedBodyParts, DamageInterface->GetDamage());
 	if (OwningCharacter->IsLocallyControlled() == false)
@@ -115,7 +115,7 @@ void UHealthComponent::OnRep_IsDead()
 
 void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, float Damage)
 {
-	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
+	// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
 
 	uint8 BodyPartsIndex = (uint8)BodyParts;
 	
