@@ -13,6 +13,19 @@ class UWeaponComponent;
 class ACharacterBase;
 class AHoonsAIController;
 
+struct TargetPart
+{
+	std::string name;
+	int priority;
+	bool isVisible;
+	FVector partLoc;
+
+	bool operator<(const TargetPart& other) const
+	{
+		return priority > other.priority;
+	}
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Chase_Component : public UFSM_Component, public IFSMInterface
 {
@@ -38,4 +51,7 @@ public:
 	FTimerHandle handle;
 
 	bool bIsAttacking;
+	
+	FVector FocusTargetPart(AActor*);
+
 };
