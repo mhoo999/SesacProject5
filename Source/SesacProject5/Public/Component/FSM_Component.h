@@ -28,7 +28,6 @@ protected:
 
 	void bAttacked(AActor* attacker);
 	
-public:
 	UPROPERTY(BlueprintReadWrite)
 	ACharacterBase* ai;
 
@@ -38,13 +37,15 @@ public:
 	UPROPERTY()
 	UAIWeaponComponent* WeaponComp;
 	
-	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
-	TArray<AActor*> waypointArray;
-
 	AActor* target;
 
 	FVector targetLastLoc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float sightRadius = 20.0f;
+	
+public:
+	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	TArray<AActor*> waypointArray;
+	
 };
