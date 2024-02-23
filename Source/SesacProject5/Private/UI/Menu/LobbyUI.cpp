@@ -28,12 +28,6 @@ void ULobbyUI::MovetoField()
 {
 	pc->ShowGameLoading();
 	pc->HiddenLobby();
-
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
-	{
-		GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
-	}), 5.0f, false, 5.f);
 }
 
 void ULobbyUI::OpenWorkBenchTab()
