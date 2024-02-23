@@ -45,12 +45,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 				ac->StopMovement();
 				WeaponComp->SetFocusLocation(TargetLocation);
 				WeaponComp->StartFireAction(FInputActionValue());
-				// ac->GetFSM()->SenseNewActor(target);
+				ai->FaceRotation(ai->GetControlRotation() + FRotator(0, 0, 0));
 			}
-			// else
-			// {
-			// 	ai->FaceRotation(ai->GetControlRotation() + FRotator(10, 0, 0));
-			// }
 		}
 		else
 		{
@@ -73,10 +69,10 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		if (bIsAttacking)
 		{
 			bIsAttacking = false;
+			SenseNewActor(nullptr);
 		}
 		
 		WeaponComp->EndFireAction(FInputActionValue());
-		// SenseNewActor(nullptr);
 		ac->MoveToLocation(targetLastLoc, 0.f, true, true);
 	}
 }
