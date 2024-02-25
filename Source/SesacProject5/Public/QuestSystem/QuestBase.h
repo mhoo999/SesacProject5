@@ -98,15 +98,32 @@ class SESACPROJECT5_API AQuestBase : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AQuestBase();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+private:
+	// 퀘스트 데이터가 상주할 데이터 테이블의 행 이름을 참조
+	FName questID;
+	
+	// 퀘스트 세부 정보
+	FQuestDetails questDetails;
+	
+	// 퀘스트 단계
+	int currentStage;
+	
+	// 현재 단계에 어떤 데이터가 있는지 추적
+	FStageDetails currentStageDetails;
+	
+	// Objective, ObjectiveID를 추적
+	TMap<FString, int> currentObjectiveProgress;
+	
+	// 완료 여부
+	bool isCompleted;
+	
 };
