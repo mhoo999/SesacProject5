@@ -103,6 +103,7 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 	}
 	// InitDelegate.Broadcast();
 	ai->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AEOSAIController::ChangeDead);
+	ai->GetComponentByClass<UHealthComponent>()->OnAttacked.AddUObject(this, &AEOSAIController::beAttacked);
 }
 
 void AEOSAIController::SetContext(EEnemystate next)
@@ -146,5 +147,11 @@ void AEOSAIController::printLog()
 void AEOSAIController::SetWaypoint(TArray<AActor*> waypointArray)
 {
 	FSMPatrolComp->waypointArray = waypointArray;
+}
+
+void AEOSAIController::beAttacked(AActor* attacker)
+{
+	SetContext(EEnemystate::chase);
+	FSMInterface->SenseNewActor(attacker);
 }
 
