@@ -58,8 +58,9 @@ void AEOSAIController::ChangeDead(bool bNewIsDead)
 {
 	if (bNewIsDead)
 	{
-		FSMInterface->StopExecute();
-		SetActorTickEnabled(false);
+		this->Destroy();
+		// FSMInterface->StopExecute();
+		// SetActorTickEnabled(false);
 	}
 }
 
