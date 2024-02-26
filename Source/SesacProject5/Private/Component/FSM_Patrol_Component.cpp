@@ -66,12 +66,14 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 			if (LookAroundTimerhandle.IsValid()) return;
 
 			
-			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, FTimerDelegate::CreateLambda([&]
-			{
-				GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
-				bHasPerformedLookAround = false;
-				SetNextDestination();
-			}), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
+			bHasPerformedLookAround = false;
+			SetNextDestination();
+			// GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, FTimerDelegate::CreateLambda([&]
+			// {
+			// 	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
+			// 	bHasPerformedLookAround = false;
+			// 	SetNextDestination();
+			// }), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
 		}
 	}
 	else

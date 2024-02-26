@@ -35,6 +35,9 @@ class SESACPROJECT5_API AMainMenuPlayerController : public APlayerController
 	UGameLoadingUI* gameLoading;
 	
 public:
+	void OnLoginSuccess();
+	void OnJoinSessionFail();
+	
 	UFUNCTION(BlueprintCallable)
 	void HiddenOpening();
 	

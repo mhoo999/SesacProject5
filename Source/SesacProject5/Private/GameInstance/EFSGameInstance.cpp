@@ -5,6 +5,7 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "PlayerController/MainMenuPlayerController.h"
 
 
 void UEFSGameInstance::Init()
@@ -50,12 +51,14 @@ void UEFSGameInstance::OnLoginComplete(int32 LocalUserNum, bool bWasSuccessful, 
 {
 	if (bWasSuccessful)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnLoginComplete) Login Success"));
+		// UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnLoginComplete) Login Success"));
+
+		GetWorld()->GetFirstPlayerController<AMainMenuPlayerController>()->OnLoginSuccess();
 	}
 	else
 	{
 		// Todo : Login Widget Button set enable 
-		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnLoginComplete) Login Failed : %s"), *Error); 
+		// UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnLoginComplete) Login Failed : %s"), *Error); 
 	}
 }
 
@@ -113,17 +116,25 @@ void UEFSGameInstance::OnFindSessionCompleted(bool bWasSuccessful)
 		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Success to find session"));
 		if (SessionSearch->SearchResults.Num() > 0)
 		{
-			for (auto Iter : SessionSearch->SearchResults)
-			{
-				FString Value;
-				Iter.Session.SessionSettings.Get(FName("ROOM_NAME"), Value);
-				UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Room Name : %s"), *Value);
-			}
+			// for (auto Iter : SessionSearch->SearchResults)
+			// {
+			// 	FString Value;
+			// 	Iter.Session.SessionSettings.Get(FName("ROOM_NAME"), Value);
+			// 	UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Room Name : %s"), *Value);
+			// }
+
+			SessionPtrRef->JoinSession(0, FName("MainSession"), SessionSearch->SearchResults[0]);
+		}
+		else
+		{
+			GetWorld()->GetFirstPlayerController<AMainMenuPlayerController>()->OnJoinSessionFail();	
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Fail to find session"));
+
+		GetWorld()->GetFirstPlayerController<AMainMenuPlayerController>()->OnJoinSessionFail();
 	}
 }
 

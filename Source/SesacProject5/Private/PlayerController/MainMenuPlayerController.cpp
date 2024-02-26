@@ -29,6 +29,18 @@ void AMainMenuPlayerController::BeginPlay()
 	SetShowMouseCursor(true);
 }
 
+void AMainMenuPlayerController::OnLoginSuccess()
+{
+	ShowLobby();
+	HiddenTitle();
+}
+
+void AMainMenuPlayerController::OnJoinSessionFail()
+{
+	HiddenGameLoading();
+	ShowLobby();
+}
+
 void AMainMenuPlayerController::HiddenOpening()
 {
 	opening->SetVisibility(ESlateVisibility::Hidden);
@@ -58,11 +70,11 @@ void AMainMenuPlayerController::ShowGameLoading()
 {
 	gameLoading->SetVisibility(ESlateVisibility::Visible);
 
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
-	{
-		GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
-	}), 10.0f, false, 5.f);
+	// FTimerHandle TimerHandle;
+	// GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
+	// {
+	// 	GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
+	// }), 10.0f, false, 5.f);
 }
 
 void AMainMenuPlayerController::HiddenGameLoading()
