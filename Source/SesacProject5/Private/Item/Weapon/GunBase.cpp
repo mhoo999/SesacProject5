@@ -141,7 +141,7 @@ void AGunBase::FireBullet(FVector TargetLocation)
 {
 	ServerRPC_FireBullet(TargetLocation, GetMuzzleSocketTransform().GetLocation());
 	PerformProceduralRecoil();
-	if (FireSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, GetMuzzleSocketTransform().GetLocation(), GetMuzzleSocketTransform().GetRotation().Rotator(), 5);
+	if (FireSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, GetMuzzleSocketTransform().GetLocation(), GetMuzzleSocketTransform().GetRotation().Rotator(), 3);
 }
 
 void AGunBase::MultiRPC_FireBullet_Implementation(FVector FromLocation)
@@ -149,7 +149,7 @@ void AGunBase::MultiRPC_FireBullet_Implementation(FVector FromLocation)
 	if (GetCharacterComponent()->IsLocallyControlled()) return;
 
 	PerformProceduralRecoil();
-	if (FireSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, FromLocation, GetMuzzleSocketTransform().GetRotation().Rotator(), 5);
+	if (FireSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, FromLocation, GetMuzzleSocketTransform().GetRotation().Rotator(), 3);
 }
 
 void AGunBase::ServerRPC_FireBullet_Implementation(FVector TargetLocation, FVector FromLocation)

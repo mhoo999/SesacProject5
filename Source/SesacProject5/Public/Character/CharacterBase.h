@@ -39,6 +39,9 @@ public:
 
 	FVector GetCameraLocation() const;
 
+	UFUNCTION()
+	virtual void Die(bool bIsDead);
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	UCameraComponent* CameraComponent;
