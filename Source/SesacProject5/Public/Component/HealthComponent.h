@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+enum class EDamageType : uint8;
+class IDamageInterface;
+
 UENUM()
 enum class EBodyParts : uint8
 {
@@ -25,18 +28,25 @@ struct FHealth
 {
 	GENERATED_BODY()
 
-	void UpdateHealth()
+	void SubHealth(float Damage)
 	{
-		OnHealthChanged.ExecuteIfBound(Health, MaxHealth);
+		Health -= Damage;
+		if (Health <= 0.f)
+		{
+			Health = 0.f;
+		}
+		OnHealthChanged.Broadcast(BodyParts, Health, MaxHealth);
 	}
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EBodyParts BodyParts;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health;
 	
-	DECLARE_DELEGATE_TwoParams(FDele_Single_Two_Float_Float, float, float);
-	FDele_Single_Two_Float_Float OnHealthChanged;
+	DECLARE_MULTICAST_DELEGATE_ThreeParams(FDele_Multi_Three_BodyParts_Health_MaxHealth, EBodyParts, float, float);
+	FDele_Multi_Three_BodyParts_Health_MaxHealth OnHealthChanged;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -60,15 +70,16 @@ public:
 
 	void ApplyDamage(AActor* DamageActor, FName BoneName);
 
-	void ReduceHealth(uint8 BodyPartsIndex, float Damage);
-
 	UFUNCTION(Client, Reliable)
-	void ClientRPC_ApplyDamage(EBodyParts BodyParts, float Damage); 
+	void ClientRPC_ApplyDamage(EBodyParts BodyParts, EDamageType DamageType, float Damage); 
 
 	FHealth& GetHealth(EBodyParts BodyParts);
 
 	UFUNCTION()
 	void OnRep_IsDead();
+
+	UFUNCTION()
+	void Die();
 	
 private:
 	UPROPERTY()

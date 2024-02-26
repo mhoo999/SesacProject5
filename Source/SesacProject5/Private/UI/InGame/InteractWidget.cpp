@@ -3,7 +3,6 @@
 
 #include "UI/InGame/InteractWidget.h"
 
-#include "GameFramework/Character.h"
 #include "Component/InteractComponent.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
@@ -12,7 +11,8 @@
 
 void UInteractWidget::InitWidget(APawn* Pawn)
 {
-	if (UInteractComponent* InteractComponent = Pawn->GetComponentByClass<UInteractComponent>())
+	InteractComponent = Pawn->GetComponentByClass<UInteractComponent>();
+	if (InteractComponent)
 	{
 		InteractComponent->SetInteractWidget(this);
 		InteractComponent->OnInteractActorChanged.BindUObject(this, &UInteractWidget::UpdateWidget);
@@ -38,15 +38,18 @@ void UInteractWidget::UpdateWidget(IInteractInterface* NewInteractActor)
 	
 	const TArray<FText>& InteractionNameArray = NewInteractActor->GetInteractionNameArray();
 
-	for (FText Iter : InteractionNameArray)
+	if (InteractionNameArray.Num() > 0)
 	{
-		UInteractionSlotWidget* InteractionSlotWidget = CreateWidget<UInteractionSlotWidget>(GetOwningPlayer(), InteractionSlotWidgetClass);
-		InteractionSlotWidget->InitWidget(Iter);
-		VB_InteractionSlot->AddChildToVerticalBox(InteractionSlotWidget);
-	}
+		for (FText Iter : InteractionNameArray)
+		{
+			UInteractionSlotWidget* InteractionSlotWidget = CreateWidget<UInteractionSlotWidget>(GetOwningPlayer(), InteractionSlotWidgetClass);
+			InteractionSlotWidget->InitWidget(Iter);
+			VB_InteractionSlot->AddChildToVerticalBox(InteractionSlotWidget);
+		}
 	
-	SelectIndex = 0;
-	Cast<UInteractionSlotWidget>(VB_InteractionSlot->GetChildAt(SelectIndex))->Focus();
+		SelectIndex = 0;
+		Cast<UInteractionSlotWidget>(VB_InteractionSlot->GetChildAt(SelectIndex))->Focus();	
+	}
 }
 
 void UInteractWidget::SelectUp()
@@ -67,5 +70,23 @@ void UInteractWidget::SelectDown()
 
 FText UInteractWidget::GetInteractionName() const
 {
+	if (VB_InteractionSlot->GetChildrenCount() == 0) return FText();
+	
 	return Cast<UInteractionSlotWidget>(VB_InteractionSlot->GetChildAt(SelectIndex))->GetInteractionName();
+}
+
+void UInteractWidget::StartInteract()
+{
+	if (InteractComponent)
+	{
+		InteractComponent->StartInteraction();
+	}
+}
+
+void UInteractWidget::StopInteract()
+{
+	if (InteractComponent)
+	{
+		InteractComponent->StopInteraction();
+	}
 }

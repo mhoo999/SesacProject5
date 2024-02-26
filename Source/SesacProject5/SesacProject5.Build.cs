@@ -10,7 +10,7 @@ public class SesacProject5 : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "GameLiftServerSDK",
+			"Core", "CoreUObject", "Engine", "InputCore",
 			"Networking", "Sockets", "EnhancedInput", "AIModule", "NavigationSystem"
 		});
 
@@ -23,6 +23,11 @@ public class SesacProject5 : ModuleRules
         {
 	        "OnlineSubsystem", "OnlineSubsystemEOS", "EOSShared", "EOSVoiceChat", "OnlineServicesEOS",
 	        "SocketSubsystemEOS", "OnlineSubsystemUtils"
+        });
+        
+        PrivateDependencyModuleNames.AddRange(new string[]
+        {
+	        "ProceduralFPSAnimation"
         });
 		
 		// Uncomment if you are using online features

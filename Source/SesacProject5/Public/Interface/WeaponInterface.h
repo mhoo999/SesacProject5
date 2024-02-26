@@ -16,6 +16,7 @@ class UWeaponInterface : public UInterface
 /**
  * 
  */
+class ACharacter;
 class SESACPROJECT5_API IWeaponInterface
 {
 	GENERATED_BODY()
@@ -25,6 +26,14 @@ public:
 
 	virtual void StartFire() = 0;
 	virtual void StopFire() = 0;
+
+	virtual void Reload() = 0;
+
+	virtual void AttachToCharacter() = 0;
+	virtual void DetachFromCharacter() = 0;
+
+	virtual void StartAim() = 0;
+	virtual void StopAim() = 0;
 
 	virtual void FireBullet(FVector TargetLocation) = 0;
 };

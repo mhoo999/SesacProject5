@@ -25,18 +25,6 @@ ADoorBase::ADoorBase()
 void ADoorBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (HasAuthority())
-	{
-		SetReplicates(true);
-	}
-}
-
-void ADoorBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ADoorBase, DoorState);
 }
 
 // Called every frame
@@ -45,54 +33,11 @@ void ADoorBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ADoorBase::Interact(ACharacter* InteractCharacter, FText InteractionName)
-{
-	UE_LOG(LogTemp, Warning, TEXT("ADoorBase::Interact) InteractionName : %s"), *InteractionName.ToString());
-	FString Interaction = InteractionName.ToString();
-	if (Interaction.Equals("Open"))
-	{
-		Open();
-	}
-	else if (Interaction.Equals("Close"))
-	{
-		Close();
-	}
-}
-
 const TArray<FText>& ADoorBase::GetInteractionNameArray()
 {
-	InteractionNameArray.Empty();
-	switch (DoorState) {
-	case EDoorState::OPEN:
-		InteractionNameArray.Add(FText::FromName("Close"));
-		break;
-	case EDoorState::CLOSE:
-		InteractionNameArray.Add(FText::FromName("Open"));
-		break;
-	case EDoorState::LOCKED:
-		{
-			// Todo : Check Key
-			/*
-			 * UInventoryComponent* InventoryComponent = InteractCharacter->GetComponentByClass<UInventoryComponent>()
-			 *
-			 *
-			 *
-			 *
-			 *
-			if (InventoryComponent->FindItem(KeyName))
-			{
-				InteractionNameArray.Add(FText::FromName("Use key"));
-			}
-			if (InventoryComponent->FindType(EItemType::Grenade))
-			{
-				InteractionNameArray.Add(FText::FromName("Use Grenade"));
-			}
-			*/
-			
-		}
-		break;
-	}
-	if (DoorState != EDoorState::OPEN)
+	Super::GetInteractionNameArray();
+	
+	if (OpenableState != EOpenableState::OPEN)
 	{
 		InteractionNameArray.Add(FText::FromName("Kick"));
 	}
@@ -107,46 +52,11 @@ FText ADoorBase::GetActorName() const
 
 void ADoorBase::Open()
 {
-	if (HasAuthority())
-	{
-		// State is already Open -> return
-        if (DoorState == EDoorState::OPEN)
-        {
-        	return;	
-        }
-        DoorState = EDoorState::OPEN;
-	}
+	UE_LOG(LogTemp, Warning, TEXT("ADoorBase::Open"));
 	DoorMeshComponent->SetRelativeRotation(FRotator(0, 90, 0));
 }
 
 void ADoorBase::Close()
 {
-	if (HasAuthority())
-	{
-		// State is already Open -> return
-		if (DoorState == EDoorState::CLOSE)
-		{
-			return;	
-		}
-	
-		DoorState = EDoorState::CLOSE;
-	}
-    DoorMeshComponent->SetRelativeRotation(FRotator(0, 0, 0));
-}
-
-void ADoorBase::OnRep_DoorState()
-{
-	switch (DoorState)
-	{
-	case EDoorState::OPEN:
-		Open();
-		break;
-	case EDoorState::CLOSE:
-		Close();
-		break;
-	case EDoorState::LOCKED:
-		break;
-	}
-	
-	OnInteractActorChanged.ExecuteIfBound(this);
+	DoorMeshComponent->SetRelativeRotation(FRotator(0, 0, 0));
 }

@@ -16,6 +16,7 @@ class SESACPROJECT5_API AInGamePlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	void ToggleTabWidget();
 protected:
 	//virtual void OnNetCleanup(UNetConnection* Connection) override;
 

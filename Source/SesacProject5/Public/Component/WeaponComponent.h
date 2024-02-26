@@ -37,6 +37,11 @@ public:
 	void StartFireAction(const FInputActionValue& Value);
 	void EndFireAction(const FInputActionValue& Value);
 
+	void ReloadAction(const FInputActionValue& Value);
+
+	void AimStartAction();
+	void AimEndAction();
+
 	float GetWeaponAttackRange() const;
 
 	UFUNCTION()
@@ -55,6 +60,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Fire;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_Reload;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_Aim;
 
 	// Todo : Delete this
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))

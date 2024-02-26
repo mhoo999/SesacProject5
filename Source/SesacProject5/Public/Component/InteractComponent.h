@@ -31,6 +31,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void StartInteraction();
+	void StopInteraction();
+
 	// Setter
 	void SetInteractWidget(UInteractWidget* NewInteractWidget);
 
@@ -41,6 +44,7 @@ public:
 private:
 	void InteractAction(const FInputActionValue& Value);
 	void SelectInteractionAction(const FInputActionValue& Value);
+	void TabAction(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
@@ -61,6 +65,8 @@ private:
 	UInputAction* IA_Interact;
 	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
 	UInputAction* IA_SelectInteraction;
+	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
+	UInputAction* IA_Tab;
 
 public:
 	DECLARE_DELEGATE_OneParam(FDele_Interact, IInteractInterface*);

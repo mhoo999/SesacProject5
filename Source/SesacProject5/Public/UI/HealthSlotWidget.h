@@ -24,7 +24,7 @@ public:
 	void InitWidget(UHealthComponent* HealthComponent);
 	
 	UFUNCTION()
-	void UpdateWidget(float Health, float MaxHealth);
+	void UpdateWidget(EBodyParts TargetBodyParts, float Health, float MaxHealth);
 private:
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	EBodyParts BodyParts;

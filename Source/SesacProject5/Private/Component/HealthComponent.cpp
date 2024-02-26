@@ -24,10 +24,7 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	if (GetOwner()->HasAuthority())
-	{
-		SetIsReplicated(true);
-	}
+	SetIsReplicated(true);
 
 	OwningCharacter = GetOwner<ACharacter>();
 }
@@ -52,55 +49,26 @@ void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 {
 	if (bIsDead || BodyPartsMap.Contains(BoneName) == false) return;
 
+	EBodyParts HittedBodyParts = BodyPartsMap[BoneName];
+	UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::ApplyDamage) %s"), *UEnum::GetValueAsString(HittedBodyParts));
+
 	IDamageInterface* DamageInterface =  Cast<IDamageInterface>(DamageActor);
 	if (DamageInterface == nullptr) return;
 	
 	OnAttacked.Broadcast(DamageInterface->GetIndicator());
-	
-	// Todo : At Inventory or Equipment Component, Find Equipment for Block or Ricochet Chance or Reduce Damage
 
-	EBodyParts HittedBodyParts = BodyPartsMap[BoneName];
-
-	// UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::ApplyDamage) %s"), *UEnum::GetValueAsString(HittedBodyParts));
-	
-	ClientRPC_ApplyDamage(HittedBodyParts, DamageInterface->GetDamage());
-	if (OwningCharacter->IsLocallyControlled() == false)
+	EDamageType DamageType = DamageInterface->GetDamageType();
+	float Damage = DamageInterface->GetDamage();
+	if (DamageType == EDamageType::Bullet)
 	{
-		ClientRPC_ApplyDamage_Implementation(HittedBodyParts, DamageInterface->GetDamage());
+		// Todo : At Inventory or Equipment Component, Find Equipment for Block or Ricochet Chance or Reduce Damage
 	}
 	
-	// // UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %d"), *BoneName.ToString(), BodyPartsIndex);
-	// if (HealthArray[BodyPartsIndex].Health == 0.f)
-	// {
-	// 	// Damage to Destroyed Parts
-	// 	float DamageModifier = BlackOutDamageModifireMap[HittedBodyParts];
-	//
-	// 	for (int i = 1; i < (uint8)EBodyParts::SIZE; ++i)
-	// 	{
-	// 		if (i == BodyPartsIndex) continue;
-	//
-	// 		Body
-	// 	}
-	// }
-	// else
-	// {
-	// 	HealthArray[BodyPartsIndex].Health -= 10.f;
-	// 	if (HealthArray[BodyPartsIndex].Health <= 0.f)
-	// 	{
-	// 		UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ApplyDamage) Is Dead!"));
-	// 		// Destroy Parts
-	// 		if (BodyPartsMap[BoneName] == EBodyParts::HEAD || BodyPartsMap[BoneName] == EBodyParts::THORAX)
-	// 		{
-	// 			bIsDead = true;
-	// 			OnRep_IsDead();
-	// 		}
-	// 	}
-	// 	ClientRPC_ApplyDamage(BodyPartsIndex, 10.f);
-	// }
-}
-
-void UHealthComponent::ReduceHealth(uint8 BodyPartsIndex, float Damage)
-{
+	ClientRPC_ApplyDamage(HittedBodyParts, DamageType, Damage);
+	if (OwningCharacter->IsLocallyControlled() == false)
+	{
+		ClientRPC_ApplyDamage_Implementation(HittedBodyParts, DamageType, Damage);
+	}
 }
 
 FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)
@@ -113,38 +81,58 @@ void UHealthComponent::OnRep_IsDead()
 	OnIsDeadChanged.Broadcast(bIsDead);
 }
 
-void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, float Damage)
+void UHealthComponent::Die()
+{
+	if (OwningCharacter->HasAuthority())
+	{
+		UE_LOG(LogTemp, Log, TEXT("UHealthComponent::Die"));
+		bIsDead = true;
+		OnRep_IsDead();
+	}
+}
+
+void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, EDamageType DamageType, float Damage)
 {
 	// UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s, %f"), *UEnum::GetValueAsString((EBodyParts)BodyParts), Damage);
 
 	uint8 BodyPartsIndex = (uint8)BodyParts;
 	
-	
 	if (HealthArray[BodyPartsIndex].Health <= 0.f)
 	{
-		if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
+		if (DamageType == EDamageType::Bullet)
 		{
-			if (OwningCharacter->HasAuthority())
+			if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
 			{
-				bIsDead = true;
-				OnRep_IsDead();
+				Die();
+			}
+			else
+			{
+				// BlackOut Spread Damage
+
+				float BlackOutDamageModifire = BlackOutDamageModifireMap[BodyParts];
+				for (int32 i = 1; i < (uint8)EBodyParts::SIZE; ++i)
+				{
+					if (i == BodyPartsIndex) continue;
+					HealthArray[i].SubHealth(Damage * BlackOutDamageModifire);
+					if (HealthArray[i].Health == 0.f &&((EBodyParts)i == EBodyParts::HEAD || (EBodyParts)i == EBodyParts::THORAX))
+					{
+						Die();
+					}
+				}
 			}
 		}
 	}
 	else
 	{
-		HealthArray[BodyPartsIndex].Health -= Damage;
-
-		if (HealthArray[BodyPartsIndex].Health <= 0.f)
+		HealthArray[BodyPartsIndex].SubHealth(Damage);
+		if (HealthArray[BodyPartsIndex].Health == 0.f)
 		{
-			HealthArray[BodyPartsIndex].Health = 0.f;
-			if ((BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX) && OwningCharacter->HasAuthority())
+			UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) %s is black out"), *UEnum::GetValueAsString((EBodyParts)BodyParts));
+			if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
 			{
-				bIsDead = true;
-				OnRep_IsDead();
-			}
+				Die();
+			}	
 		}
+		
 	}
-	
-	HealthArray[BodyPartsIndex].UpdateHealth();
 }

@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UEquipmentComponent;
 class UEscapeComponent;
 class UHealthComponent;
 class UWeaponComponent;
@@ -15,7 +16,7 @@ class UInputMappingContext;
 class UMoveComponent;
 class USpringArmComponent;
 class UCameraComponent;
-
+class UFPSAnim_CharacterComponent;
 UCLASS()
 class SESACPROJECT5_API ACharacterBase : public ACharacter, public IGenericTeamAgentInterface
 {
@@ -39,9 +40,7 @@ public:
 	FVector GetCameraLocation() const;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	USpringArmComponent* SpringArmComponent;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UMoveComponent* MoveComponent;
@@ -53,9 +52,13 @@ private:
 	UHealthComponent* HealthComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UEscapeComponent* EscapeComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UEquipmentComponent* EquipmentComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UFPSAnim_CharacterComponent* FPSAnim_Character;
 
 	// Arm
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	USkeletalMeshComponent* ArmMeshComponent;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))

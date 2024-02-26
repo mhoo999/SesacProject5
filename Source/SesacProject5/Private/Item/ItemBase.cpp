@@ -3,10 +3,8 @@
 
 #include "Item/ItemBase.h"
 
-#include <Kismet/GameplayStatics.h>
-
-#include "ContentBrowserDataSource.h"
 #include "Components/BoxComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AItemBase::AItemBase()
@@ -30,6 +28,13 @@ void AItemBase::BeginPlay()
 	{
 		SetReplicates(true);
 	}
+}
+
+void AItemBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AItemBase, ItemInstance);
 }
 
 // Called every frame
@@ -60,3 +65,28 @@ FText AItemBase::GetActorName() const
 {
 	return FText::FromName(ItemData.Name);
 }
+
+void AItemBase::PutToInventory(FStorage* Storage, FIntPoint InventoryPos)
+{
+	ItemInstance.InventoryPos = InventoryPos;
+
+	MultiRPC_PutToInventory();
+}
+
+void AItemBase::PopFromInventory()
+{
+	MultiRPC_PopFromInventory();
+}
+
+void AItemBase::MultiRPC_PopFromInventory_Implementation()
+{
+	CollisionComponent->SetSimulatePhysics(true);
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void AItemBase::MultiRPC_PutToInventory_Implementation()
+{
+	CollisionComponent->SetSimulatePhysics(false);
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+ 

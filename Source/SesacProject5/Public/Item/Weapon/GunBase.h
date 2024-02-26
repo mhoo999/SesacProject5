@@ -3,15 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "FPSAnim_Firearm.h"
 #include "Interface/WeaponInterface.h"
 #include "GunBase.generated.h"
 
+class UWeaponComponent;
 class UArrowComponent;
 class AProjectileBase;
 class USkeletalMeshComponent;
 UCLASS()
-class SESACPROJECT5_API AGunBase : public AActor, public IWeaponInterface
+class SESACPROJECT5_API AGunBase : public AFPSAnim_Firearm, public IWeaponInterface
 {
 	GENERATED_BODY()
 	
@@ -32,6 +33,8 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_FireBullet(FVector TargetLocation, FVector FromLocation);
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_FireBullet(FVector FromLocation);
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_StartFire();
@@ -44,8 +47,29 @@ public:
 	void MultiRPC_StopFire();
 
 	virtual void OnRep_Owner() override;
+	
+	virtual void AttachToCharacter() override;
+	virtual void DetachFromCharacter() override;
+
+	// Rload
+	virtual void Reload() override;
+
+	void OnReload();
+	UFUNCTION(BlueprintCallable)
+	void ReloadComplete();
+
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_Reload();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_Reload();
+
+	// Aim
+	virtual void StartAim() override;
+	virtual void StopAim() override;
 
 private:
+	UPROPERTY()
+	UWeaponComponent* WeaponComponent;
 	UPROPERTY()
 	ACharacter* OwningCharacter;
 	UPROPERTY()
@@ -56,12 +80,17 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<AProjectileBase> BulletClass;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	USkeletalMeshComponent* SkeletalMeshComponent;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	UArrowComponent* FireArrowComponent;
 
 	// Montage
 	UPROPERTY(EditDefaultsOnly, Category = "Animation", Meta = (AllowPrivateAccess))
 	UAnimMontage* FireMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation", Meta = (AllowPrivateAccess))
+	UAnimMontage* ReloadMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation", Meta = (AllowPrivateAccess))
+	UAnimMontage* ReloadMontage_Character;
+
+	// Sound
+	UPROPERTY(EditDefaultsOnly, Category = "Sound", Meta = (AllowPrivateAccess))
+	USoundBase* FireSound;
 };
