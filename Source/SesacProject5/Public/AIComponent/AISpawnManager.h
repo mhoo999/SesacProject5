@@ -23,10 +23,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
 	TArray<AActor*> waypointArray;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, Category="MySettings")
 	TSubclassOf<AScavBase> ScavFactory;
 
 	void MakeScave();
