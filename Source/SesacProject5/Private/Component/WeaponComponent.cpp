@@ -32,6 +32,9 @@ void UWeaponComponent::SetupPlayerInputComponent(UEnhancedInputComponent* Player
 {
 	PlayerInputComponent->BindAction(IA_Fire, ETriggerEvent::Started, this, &UWeaponComponent::StartFireAction);
 	PlayerInputComponent->BindAction(IA_Fire, ETriggerEvent::Completed, this, &UWeaponComponent::EndFireAction);
+	PlayerInputComponent->BindAction(IA_Reload, ETriggerEvent::Started, this, &UWeaponComponent::ReloadAction);
+	PlayerInputComponent->BindAction(IA_Aim, ETriggerEvent::Started, this, &UWeaponComponent::AimStartAction);
+	PlayerInputComponent->BindAction(IA_Aim, ETriggerEvent::Completed, this, &UWeaponComponent::AimEndAction);
 }
 
 // Called when the game starts
@@ -44,17 +47,17 @@ void UWeaponComponent::BeginPlay()
 
 	// Todo : Delete
 	// Debug Test Spawn Gun;
+	SetIsReplicated(true);
 	if (OwningCharacter->HasAuthority())
 	{
-		SetIsReplicated(true);
 		if (GunClass)
 		{
 			AGunBase* Gun = GetWorld()->SpawnActor<AGunBase>(GunClass);
 			Weapon = Gun;
-			Gun->AttachToComponent(GetOwner<ACharacter>()->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("GunSocket"));
 			Gun->SetOwner(GetOwner());
 			Gun->OnRep_Owner();
 			WeaponInterface = Gun;
+			WeaponInterface->AttachToCharacter();
 		}
 	}
 }
@@ -64,7 +67,6 @@ void UWeaponComponent::FireBullet()
 	if (OwningCharacter->IsLocallyControlled())
 	{
 		WeaponInterface->FireBullet(GetFocusLocation());
-		AddRecoil();
 	}
 }
 
@@ -78,12 +80,27 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::StartFireAction(const FInputActionValue& Value)
 {
-	WeaponInterface->StartFire();
+	if (WeaponInterface) WeaponInterface->StartFire();
 }
 
 void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
 {
-	WeaponInterface->StopFire();
+	if (WeaponInterface) WeaponInterface->StopFire();
+}
+
+void UWeaponComponent::ReloadAction(const FInputActionValue& Value)
+{
+	if (WeaponInterface) WeaponInterface->Reload();
+}
+
+void UWeaponComponent::AimStartAction()
+{
+	if (WeaponInterface) WeaponInterface->StartAim();
+}
+
+void UWeaponComponent::AimEndAction()
+{
+	if (WeaponInterface) WeaponInterface->StopAim();
 }
 
 float UWeaponComponent::GetWeaponAttackRange() const

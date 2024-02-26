@@ -35,6 +35,7 @@ public:
 	void CrouchAction(const FInputActionValue& Value);
 	void SprintStartAction(const FInputActionValue& Value);
 	void SprintEndAction(const FInputActionValue& Value);
+	void JumpAction(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
@@ -53,6 +54,8 @@ private:
 	UInputAction* IA_Crouch;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Sprint;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_Jump;
 
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	ACharacter* OwningCharacter;

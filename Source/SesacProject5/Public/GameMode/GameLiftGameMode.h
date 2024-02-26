@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameLiftServerSDK.h"
+// #include "GameLiftServerSDK.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameLiftGameMode.generated.h"
 

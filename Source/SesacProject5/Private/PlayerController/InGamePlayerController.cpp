@@ -20,3 +20,8 @@ void AInGamePlayerController::BeginPlay()
 		}
 	}
 }
+
+void AInGamePlayerController::ToggleTabWidget()
+{
+	InGameWidget->ToggleTabWidget();
+}

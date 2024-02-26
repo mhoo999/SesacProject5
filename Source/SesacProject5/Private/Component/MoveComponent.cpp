@@ -49,6 +49,7 @@ void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(IA_Crouch, ETriggerEvent::Started, this, &UMoveComponent::CrouchAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &UMoveComponent::SprintStartAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &UMoveComponent::SprintEndAction);
+	PlayerInputComponent->BindAction(IA_Jump, ETriggerEvent::Started, this, &UMoveComponent::JumpAction);
 }
 
 bool UMoveComponent::IsSprint() const
@@ -118,6 +119,14 @@ void UMoveComponent::SprintEndAction(const FInputActionValue& Value)
 	{
 		bIsSprint = false;
 		ServerRPC_SetMaxWalkSpeed(300.f);	
+	}
+}
+
+void UMoveComponent::JumpAction(const FInputActionValue& Value)
+{
+	if (OwningCharacter->CanJump())
+	{
+		OwningCharacter->Jump();
 	}
 }
 

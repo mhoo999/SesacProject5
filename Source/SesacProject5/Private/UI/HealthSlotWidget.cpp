@@ -16,10 +16,10 @@ void UHealthSlotWidget::NativePreConstruct()
 
 void UHealthSlotWidget::InitWidget(UHealthComponent* HealthComponent)
 {
-	HealthComponent->GetHealth(BodyParts).OnHealthChanged.BindUObject(this, &UHealthSlotWidget::UpdateWidget);
+	HealthComponent->GetHealth(BodyParts).OnHealthChanged.AddUObject(this, &UHealthSlotWidget::UpdateWidget);
 }
 
-void UHealthSlotWidget::UpdateWidget(float Health, float MaxHealth)
+void UHealthSlotWidget::UpdateWidget(EBodyParts TargetBodyParts, float Health, float MaxHealth)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UHealthSlotWidget::UpdateWidget) %s"), *UEnum::GetValueAsString(BodyParts));
 	TB_Health->SetText(FText::AsNumber((int)Health));

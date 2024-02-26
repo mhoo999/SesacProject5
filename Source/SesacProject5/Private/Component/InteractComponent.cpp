@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "Interface/InteractInterface.h"
+#include "PlayerController/InGamePlayerController.h"
 #include "UI/InGame/InteractWidget.h"
 
 // Sets default values for this component's properties
@@ -23,6 +24,7 @@ void UInteractComponent::SetupPlayerInputComponent(UEnhancedInputComponent* Play
 {
 	PlayerInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &UInteractComponent::InteractAction);
 	PlayerInputComponent->BindAction(IA_SelectInteraction, ETriggerEvent::Triggered, this, &UInteractComponent::SelectInteractionAction);
+	PlayerInputComponent->BindAction(IA_Tab, ETriggerEvent::Started, this, &UInteractComponent::TabAction);
 }
 
 
@@ -72,9 +74,24 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	if (InteractActor == nullptr) return;
 	
-	// Todo : Hide Interact Widget
 	InteractActor = nullptr;
 	OnInteractActorChanged.ExecuteIfBound(nullptr);
+}
+
+void UInteractComponent::StartInteraction()
+{
+	SetComponentTickEnabled(true);
+}
+
+void UInteractComponent::StopInteraction()
+{
+	SetComponentTickEnabled(false);
+
+	if (InteractActor != nullptr)
+	{
+		InteractActor = nullptr;
+		OnInteractActorChanged.ExecuteIfBound(nullptr);
+	}
 }
 
 void UInteractComponent::SetInteractWidget(UInteractWidget* NewInteractWidget)
@@ -110,4 +127,9 @@ void UInteractComponent::SelectInteractionAction(const FInputActionValue& Value)
 			InteractWidget->SelectDown();
 		}
 	}
+}
+
+void UInteractComponent::TabAction(const FInputActionValue& Value)
+{
+	OwningCharacter->GetController<AInGamePlayerController>()->ToggleTabWidget();
 }

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InteractWidget.generated.h"
 
+class UInteractComponent;
 class UVerticalBox;
 class UTextBlock;
 class IInteractInterface;
@@ -28,7 +29,12 @@ public:
 
 	FText GetInteractionName() const;
 
+	void StartInteract();
+	void StopInteract();
+
 private:
+	UPROPERTY()
+	UInteractComponent* InteractComponent;
 	IInteractInterface* InteractActor;
 	int32 SelectIndex;
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
