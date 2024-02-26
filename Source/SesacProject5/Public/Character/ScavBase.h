@@ -18,5 +18,4 @@ class SESACPROJECT5_API AScavBase : public ACharacterBase
 public:
 	AScavBase();
 
-	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
 };

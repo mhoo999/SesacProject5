@@ -75,6 +75,7 @@ void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	// 0219 (&& ai->TeamId != chr->TeamId && chr->TeamId != 255) 추가하여 적일 경우에만 chr 반환하도록 수정 
 	SetFocus(stimulus.WasSuccessfullySensed() && ai->TeamId != chr->TeamId && chr->TeamId != 255 ? chr  : nullptr);
 	// SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
+
 	
 	// UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
 
@@ -102,6 +103,7 @@ void AEOSAIController::OnPossess(APawn* InPawn)
 	}
 	// InitDelegate.Broadcast();
 	ai->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AEOSAIController::ChangeDead);
+	ai->GetComponentByClass<UHealthComponent>()->OnAttacked.AddUObject(this, &AEOSAIController::beAttacked);
 }
 
 void AEOSAIController::SetContext(EEnemystate next)
@@ -145,5 +147,11 @@ void AEOSAIController::printLog()
 void AEOSAIController::SetWaypoint(TArray<AActor*> waypointArray)
 {
 	FSMPatrolComp->waypointArray = waypointArray;
+}
+
+void AEOSAIController::beAttacked(AActor* attacker)
+{
+	SetContext(EEnemystate::chase);
+	FSMInterface->SenseNewActor(attacker);
 }
 

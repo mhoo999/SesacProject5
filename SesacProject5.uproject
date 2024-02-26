@@ -44,9 +44,12 @@
 			"Enabled": true
 		},
 		{
-			"Name": "ProceduralFPSAnimation",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/1fb5c6803d65428d8b67b49553bacbc9"
+			"Name": "GameLiftServerSDK",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonUI",
+			"Enabled": true
 		}
 	]
 }

@@ -75,23 +75,26 @@ private:
 
 	void ChangeDead(bool bNewIsDead);
 
-public:
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	ACharacterBase* ai;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings|ETC", meta=(AllowPrivateAccess))
+	float missTime = 10.f;
 
 	UFUNCTION()
 	void OnPerception(AActor* actor, FAIStimulus stimulus);
 
 	virtual void OnPossess(APawn* InPawn) override;
-
-	void SetContext(EEnemystate next);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings|ETC")
-	float missTime = 10.f;
-
-	IFSMInterface* GetFSM();
-
+	
 	void printLog();
-
+	
+	void beAttacked(AActor* attacker);
+	
+public:
+	IFSMInterface* GetFSM();
+	
 	void SetWaypoint(TArray<AActor*> waypointArray);
+	
+	void SetContext(EEnemystate next);
+	
 };
