@@ -50,11 +50,15 @@ void ACharacterBase::BeginPlay()
 
 	if (APlayerController* PC = GetController<APlayerController>())
 	{
-		if (IsLocallyControlled() && DefaultIMC)
+		if (IsLocallyControlled())
 		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+			HealthComponent->OnIsDeadChanged.AddUObject(this, &ACharacterBase::Die);
+			if (DefaultIMC)
 			{
-				Subsystem->AddMappingContext(DefaultIMC, 0);
+				if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+                {
+                	Subsystem->AddMappingContext(DefaultIMC, 0);
+                }
 			}
 		}
 	}
@@ -90,4 +94,9 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 FVector ACharacterBase::GetCameraLocation() const
 {
 	return CameraComponent->GetComponentLocation();
+}
+
+void ACharacterBase::Die(bool bIsDead)
+{
+	DisableInput(GetController<APlayerController>());
 }
