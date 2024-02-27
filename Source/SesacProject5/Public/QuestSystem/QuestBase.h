@@ -59,13 +59,16 @@ struct FStageDetails
 	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	FObjectiveDetails Objectives;
+	TArray<FObjectiveDetails> Objectives;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	UTexture2D* rewardImage;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	int XRReward;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	TMap<FName, int> itemReward;
+	FText itemReward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	int currencyRewards;
@@ -80,6 +83,9 @@ struct FQuestDetails : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	FText questName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	UTexture2D* questImage;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	FText logDescription;
 
