@@ -14,6 +14,7 @@
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "QuestSystem/QuestLogComponent.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
@@ -30,6 +31,8 @@ ACharacterBase::ACharacterBase()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	EscapeComponent = CreateDefaultSubobject<UEscapeComponent>(TEXT("EscapeComponent"));
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("EquipmentComponent"));
+
+	QuestLogComponent = CreateDefaultSubobject<UQuestLogComponent>(TEXT("QuestLogComponent"));
 
 	FPSAnim_Character = CreateDefaultSubobject<UFPSAnim_CharacterComponent>(TEXT("FPSAnim_Character"));
 

@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UQuestLogComponent;
 class UEquipmentComponent;
 class UEscapeComponent;
 class UHealthComponent;
@@ -43,6 +44,8 @@ public:
 	virtual void Die(bool bIsDead);
 
 private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess))
+	UQuestLogComponent* QuestLogComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
