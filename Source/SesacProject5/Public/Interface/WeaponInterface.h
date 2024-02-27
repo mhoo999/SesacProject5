@@ -36,4 +36,7 @@ public:
 	virtual void StopAim() = 0;
 
 	virtual void FireBullet(FVector TargetLocation) = 0;
+
+	virtual float GetRecoilPitch() const {return 0;}
+	virtual float GetRecoilYaw() const {return 0;}
 };

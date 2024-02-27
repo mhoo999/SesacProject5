@@ -16,7 +16,9 @@ class SESACPROJECT5_API UPlayerWeaponComponent : public UWeaponComponent
 
 public:
 	virtual FVector GetFocusLocation() const override;
-	virtual void AddRecoil() override;
+
+	virtual float GetRecoilPitch() const override;
+	virtual float GetRecoilYaw() const override;
 private:
 	int32 ZeroPoint = 25;
 };

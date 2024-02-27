@@ -17,7 +17,7 @@ class SESACPROJECT5_API UAIWeaponComponent : public UWeaponComponent
 public:
 	void SetFocusLocation(FVector NewFocusLocation);
 	virtual FVector GetFocusLocation() const override;
-	virtual void AddRecoil() override;
+	virtual void AddRecoil(float Pitch = 0.f, float Yaw = 0.f) override;
 private:
 	UPROPERTY()
 	FVector FocusLocation;

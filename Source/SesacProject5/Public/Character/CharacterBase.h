@@ -59,10 +59,6 @@ private:
 	UEquipmentComponent* EquipmentComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UFPSAnim_CharacterComponent* FPSAnim_Character;
-
-	// Arm
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
-	USkeletalMeshComponent* ArmMeshComponent;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;

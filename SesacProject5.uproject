@@ -51,6 +51,10 @@
 		{
 			"Name": "ProceduralFPSAnimation",
 			"Enabled": true
+		},
+		{
+			"Name": "SkeletalMeshModelingTools",
+			"Enabled": true
 		}
 	]
 }

@@ -8,6 +8,7 @@
 
 #include "Character/CharacterBase.h"
 // Todo : Delete this after test
+#include "Component/MoveComponent.h"
 #include "Item/Weapon/GunBase.h"
 #include "Net/UnrealNetwork.h"
 
@@ -44,7 +45,7 @@ void UWeaponComponent::BeginPlay()
 
 	// ...
 	OwningCharacter = GetOwner<ACharacterBase>();
-
+	MoveComponent = OwningCharacter->GetComponentByClass<UMoveComponent>();
 	// Todo : Delete
 	// Debug Test Spawn Gun;
 	SetIsReplicated(true);
@@ -80,7 +81,11 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::StartFireAction(const FInputActionValue& Value)
 {
-	if (WeaponInterface) WeaponInterface->StartFire();
+	if (WeaponInterface)
+	{
+		MoveComponent->StopSprint();
+		WeaponInterface->StartFire();
+	}
 }
 
 void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
@@ -118,6 +123,6 @@ FVector UWeaponComponent::GetFocusLocation() const
 	return FVector();
 }
 
-void UWeaponComponent::AddRecoil()
+void UWeaponComponent::AddRecoil(float Pitch, float Yaw)
 {
 }

@@ -24,9 +24,6 @@ ACharacterBase::ACharacterBase()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	// CameraComponent->SetupAttachment(SpringArmComponent);
 
-	ArmMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ArmMeshComponent"));
-	ArmMeshComponent->SetupAttachment(CameraComponent);
-
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>(TEXT("MoveComponent"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
@@ -67,7 +64,7 @@ void ACharacterBase::BeginPlay()
 
 	FPSAnim_Character->Init(CameraComponent, true, GetMesh(), GetMesh());
 	// CameraComponent->SetRelativeRotation(FRotator(90, 0, -90));
-	CameraComponent->SetRelativeRotation(FRotator(0, 90, -90));
+	// CameraComponent->SetRelativeRotation(FRotator(0, 90, -90));
 }
 
 // Called every frame

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MoveComponent.generated.h"
 
+class UFPSAnim_CharacterComponent;
 struct FInputActionValue;
 class UInputAction;
 class UEnhancedInputComponent;
@@ -30,12 +31,18 @@ public:
 
 	bool IsSprint() const;
 
+	void StopSprint();
+
 	void MoveAction(const FInputActionValue& Value);
 	void LookAction(const FInputActionValue& Value);
 	void CrouchAction(const FInputActionValue& Value);
 	void SprintStartAction(const FInputActionValue& Value);
 	void SprintEndAction(const FInputActionValue& Value);
 	void JumpAction(const FInputActionValue& Value);
+	void LeanLeftStartAction(const FInputActionValue& Value);
+	void LeanLeftEndAction(const FInputActionValue& Value);
+	void LeanRightStartAction(const FInputActionValue& Value);
+	void LeanRightEndAction(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
@@ -44,6 +51,9 @@ public:
 	
 	
 private:
+	UPROPERTY()
+	UFPSAnim_CharacterComponent* FPSAnin_Character;
+	
 	bool bIsSprint;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
@@ -56,6 +66,10 @@ private:
 	UInputAction* IA_Sprint;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Jump;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_LeanLeft;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_LeanRight;
 
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	ACharacter* OwningCharacter;

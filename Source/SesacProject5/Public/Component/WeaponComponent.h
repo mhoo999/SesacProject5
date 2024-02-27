@@ -7,10 +7,12 @@
 #include "WeaponComponent.generated.h"
 
 
+class UMoveComponent;
 struct FInputActionValue;
 class UInputAction;
 class IWeaponInterface;
 class ACharacterBase;
+class UFPSAnim_CharacterComponent;
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UWeaponComponent : public UActorComponent
@@ -48,16 +50,21 @@ public:
 	void OnRep_Weapon();
 
 	virtual FVector GetFocusLocation() const;
-	virtual void AddRecoil();
+	virtual void AddRecoil(float Pitch = 0.f, float Yaw = 0.f);
+	
+	virtual float GetRecoilPitch() const { return 0.f; }
+	virtual float GetRecoilYaw() const { return 0.f; }
 
 protected:
 	UPROPERTY()
+	UMoveComponent* MoveComponent;
+	UPROPERTY()
 	ACharacterBase* OwningCharacter;
-private:
 	UPROPERTY(ReplicatedUsing = "OnRep_Weapon", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* Weapon;
 	IWeaponInterface* WeaponInterface;
-
+private:
+	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Fire;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
