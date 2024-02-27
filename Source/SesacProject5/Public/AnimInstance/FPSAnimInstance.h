@@ -25,6 +25,8 @@ public:
 private:
 	UPROPERTY()
 	bool bIsDead = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsCrouch = false;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DieMontageArray;

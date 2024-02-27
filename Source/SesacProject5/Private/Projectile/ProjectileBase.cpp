@@ -5,7 +5,9 @@
 
 #include "Component/HealthComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/DecalActor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -33,7 +35,6 @@ void AProjectileBase::BeginPlay()
 
 	if (HasAuthority())
 	{
-		// SetLifeSpan(1.f);
 		SetReplicates(true);
 
 		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnCollisionComponentBeginOverlap);
@@ -49,11 +50,20 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s"), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
+	if (OtherActor == GetOwner()) return;
+	
+	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
 		HealthComponent->ApplyDamage(this, SweepResult.BoneName);
 	}
+
+	if (DecalInstance)
+	{
+		UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalInstance, FVector(5,5,5)
+			, SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
+	}
+	
 
 	Destroy();
 }

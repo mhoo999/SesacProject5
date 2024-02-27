@@ -13,7 +13,7 @@ FVector UAIWeaponComponent::GetFocusLocation() const
 	return FocusLocation;
 }
 
-void UAIWeaponComponent::AddRecoil()
+void UAIWeaponComponent::AddRecoil(float Pitch, float Yaw)
 {
 	// Todo : Add Recoil to AI;
 }

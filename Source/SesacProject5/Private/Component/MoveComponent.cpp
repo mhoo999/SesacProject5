@@ -4,6 +4,7 @@
 #include "Component/MoveComponent.h"
 
 #include "EnhancedInputComponent.h"
+#include "FPSAnim_CharacterComponent.h"
 #include "EntitySystem/MovieSceneComponentDebug.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -26,6 +27,7 @@ void UMoveComponent::BeginPlay()
 	// ...
 	OwningCharacter = GetOwner<ACharacter>();
 	check(OwningCharacter != nullptr && OwningCharacter->IsValidLowLevelFast());
+	FPSAnin_Character = OwningCharacter->GetComponentByClass<UFPSAnim_CharacterComponent>();
 
 	if (OwningCharacter->HasAuthority())
 	{
@@ -50,11 +52,25 @@ void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &UMoveComponent::SprintStartAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &UMoveComponent::SprintEndAction);
 	PlayerInputComponent->BindAction(IA_Jump, ETriggerEvent::Started, this, &UMoveComponent::JumpAction);
+	PlayerInputComponent->BindAction(IA_LeanLeft, ETriggerEvent::Started, this, &UMoveComponent::LeanLeftStartAction);
+	PlayerInputComponent->BindAction(IA_LeanLeft, ETriggerEvent::Completed, this, &UMoveComponent::LeanLeftEndAction);
+	PlayerInputComponent->BindAction(IA_LeanRight, ETriggerEvent::Started, this, &UMoveComponent::LeanRightStartAction);
+	PlayerInputComponent->BindAction(IA_LeanRight, ETriggerEvent::Completed, this, &UMoveComponent::LeanRightEndAction);
 }
 
 bool UMoveComponent::IsSprint() const
 {
 	return bIsSprint;
+}
+
+void UMoveComponent::StopSprint()
+{
+	if (bIsSprint)
+	{
+		FPSAnin_Character->StopHighAndLowPortPose();
+		bIsSprint = false;
+		ServerRPC_SetMaxWalkSpeed(300.f);	
+	}
 }
 
 void UMoveComponent::MoveAction(const FInputActionValue& Value)
@@ -72,9 +88,13 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 	OwningCharacter->AddMovementInput(RotationMatrix.GetScaledAxis(EAxis::X), Vector2DValue.Y);
 	OwningCharacter->AddMovementInput(RotationMatrix.GetScaledAxis(EAxis::Y), Vector2DValue.X);
 
-	if (bIsSprint && (Vector2DValue.Y <= 0.f || Vector2DValue.X != 0.f))
+	if (bIsSprint)
 	{
-		SprintEndAction(FInputActionValue());
+		FPSAnin_Character->SetLowPortPose();
+		if ((Vector2DValue.Y <= 0.f || Vector2DValue.X != 0.f))
+		{
+			SprintEndAction(FInputActionValue());
+		}
 	}
 }
 
@@ -115,11 +135,7 @@ void UMoveComponent::SprintStartAction(const FInputActionValue& Value)
 
 void UMoveComponent::SprintEndAction(const FInputActionValue& Value)
 {
-	if (bIsSprint)
-	{
-		bIsSprint = false;
-		ServerRPC_SetMaxWalkSpeed(300.f);	
-	}
+	StopSprint();
 }
 
 void UMoveComponent::JumpAction(const FInputActionValue& Value)
@@ -128,6 +144,26 @@ void UMoveComponent::JumpAction(const FInputActionValue& Value)
 	{
 		OwningCharacter->Jump();
 	}
+}
+
+void UMoveComponent::LeanLeftStartAction(const FInputActionValue& Value)
+{
+	FPSAnin_Character->LeanLeft();
+}
+
+void UMoveComponent::LeanLeftEndAction(const FInputActionValue& Value)
+{
+	FPSAnin_Character->StopLeanLeft();
+}
+
+void UMoveComponent::LeanRightStartAction(const FInputActionValue& Value)
+{
+	FPSAnin_Character->LeanRight();
+}
+
+void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
+{
+	FPSAnin_Character->StopLeanRight();
 }
 
 void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)

@@ -67,7 +67,18 @@ public:
 	virtual void StartAim() override;
 	virtual void StopAim() override;
 
+	// Recoil Function
+	virtual float GetRecoilPitch() const override;
+	virtual float GetRecoilYaw() const override;
+
+	void AddRecoil();
+
 private:
+	// Recoil Property
+	float RecoilPitch = 0.f;
+	float RecoilPitchMax = -10.f;
+	float RecoilYaw = 0.f;
+	
 	UPROPERTY()
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY()

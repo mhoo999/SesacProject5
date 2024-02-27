@@ -4,6 +4,7 @@
 #include "Component/PlayerWeaponComponent.h"
 
 #include "Character/CharacterBase.h"
+#include "Interface/WeaponInterface.h"
 
 FVector UPlayerWeaponComponent::GetFocusLocation() const
 {
@@ -12,11 +13,12 @@ FVector UPlayerWeaponComponent::GetFocusLocation() const
 	return OwningCharacter->GetCameraLocation() + ((ZeroPoint * 100) * CameraDirection); 
 }
 
-void UPlayerWeaponComponent::AddRecoil()
+float UPlayerWeaponComponent::GetRecoilPitch() const
 {
-	if (OwningCharacter->IsLocallyControlled())
-	{
-		OwningCharacter->AddControllerPitchInput(FMath::RandRange(-0.f, -1.f));
-		OwningCharacter->AddControllerYawInput(FMath::RandRange(-1.0f, 1.0f));
-	}
+	return WeaponInterface->GetRecoilPitch();
+}
+
+float UPlayerWeaponComponent::GetRecoilYaw() const
+{
+	return WeaponInterface->GetRecoilYaw();
 }

@@ -4,6 +4,7 @@
 #include "AnimInstance/FPSAnimInstance.h"
 
 #include "Component/HealthComponent.h"
+#include "GameFramework/Character.h"
 
 void UFPSAnimInstance::NativeBeginPlay()
 {
@@ -16,6 +17,15 @@ void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	if (bIsDead) return;
 	Super::NativeUpdateAnimation(DeltaSeconds);
+
+	// bIsCrouch = Cast<ACharacter>(GetOwningActor())->bIsCrouched;
+
+	if (ACharacter* Character = Cast<ACharacter>(GetOwningActor()))
+	{
+		bIsCrouch = Character->bIsCrouched;
+		// UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::NativeUpdateAnimation) Owning Actor : %s"), *GetOwningActor()->GetActorNameOrLabel());	
+	}
+	// bIsCrouch = GetOwningActor()->GetComponentByClass<UCharacterMovementComponent>()->IsCrouching();
 }
 
 void UFPSAnimInstance::Die(bool bNewIsDead)

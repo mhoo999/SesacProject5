@@ -7,6 +7,7 @@
 #include "Interface/DamageInterface.h"
 #include "ProjectileBase.generated.h"
 
+class ADecalActor;
 class UProjectileMovementComponent;
 class USphereComponent;
 
@@ -48,4 +49,7 @@ private:
 	UStaticMeshComponent* StaticMeshComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UMaterialInstance* DecalInstance;
 };

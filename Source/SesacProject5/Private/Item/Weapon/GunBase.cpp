@@ -101,6 +101,22 @@ void AGunBase::StopAim()
 	}
 }
 
+float AGunBase::GetRecoilPitch() const
+{
+	return RecoilPitch;
+}
+
+float AGunBase::GetRecoilYaw() const
+{
+	return RecoilYaw;
+}
+
+void AGunBase::AddRecoil()
+{
+	RecoilPitch = FMath::Max(RecoilPitchMax, RecoilPitch + FMath::RandRange(-1.f, -3.f));
+	RecoilYaw += FMath::RandRange(-3.f, 3.f);
+}
+
 void AGunBase::ServerRPC_Reload_Implementation()
 {
 	MultiRPC_Reload();
@@ -116,6 +132,15 @@ void AGunBase::MultiRPC_Reload_Implementation()
 void AGunBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (RecoilPitch >= 0.f)
+	{
+		RecoilPitch = FMath::Max(RecoilPitch - DeltaTime * 5.f, 0.f);
+	}
+	if (RecoilYaw >= 0.f)
+	{
+		RecoilYaw = FMath::Max(RecoilYaw - DeltaTime * 5.f, 0.f);
+	}
 }
 
 void AGunBase::StartFire()
@@ -140,6 +165,15 @@ void AGunBase::StopFire()
 void AGunBase::FireBullet(FVector TargetLocation) 
 {
 	ServerRPC_FireBullet(TargetLocation, GetMuzzleSocketTransform().GetLocation());
+	{
+		// Recoil
+		// OwningCharacter->AddControllerPitchInput(FMath::RandRange(-1.f, -5.f));
+		// OwningCharacter->AddControllerYawInput(FMath::RandRange(-5.f, 5.f));
+		//
+		// OwningCharacter->GetController<APlayerController>()->RotationInput.Pitch = OwningCharacter->GetController<APlayerController>()->RotationInput.Pitch = 10.f;
+		// OwningCharacter->GetController<APlayerController>()->RotationInput.Pitch = OwningCharacter->GetController<APlayerController>()->RotationInput.Yaw = 10.f;
+	}
+	
 	PerformProceduralRecoil();
 	if (FireSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, GetMuzzleSocketTransform().GetLocation(), GetMuzzleSocketTransform().GetRotation().Rotator(), 3);
 }
