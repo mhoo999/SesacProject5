@@ -1,7 +1,7 @@
 // copyright by LootingEmployment
 
 
-#include "Component/FSM_Patrol_Component.h"
+#include "AIComponent/FSM_Patrol_Component.h"
 
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"

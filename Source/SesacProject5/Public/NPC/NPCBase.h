@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "NPCBase.generated.h"
 
+class UImage;
+
 UCLASS()
 class SESACPROJECT5_API ANPCBase : public AActor
 {
@@ -25,7 +27,7 @@ private:
 	FName name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="NPC", meta=(AllowPrivateAccess))
-	TSubclassOf<UTexture2D> portrait;
+	UTexture2D* portrait;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="NPC", meta=(AllowPrivateAccess))
 	UDataTable* questDataTable;
