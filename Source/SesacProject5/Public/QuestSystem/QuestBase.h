@@ -7,6 +7,7 @@
 #include "QuestBase.generated.h"
 
 
+class ANPCBase;
 // 퀘스트의 목표 유형
 UENUM()
 enum class EObjectiveType : uint8
@@ -125,5 +126,7 @@ private:
 	
 	// 완료 여부
 	bool isCompleted;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC", meta=(AllowPrivateAccess))
+	TArray<ANPCBase*> NPCArray;
 };

@@ -1,11 +1,11 @@
 // copyright by LootingEmployment
 
 
-#include "Component/FSM_Chase_Component.h"
+#include "AIComponent/FSM_Chase_Component.h"
 #include "InputActionValue.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
-#include "Component/AIWeaponComponent.h"
+#include "AIComponent/AIWeaponComponent.h"
 #include "Component/WeaponComponent.h"
 
 UFSM_Chase_Component::UFSM_Chase_Component()

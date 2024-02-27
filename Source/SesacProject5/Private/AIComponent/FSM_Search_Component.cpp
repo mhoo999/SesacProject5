@@ -1,7 +1,7 @@
 // copyright by LootingEmployment
 
 
-#include "Component/FSM_Search_Component.h"
+#include "AIComponent/FSM_Search_Component.h"
 
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"

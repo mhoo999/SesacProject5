@@ -1,7 +1,7 @@
 // copyright by LootingEmployment
 
 
-#include "Component/AIWeaponComponent.h"
+#include "AIComponent/AIWeaponComponent.h"
 
 void UAIWeaponComponent::SetFocusLocation(FVector NewFocusLocation)
 {

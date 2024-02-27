@@ -4,9 +4,9 @@
 #include "AIController/EOSAIController.h"
 
 #include "Character/CharacterBase.h"
-#include "Component/FSM_Chase_Component.h"
-#include "Component/FSM_Patrol_Component.h"
-#include "Component/FSM_Search_Component.h"
+#include "AIComponent/FSM_Chase_Component.h"
+#include "AIComponent/FSM_Patrol_Component.h"
+#include "AIComponent/FSM_Search_Component.h"
 #include "Component/HealthComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"

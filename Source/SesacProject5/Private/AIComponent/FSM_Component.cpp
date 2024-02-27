@@ -1,9 +1,9 @@
 // copyright by LootingEmployment
 
 
-#include "Component/FSM_Component.h"
+#include "AIComponent/FSM_Component.h"
 
-#include "Component/AIWeaponComponent.h"
+#include "AIComponent/AIWeaponComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "Interface/FSMInterface.h"
