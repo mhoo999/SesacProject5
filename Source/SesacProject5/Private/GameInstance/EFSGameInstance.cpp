@@ -33,10 +33,14 @@ void UEFSGameInstance::Init()
 	
 	if (UGameplayStatics::DoesSaveGameExist(slotName, 0))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::Init) Load Success"));
 		questData = Cast<UQuestSaveData>(UGameplayStatics::LoadGameFromSlot(slotName, 0));
+
+		questData->PrintLog();
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::Init) Load Fail"));
 		questData = Cast<UQuestSaveData>(UGameplayStatics::CreateSaveGameObject(UQuestSaveData::StaticClass()));
 		UGameplayStatics::SaveGameToSlot(questData, slotName, 0);
 	}

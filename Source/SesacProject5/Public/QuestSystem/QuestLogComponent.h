@@ -65,11 +65,11 @@ private:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	// TArray<AQuestBase*> currentQuests;
 
-	// 퀘스트 목록
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
-	TArray<FQuestManagement> questList;
-
 public:
+	// 퀘스트 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	TArray<FQuestManagement> questList;
+	
 	// 새로운 퀘스트를 받는 함수
 	UFUNCTION(BlueprintCallable)
 	void AddNewQuest(FName questID, FDataTableRowHandle questRow);

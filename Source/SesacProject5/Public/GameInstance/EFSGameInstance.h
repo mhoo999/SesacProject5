@@ -53,7 +53,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FString ServerURL;
 
+public:
 	// Save quest data
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UQuestSaveData* questData;
 };
