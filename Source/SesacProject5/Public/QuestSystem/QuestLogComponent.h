@@ -86,8 +86,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TrackQuest();
 
+	void ClearQuestList();
+	
 private:
 	bool HasQuest(FName questID);
 	
 	void AcceptQuest(FQuestManagement& quest, FDataTableRowHandle& questRow);
+
 };

@@ -57,4 +57,7 @@ public:
 	// Save quest data
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UQuestSaveData* questData;
+
+	UFUNCTION(BlueprintCallable)
+	void ClearSaveData();
 };
