@@ -54,20 +54,14 @@ void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* Over
 	
 	if (OtherActor == GetOwner()) return;
 
-	if (HasAuthority())
+	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
-		if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
-		{
-			HealthComponent->ApplyDamage(this, SweepResult.BoneName);
-		}
+		HealthComponent->ApplyDamage(this, SweepResult.BoneName);
 	}
 	
-	if (DecalInstance)
-	{
-		MultRPC_SpawnBulletDecal(SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
-	}
+	MultRPC_SpawnBulletDecal(SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
 	
-	// Destroy();
+	Destroy();
 }
 
 EDamageType AProjectileBase::GetDamageType() const
