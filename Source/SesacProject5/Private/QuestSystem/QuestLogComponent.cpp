@@ -81,3 +81,8 @@ void UQuestLogComponent::AcceptQuest(FQuestManagement& quest, FDataTableRowHandl
 		UE_LOG(LogTemp, Warning, TEXT("Quest details not found in data table for quest ID: %s"), *questRow.RowName.ToString());
 	}
 }
+
+void UQuestLogComponent::ClearQuestList()
+{
+	questList.Empty();
+}

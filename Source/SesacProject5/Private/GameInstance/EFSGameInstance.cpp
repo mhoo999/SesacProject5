@@ -5,8 +5,10 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "Character/CharacterBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerController/MainMenuPlayerController.h"
+#include "QuestSystem/QuestLogComponent.h"
 #include "SaveData/QuestSaveData.h"
 
 
@@ -36,7 +38,7 @@ void UEFSGameInstance::Init()
 		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::Init) Load Success"));
 		questData = Cast<UQuestSaveData>(UGameplayStatics::LoadGameFromSlot(slotName, 0));
 
-		questData->PrintLog();
+		// questData->PrintLog();
 	}
 	else
 	{
@@ -175,4 +177,17 @@ void UEFSGameInstance::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionC
 void UEFSGameInstance::OnDestroySessionCompleted(FName SessionName, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::OnDestroySessionCompleted"));
+}
+
+void UEFSGameInstance::ClearSaveData()
+{
+	UGameplayStatics::DeleteGameInSlot("questdata", 0);
+	ACharacterBase* player = Cast<ACharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+	if (player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::ClearSaveData"));
+		UQuestLogComponent* questLogComp = player->GetComponentByClass<UQuestLogComponent>();
+		questLogComp->ClearQuestList();
+	}
 }
