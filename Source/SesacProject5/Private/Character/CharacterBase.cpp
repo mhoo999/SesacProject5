@@ -100,3 +100,11 @@ void ACharacterBase::Die(bool bIsDead)
 {
 	DisableInput(GetController<APlayerController>());
 }
+
+void ACharacterBase::DieEnd()
+{
+	if (APlayerController* PlayerController = GetController<APlayerController>())
+	{
+		PlayerController->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
+	}
+}

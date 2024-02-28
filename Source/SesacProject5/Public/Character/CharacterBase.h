@@ -43,6 +43,8 @@ public:
 	UFUNCTION()
 	virtual void Die(bool bIsDead);
 
+	void DieEnd();
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess))
 	UQuestLogComponent* QuestLogComponent;

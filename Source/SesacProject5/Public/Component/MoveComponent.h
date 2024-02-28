@@ -34,6 +34,8 @@ public:
 	void StopSprint();
 
 	void MoveAction(const FInputActionValue& Value);
+	void MoveEndAction(const FInputActionValue& Value);
+	
 	void LookAction(const FInputActionValue& Value);
 	void CrouchAction(const FInputActionValue& Value);
 	void SprintStartAction(const FInputActionValue& Value);
@@ -52,7 +54,7 @@ public:
 	
 private:
 	UPROPERTY()
-	UFPSAnim_CharacterComponent* FPSAnin_Character;
+	UFPSAnim_CharacterComponent* FPSAnim_Character;
 	
 	bool bIsSprint;
 	

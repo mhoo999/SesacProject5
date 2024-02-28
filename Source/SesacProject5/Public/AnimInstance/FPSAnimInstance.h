@@ -22,6 +22,9 @@ public:
 	UFUNCTION()
 	void Die(bool bNewIsDead);
 
+	UFUNCTION()
+	void AnimNotify_OnDieEnd();
+
 private:
 	UPROPERTY()
 	bool bIsDead = false;

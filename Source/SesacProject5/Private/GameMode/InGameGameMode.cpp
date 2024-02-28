@@ -12,6 +12,18 @@ AInGameGameMode::AInGameGameMode()
 {
 }
 
+AActor* AInGameGameMode::ChoosePlayerStart_Implementation(AController* Player)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), *Player->GetActorNameOrLabel());
+	return Super::ChoosePlayerStart_Implementation(Player);
+}
+
+AActor* AInGameGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::FindPlayerStart) %s"), *Player->GetActorNameOrLabel());
+	return Super::FindPlayerStart_Implementation(Player, IncomingName);
+}
+
 void AInGameGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);

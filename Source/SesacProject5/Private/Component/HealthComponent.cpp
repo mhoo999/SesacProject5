@@ -3,7 +3,9 @@
 
 #include "Component/HealthComponent.h"
 
+#include "Components/AudioComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "Projectile/ProjectileBase.h"
 
@@ -27,6 +29,15 @@ void UHealthComponent::BeginPlay()
 	SetIsReplicated(true);
 
 	OwningCharacter = GetOwner<ACharacter>();
+	
+	VoiceComponent = UGameplayStatics::SpawnSoundAttached(DieSound, OwningCharacter->GetMesh(), FName("head"),
+		FVector(ForceInit), FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false,
+		1, 1, 0, nullptr, nullptr, false);
+
+	if (VoiceComponent)
+	{
+		VoiceComponent->Stop();
+	}
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -62,11 +73,38 @@ void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 	{
 		// Todo : At Inventory or Equipment Component, Find Equipment for Block or Ricochet Chance or Reduce Damage
 	}
-	
-	ClientRPC_ApplyDamage(HittedBodyParts, DamageType, Damage);
+
+	ClientRPC_ApplyDamage_Implementation(HittedBodyParts, DamageType, Damage);
 	if (OwningCharacter->IsLocallyControlled() == false)
 	{
-		ClientRPC_ApplyDamage_Implementation(HittedBodyParts, DamageType, Damage);
+		ClientRPC_ApplyDamage(HittedBodyParts, DamageType, Damage);
+	}
+}
+
+void UHealthComponent::MultiRPC_StartDieSound_Implementation()
+{
+	VoiceComponent->StopDelayed(0.3f);
+	VoiceComponent->SetSound(DieSound);
+	VoiceComponent->Play();
+}
+
+void UHealthComponent::MultiRPC_StartHurtSound_Implementation()
+{
+	if (VoiceComponent->IsPlaying())
+	{
+		if (VoiceComponent->GetSound() == HurtSound) return;
+		VoiceComponent->StopDelayed(0.3f); 
+	}
+	
+	VoiceComponent->SetSound(HurtSound);
+	VoiceComponent->Play();
+}
+
+void UHealthComponent::MultiRPC_StopHurtSound_Implementation()
+{
+	if (VoiceComponent->IsPlaying() && VoiceComponent->GetSound() == HurtSound)
+	{
+		VoiceComponent->StopDelayed(0.3f);
 	}
 }
 
@@ -78,6 +116,8 @@ FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)
 void UHealthComponent::OnRep_IsDead()
 {
 	OnIsDeadChanged.Broadcast(bIsDead);
+
+	UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::OnRep_IsDead"));
 }
 
 void UHealthComponent::Die()
@@ -87,7 +127,19 @@ void UHealthComponent::Die()
 		UE_LOG(LogTemp, Log, TEXT("UHealthComponent::Die"));
 		bIsDead = true;
 		OnRep_IsDead();
+		MultiRPC_StartDieSound();
 	}
+}
+
+float UHealthComponent::GetTotalHealth() const
+{
+	float TotalHealth = 0.f;
+	for (auto Iter : HealthArray)
+	{
+		TotalHealth += Iter.Health;
+	}
+
+	return TotalHealth;
 }
 
 void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, EDamageType DamageType, float Damage)
@@ -103,6 +155,7 @@ void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts
 			if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
 			{
 				Die();
+				return;
 			}
 			else
 			{
@@ -116,6 +169,7 @@ void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts
 					if (HealthArray[i].Health == 0.f &&((EBodyParts)i == EBodyParts::HEAD || (EBodyParts)i == EBodyParts::THORAX))
 					{
 						Die();
+						return;
 					}
 				}
 			}
@@ -130,8 +184,16 @@ void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts
 			if (BodyParts == EBodyParts::HEAD || BodyParts == EBodyParts::THORAX)
 			{
 				Die();
+				return;
 			}	
 		}
-		
+	}
+
+	float TotalHealth = GetTotalHealth();
+	UE_LOG(LogTemp, Log, TEXT("UHealthComponent::ClientRPC_ApplyDamage_Implementation) Total Health : %f"), TotalHealth);
+	
+	if (OwningCharacter->HasAuthority() && TotalHealth <= HurtHealth)
+	{
+		MultiRPC_StartHurtSound();
 	}
 }

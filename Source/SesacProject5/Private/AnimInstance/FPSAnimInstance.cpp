@@ -3,6 +3,7 @@
 
 #include "AnimInstance/FPSAnimInstance.h"
 
+#include "Character/CharacterBase.h"
 #include "Component/HealthComponent.h"
 #include "GameFramework/Character.h"
 
@@ -11,6 +12,7 @@ void UFPSAnimInstance::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	GetOwningActor()->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
+	// GetOwningActor()->GetComponentByClass<>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
 }
 
 void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -39,4 +41,16 @@ void UFPSAnimInstance::Die(bool bNewIsDead)
 			Montage_Play(DieMontageArray[FMath::RandRange(0, DieMontageArray.Num()-1)]);
 		}
 	}
+}
+
+void UFPSAnimInstance::AnimNotify_OnDieEnd()
+{
+	if (ACharacterBase* Character = Cast<ACharacterBase>(GetOwningActor()))
+	{
+		if (Character->IsLocallyControlled())
+		{
+			Character->DieEnd();
+		}
+	}
+	// UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::AnimNotify_OnDieEnd) %s"), *GetOwningActor()->GetActorNameOrLabel());
 }

@@ -40,6 +40,8 @@ public:
 	virtual float GetDamage() const override;
 	virtual AActor* GetIndicator() const override;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MultRPC_SpawnBulletDecal(FVector SpawnLocation, FRotator SpawnRotation);
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FProjectileInfo ProjectileInfo;
