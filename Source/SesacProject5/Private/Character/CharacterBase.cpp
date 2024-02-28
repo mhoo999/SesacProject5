@@ -14,7 +14,9 @@
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameInstance/EFSGameInstance.h"
 #include "QuestSystem/QuestLogComponent.h"
+#include "SaveData/QuestSaveData.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
@@ -60,6 +62,11 @@ void ACharacterBase::BeginPlay()
                 	Subsystem->AddMappingContext(DefaultIMC, 0);
                 }
 			}
+
+			if (QuestLogComponent)
+			{
+				GetGameInstance<UEFSGameInstance>()->questData->LoadQuestLog(QuestLogComponent);
+			}
 		}
 	}
 
@@ -99,4 +106,12 @@ FVector ACharacterBase::GetCameraLocation() const
 void ACharacterBase::Die(bool bIsDead)
 {
 	DisableInput(GetController<APlayerController>());
+}
+
+void ACharacterBase::DieEnd()
+{
+	if (APlayerController* PlayerController = GetController<APlayerController>())
+	{
+		PlayerController->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
+	}
 }

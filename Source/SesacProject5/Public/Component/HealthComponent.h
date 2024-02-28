@@ -71,7 +71,16 @@ public:
 	void ApplyDamage(AActor* DamageActor, FName BoneName);
 
 	UFUNCTION(Client, Reliable)
-	void ClientRPC_ApplyDamage(EBodyParts BodyParts, EDamageType DamageType, float Damage); 
+	void ClientRPC_ApplyDamage(EBodyParts BodyParts, EDamageType DamageType, float Damage);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_StartDieSound();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_StartHurtSound();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_StopHurtSound();
 
 	FHealth& GetHealth(EBodyParts BodyParts);
 
@@ -80,6 +89,9 @@ public:
 
 	UFUNCTION()
 	void Die();
+
+	// Getter
+	float GetTotalHealth() const;
 	
 private:
 	UPROPERTY()
@@ -92,6 +104,16 @@ private:
 	TMap<FName, EBodyParts> BodyPartsMap;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<EBodyParts, float> BlackOutDamageModifireMap;
+
+	float HurtHealth = 200.f;
+	
+	// Sound
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UAudioComponent* VoiceComponent;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	USoundBase* DieSound;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	USoundBase* HurtSound;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Die, bool);

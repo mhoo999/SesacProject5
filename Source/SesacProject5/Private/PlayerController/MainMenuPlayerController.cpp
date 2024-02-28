@@ -4,6 +4,7 @@
 #include "PlayerController/MainMenuPlayerController.h"
 
 #include "Blueprint/UserWidget.h"
+#include "GameInstance/EFSGameInstance.h"
 #include "UI/Menu/GameLoadingUI.h"
 #include "UI/Menu/LobbyUI.h"
 #include "UI/Menu/OpeningWidget.h"
@@ -27,12 +28,18 @@ void AMainMenuPlayerController::BeginPlay()
 	gameLoading->SetVisibility(ESlateVisibility::Hidden);
 
 	SetShowMouseCursor(true);
+
+	if (GetGameInstance<UEFSGameInstance>()->IsPlayerLoggedIn())
+	{
+		OnLoginSuccess();
+	}
 }
 
 void AMainMenuPlayerController::OnLoginSuccess()
 {
 	ShowLobby();
 	HiddenTitle();
+	HiddenOpening();
 }
 
 void AMainMenuPlayerController::OnJoinSessionFail()

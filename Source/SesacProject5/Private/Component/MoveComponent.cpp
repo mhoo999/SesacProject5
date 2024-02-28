@@ -27,7 +27,7 @@ void UMoveComponent::BeginPlay()
 	// ...
 	OwningCharacter = GetOwner<ACharacter>();
 	check(OwningCharacter != nullptr && OwningCharacter->IsValidLowLevelFast());
-	FPSAnin_Character = OwningCharacter->GetComponentByClass<UFPSAnim_CharacterComponent>();
+	FPSAnim_Character = OwningCharacter->GetComponentByClass<UFPSAnim_CharacterComponent>();
 
 	if (OwningCharacter->HasAuthority())
 	{
@@ -47,6 +47,7 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &UMoveComponent::MoveAction);
+	PlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Completed, this, &UMoveComponent::MoveEndAction);
 	PlayerInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &UMoveComponent::LookAction);
 	PlayerInputComponent->BindAction(IA_Crouch, ETriggerEvent::Started, this, &UMoveComponent::CrouchAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &UMoveComponent::SprintStartAction);
@@ -67,7 +68,7 @@ void UMoveComponent::StopSprint()
 {
 	if (bIsSprint)
 	{
-		FPSAnin_Character->StopHighAndLowPortPose();
+		FPSAnim_Character->StopHighAndLowPortPose();
 		bIsSprint = false;
 		ServerRPC_SetMaxWalkSpeed(300.f);	
 	}
@@ -83,18 +84,29 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 	FRotationMatrix RotationMatrix(FRotator(0, OwningCharacter->GetControlRotation().Yaw, 0));
 
-	// UE_LOG(LogTemp, Warning, TEXT("UMoveComponent::MoveAction) CurrentMoveSpeed : %f"), CurrentMoveSpeed);
+	// UE_LOG(LogTemp, Warning, TEXT("UMoveComponent::MoveAction) X : %f, Y : %f"), Vector2DValue.X, Vector2DValue.Y);
 
 	OwningCharacter->AddMovementInput(RotationMatrix.GetScaledAxis(EAxis::X), Vector2DValue.Y);
 	OwningCharacter->AddMovementInput(RotationMatrix.GetScaledAxis(EAxis::Y), Vector2DValue.X);
 
 	if (bIsSprint)
 	{
-		FPSAnin_Character->SetLowPortPose();
-		if ((Vector2DValue.Y <= 0.f || Vector2DValue.X != 0.f))
+		if (Vector2DValue.Y > 0.f)
+		{
+			FPSAnim_Character->SetLowPortPose();
+		}
+		else
 		{
 			SprintEndAction(FInputActionValue());
 		}
+	}
+}
+
+void UMoveComponent::MoveEndAction(const FInputActionValue& Value)
+{
+	if (bIsSprint)
+	{
+		FPSAnim_Character->StopHighAndLowPortPose();	
 	}
 }
 
@@ -148,22 +160,22 @@ void UMoveComponent::JumpAction(const FInputActionValue& Value)
 
 void UMoveComponent::LeanLeftStartAction(const FInputActionValue& Value)
 {
-	FPSAnin_Character->LeanLeft();
+	FPSAnim_Character->LeanLeft();
 }
 
 void UMoveComponent::LeanLeftEndAction(const FInputActionValue& Value)
 {
-	FPSAnin_Character->StopLeanLeft();
+	FPSAnim_Character->StopLeanLeft();
 }
 
 void UMoveComponent::LeanRightStartAction(const FInputActionValue& Value)
 {
-	FPSAnin_Character->LeanRight();
+	FPSAnim_Character->LeanRight();
 }
 
 void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
 {
-	FPSAnin_Character->StopLeanRight();
+	FPSAnim_Character->StopLeanRight();
 }
 
 void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
