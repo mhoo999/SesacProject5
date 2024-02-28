@@ -70,11 +70,11 @@ void AMainMenuPlayerController::ShowGameLoading()
 {
 	gameLoading->SetVisibility(ESlateVisibility::Visible);
 
-	// FTimerHandle TimerHandle;
-	// GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
-	// {
-	// 	GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
-	// }), 10.0f, false, 5.f);
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
+	{
+		GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
+	}), 10.0f, false, 5.f);
 }
 
 void AMainMenuPlayerController::HiddenGameLoading()
