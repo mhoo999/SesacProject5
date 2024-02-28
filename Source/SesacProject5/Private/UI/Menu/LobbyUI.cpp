@@ -32,7 +32,6 @@ void ULobbyUI::MovetoField()
 
 void ULobbyUI::OpenWorkBenchTab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Open WorkBench!"));
 }
 
 void ULobbyUI::MovetoTitle()

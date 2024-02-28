@@ -3,11 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QuestBase.h"
 #include "Components/ActorComponent.h"
+#include "NPC/NPCBase.h"
 #include "QuestLogComponent.generated.h"
 
 
 class AQuestBase;
+USTRUCT(BlueprintType)
+struct FQuestManagement
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	FName questID;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	FQuestDetails questDetails;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// int currentStage;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// FStageDetails currentStageDetails;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// TMap<FString, int> currentObjectiveProgress;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	bool isCompleted;
+};
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UQuestLogComponent : public UActorComponent
@@ -25,27 +50,44 @@ public:
 
 private:
 	// 현재 진행중인 퀘스트 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	TArray<FName> currentActiveQuests;
 
 	// 진행 완료한 퀘스트 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	TArray<FName> completedQuests;
 
 	// 현재 추적중인 퀘스트 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	TArray<FName> currentTrackedQuest;
 
-	// 수행중인 퀘스트 객체 목록
-	TArray<AQuestBase*> currentQuests;
+	// // 수행중인 퀘스트 객체 목록
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
+	// TArray<AQuestBase*> currentQuests;
+
+public:
+	// 퀘스트 목록
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	TArray<FQuestManagement> questList;
+	
+	// 새로운 퀘스트를 받는 함수
+	UFUNCTION(BlueprintCallable)
+	void AddNewQuest(FName questID, FDataTableRowHandle questRow);
+	
+	// 퀘스트를 완료하여 보상 받는 함수
+	UFUNCTION(BlueprintCallable)
+	void CompleteQuest();
+	
+	// 활성화된 퀘스트에 쿼리 보내기
+	UFUNCTION(BlueprintCallable)
+	void QueryActiveQuest();
+	
+	// 퀘스트 추적
+	UFUNCTION(BlueprintCallable)
+	void TrackQuest();
 
 private:
-	// 새로운 퀘스트를 받는 함수
-	void AddNewQuest();
-
-	// 퀘스트를 완료하여 보상 받는 함수
-	void CompleteQuest();
-
-	// 활성화된 퀘스트에 쿼리 보내기
-	void QueryActiveQuest();
-
-	// 퀘스트 추적
-	void TrackQuest();
+	bool HasQuest(FName questID);
+	
+	void AcceptQuest(FQuestManagement& quest, FDataTableRowHandle& questRow);
 };
