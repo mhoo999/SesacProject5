@@ -3,11 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QuestBase.h"
 #include "Components/ActorComponent.h"
+#include "NPC/NPCBase.h"
 #include "QuestLogComponent.generated.h"
 
 
 class AQuestBase;
+USTRUCT(BlueprintType)
+struct FQuestManagement
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	FName questID;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	FQuestDetails questDetails;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// int currentStage;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// FStageDetails currentStageDetails;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	// TMap<FString, int> currentObjectiveProgress;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	bool isCompleted;
+};
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UQuestLogComponent : public UActorComponent
@@ -36,14 +61,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	TArray<FName> currentTrackedQuest;
 
-	// 수행중인 퀘스트 객체 목록
+	// // 수행중인 퀘스트 객체 목록
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
+	// TArray<AQuestBase*> currentQuests;
+
+	// 퀘스트 목록
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
-	TArray<AQuestBase*> currentQuests;
+	TArray<FQuestManagement> questList;
 
 public:
 	// 새로운 퀘스트를 받는 함수
 	UFUNCTION(BlueprintCallable)
-	void AddNewQuest();
+	void AddNewQuest(FName questID, FDataTableRowHandle questRow);
 	
 	// 퀘스트를 완료하여 보상 받는 함수
 	UFUNCTION(BlueprintCallable)
@@ -56,4 +85,9 @@ public:
 	// 퀘스트 추적
 	UFUNCTION(BlueprintCallable)
 	void TrackQuest();
+
+private:
+	bool HasQuest(FName questID);
+	
+	void AcceptQuest(FQuestManagement& quest, FDataTableRowHandle& questRow);
 };

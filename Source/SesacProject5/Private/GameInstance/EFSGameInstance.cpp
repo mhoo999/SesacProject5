@@ -5,7 +5,9 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "Kismet/GameplayStatics.h"
 #include "PlayerController/MainMenuPlayerController.h"
+#include "SaveData/QuestSaveData.h"
 
 
 void UEFSGameInstance::Init()
@@ -25,6 +27,19 @@ void UEFSGameInstance::Init()
 	SessionPtrRef->OnFindSessionsCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnFindSessionCompleted);
 	SessionPtrRef->OnDestroySessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnDestroySessionCompleted);
 	SessionPtrRef->OnJoinSessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnJoinSessionCompleted);
+
+	// Save quest data
+	const FString slotName = "questdata";
+	
+	if (UGameplayStatics::DoesSaveGameExist(slotName, 0))
+	{
+		questData = Cast<UQuestSaveData>(UGameplayStatics::LoadGameFromSlot(slotName, 0));
+	}
+	else
+	{
+		questData = Cast<UQuestSaveData>(UGameplayStatics::CreateSaveGameObject(UQuestSaveData::StaticClass()));
+		UGameplayStatics::SaveGameToSlot(questData, slotName, 0);
+	}
 }
 
 void UEFSGameInstance::LoginWithEOS()

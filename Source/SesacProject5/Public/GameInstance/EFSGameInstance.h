@@ -9,6 +9,7 @@
 
 #include "EFSGameInstance.generated.h"
 
+class UQuestSaveData;
 /**
  * 
  */
@@ -51,4 +52,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FString ServerURL;
+
+	// Save quest data
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UQuestSaveData* questData;
 };
