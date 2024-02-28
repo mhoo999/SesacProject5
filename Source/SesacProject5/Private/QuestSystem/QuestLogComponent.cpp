@@ -20,7 +20,7 @@ void UQuestLogComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UQuestLogComponent::AddNewQuest()
 {
-	
+	UE_LOG(LogTemp, Warning, TEXT("Hello"));
 }
 
 void UQuestLogComponent::CompleteQuest()
@@ -34,4 +34,3 @@ void UQuestLogComponent::QueryActiveQuest()
 void UQuestLogComponent::TrackQuest()
 {
 }
-

@@ -116,21 +116,27 @@ public:
 
 private:
 	// 퀘스트 데이터가 상주할 데이터 테이블의 행 이름을 참조
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess), meta=(ExposeOnSpawn=true))
 	FName questID;
 	
 	// 퀘스트 세부 정보
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	FQuestDetails questDetails;
 	
 	// 퀘스트 단계
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	int currentStage;
 	
 	// 현재 단계에 어떤 데이터가 있는지 추적
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	FStageDetails currentStageDetails;
 	
 	// Objective, ObjectiveID를 추적
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	TMap<FString, int> currentObjectiveProgress;
 	
 	// 완료 여부
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem", meta=(AllowPrivateAccess))
 	bool isCompleted;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC", meta=(AllowPrivateAccess))
