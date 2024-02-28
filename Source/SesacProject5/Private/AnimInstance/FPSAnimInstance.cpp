@@ -12,7 +12,6 @@ void UFPSAnimInstance::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	GetOwningActor()->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
-	// GetOwningActor()->GetComponentByClass<>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
 }
 
 void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

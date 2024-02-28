@@ -14,8 +14,9 @@ AInGameGameMode::AInGameGameMode()
 
 AActor* AInGameGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), *Player->GetActorNameOrLabel());
-	return Super::ChoosePlayerStart_Implementation(Player);
+	AActor* PlayerStart = Super::ChoosePlayerStart_Implementation(Player);
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), (PlayerStart ? *PlayerStart->GetActorNameOrLabel() : *FString("Empty")));
+	return PlayerStart;
 }
 
 AActor* AInGameGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)

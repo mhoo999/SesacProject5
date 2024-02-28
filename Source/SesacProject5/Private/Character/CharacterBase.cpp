@@ -14,7 +14,9 @@
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameInstance/EFSGameInstance.h"
 #include "QuestSystem/QuestLogComponent.h"
+#include "SaveData/QuestSaveData.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
@@ -59,6 +61,11 @@ void ACharacterBase::BeginPlay()
                 {
                 	Subsystem->AddMappingContext(DefaultIMC, 0);
                 }
+			}
+
+			if (QuestLogComponent)
+			{
+				GetGameInstance<UEFSGameInstance>()->questData->LoadQuestLog(QuestLogComponent);
 			}
 		}
 	}
