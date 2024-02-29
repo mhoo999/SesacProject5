@@ -58,7 +58,7 @@ void UEscapeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UEscapeComponent::StartEscape(AExitBase* CurrentExit)
 {
-	// if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
+	if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
 	
 	if (true == bIsEscaping) return;
 	bIsEscaping = true;
@@ -68,7 +68,7 @@ void UEscapeComponent::StartEscape(AExitBase* CurrentExit)
 
 void UEscapeComponent::EndEscape(AExitBase* CurrentExit)
 {
-	// if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
+	if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
 	
 	if (false == bIsEscaping) return;
 	bIsEscaping = false;
