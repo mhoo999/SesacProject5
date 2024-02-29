@@ -82,10 +82,13 @@ void UQuestLogComponent::AcceptQuest(FQuestManagement& quest, FDataTableRowHandl
 	}
 }
 
-void UQuestLogComponent::OnObjectiveIDCalled(FString objectiveID, int32 value)
+void UQuestLogComponent::ClearQuestList()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UQuestLogComponent::OnObjectiveIDCalled"));
+	questList.Empty();
+}
 
+void UQuestLogComponent::ClientRPCOnObjectiveIDCalled_Implementation(const FString& objectiveID, int32 value)
+{
 	for (FQuestManagement& quest : questList)
 	{
 		for (FStageDetails& stage : quest.questDetails.stages)
@@ -100,9 +103,4 @@ void UQuestLogComponent::OnObjectiveIDCalled(FString objectiveID, int32 value)
 			}
 		}
 	}
-}
-
-void UQuestLogComponent::ClearQuestList()
-{
-	questList.Empty();
 }

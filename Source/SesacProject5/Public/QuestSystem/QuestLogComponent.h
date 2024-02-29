@@ -87,7 +87,9 @@ public:
 
 	void ClearQuestList();
 	
-	void OnObjectiveIDCalled(FString objectiveID, int32 value);
+	UFUNCTION(Client, Reliable)
+	void ClientRPCOnObjectiveIDCalled(const FString& objectiveID, int32 value);
+	
 private:
 	bool HasQuest(FName questID);
 	

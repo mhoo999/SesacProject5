@@ -43,7 +43,7 @@ void AQuestLocationBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* O
 	if (UQuestLogComponent* questLogComp = OtherActor->GetComponentByClass<UQuestLogComponent>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Overlap success"));
-		questLogComp->OnObjectiveIDCalled(objectID, value);
+		questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
 	}
 }
 
