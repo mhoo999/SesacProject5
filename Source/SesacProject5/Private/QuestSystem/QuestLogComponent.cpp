@@ -82,6 +82,26 @@ void UQuestLogComponent::AcceptQuest(FQuestManagement& quest, FDataTableRowHandl
 	}
 }
 
+void UQuestLogComponent::OnObjectiveIDCalled(FString objectiveID, int32 value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UQuestLogComponent::OnObjectiveIDCalled"));
+
+	for (FQuestManagement& quest : questList)
+	{
+		for (FStageDetails& stage : quest.questDetails.stages)
+		{
+			for (FObjectiveDetails& objective : stage.Objectives)
+			{
+				if (objective.objectiveID.Equals(objectiveID, ESearchCase::IgnoreCase) && objective.Quantity == value)
+				{
+					quest.isCompleted = true;
+					UE_LOG(LogTemp, Warning, TEXT("questID : %s is COMPLETE"), *quest.questID.ToString());
+				}
+			}
+		}
+	}
+}
+
 void UQuestLogComponent::ClearQuestList()
 {
 	questList.Empty();

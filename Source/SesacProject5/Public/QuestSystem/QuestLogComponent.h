@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "QuestBase.h"
 #include "Components/ActorComponent.h"
-#include "NPC/NPCBase.h"
 #include "QuestLogComponent.generated.h"
 
 
@@ -88,6 +87,7 @@ public:
 
 	void ClearQuestList();
 	
+	void OnObjectiveIDCalled(FString objectiveID, int32 value);
 private:
 	bool HasQuest(FName questID);
 	

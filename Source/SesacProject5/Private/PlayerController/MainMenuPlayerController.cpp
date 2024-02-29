@@ -5,6 +5,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "GameInstance/EFSGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/Menu/GameLoadingUI.h"
 #include "UI/Menu/LobbyUI.h"
 #include "UI/Menu/OpeningWidget.h"
@@ -80,7 +81,8 @@ void AMainMenuPlayerController::ShowGameLoading()
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
 	{
-		GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
+		// GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
+		UGameplayStatics::OpenLevel(GetWorld(), "Test_YMH");
 	}), 10.0f, false, 5.f);
 }
 
