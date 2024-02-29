@@ -31,6 +31,9 @@ struct FQuestManagement
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
 	bool isCompleted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	bool isProgress;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -89,10 +92,15 @@ public:
 	
 	UFUNCTION(Client, Reliable)
 	void ClientRPCOnObjectiveIDCalled(const FString& objectiveID, int32 value);
+
+	UFUNCTION(BlueprintCallable)
+	void EndIsProgress(FQuestManagement& quest);
 	
 private:
 	bool HasQuest(FName questID);
 	
 	void AcceptQuest(FQuestManagement& quest, FDataTableRowHandle& questRow);
+
+	void saveQuest();
 
 };

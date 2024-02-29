@@ -3,6 +3,11 @@
 
 #include "QuestSystem/QuestLogComponent.h"
 
+#include "Character/CharacterBase.h"
+#include "Component/EscapeComponent.h"
+#include "GameInstance/EFSGameInstance.h"
+#include "SaveData/QuestSaveData.h"
+
 UQuestLogComponent::UQuestLogComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -11,6 +16,10 @@ UQuestLogComponent::UQuestLogComponent()
 void UQuestLogComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto player = Cast<ACharacterBase>(GetOwner());
+	auto escapeComp = player->GetComponentByClass<UEscapeComponent>();
+	escapeComp->OnEscape.AddUObject(this, &UQuestLogComponent::saveQuest);
 }
 
 void UQuestLogComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -31,11 +40,6 @@ void UQuestLogComponent::AddNewQuest(FName questID, FDataTableRowHandle questRow
 	AcceptQuest(NewQuest, questRow);
 
 	questList.Add(NewQuest);
-
-	// for (int i = 0; i < questList.Num(); ++i)
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("quest ID : %s"), *questList[i].questID.ToString());
-	// }
 }
 
 void UQuestLogComponent::CompleteQuest()
@@ -75,11 +79,23 @@ void UQuestLogComponent::AcceptQuest(FQuestManagement& quest, FDataTableRowHandl
 	{
 		quest.questDetails = *rowData;
 		quest.isCompleted = false;
+		quest.isProgress = true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Quest details not found in data table for quest ID: %s"), *questRow.RowName.ToString());
 	}
+}
+
+void UQuestLogComponent::saveQuest()
+{
+	auto gameInstance = GetWorld()->GetGameInstance<UEFSGameInstance>();
+	gameInstance->questData->SaveQuestLog(questList);
+}
+
+void UQuestLogComponent::EndIsProgress(FQuestManagement& quest)
+{
+	quest.isProgress = false;
 }
 
 void UQuestLogComponent::ClearQuestList()
