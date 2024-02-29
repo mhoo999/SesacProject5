@@ -85,6 +85,9 @@ void UEscapeComponent::SetExitArray(TArray<AExitBase*> NewExitArray)
 void UEscapeComponent::ClientRPC_Escape_Implementation()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::ClientRPC_Escape_Implementation"));
+
+	OnEscape.Broadcast();
+	
 	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
 }
 

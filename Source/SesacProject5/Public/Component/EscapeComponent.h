@@ -60,4 +60,7 @@ public:
 	// EscapeTime
 	DECLARE_DELEGATE_OneParam(FDele_EscapeTime, float);
 	FDele_EscapeTime OnEscapeTimeChanged;
+
+	DECLARE_MULTICAST_DELEGATE(FDele_Escape);
+	FDele_Escape OnEscape;
 };
