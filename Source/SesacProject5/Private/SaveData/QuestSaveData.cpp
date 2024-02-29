@@ -2,8 +2,6 @@
 
 
 #include "SaveData/QuestSaveData.h"
-
-#include "GameInstance/EFSGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "QuestSystem/QuestLogComponent.h"
 
@@ -11,13 +9,13 @@ void UQuestSaveData::PrintLog()
 {
 	if (questList.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UQuestSaveData::PrintLog) Quest List is empty"));
+		// UE_LOG(LogTemp, Warning, TEXT("UQuestSaveData::PrintLog) Quest List is empty"));
 		return;
 	}
 	
 	for (FQuestManagement Iter : questList)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UQuestSaveData::PrintLog) Quest ID : %s"), *Iter.questID.ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("UQuestSaveData::PrintLog) Quest ID : %s"), *Iter.questID.ToString());
 	}
 }
 

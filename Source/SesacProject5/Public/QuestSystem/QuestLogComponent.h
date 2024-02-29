@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "QuestBase.h"
 #include "Components/ActorComponent.h"
-#include "NPC/NPCBase.h"
 #include "QuestLogComponent.generated.h"
 
 
@@ -32,6 +31,9 @@ struct FQuestManagement
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
 	bool isCompleted;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestManagement")
+	bool isProgress;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -76,7 +78,7 @@ public:
 	
 	// 퀘스트를 완료하여 보상 받는 함수
 	UFUNCTION(BlueprintCallable)
-	void CompleteQuest();
+	void CompleteQuest(FQuestManagement questData);
 	
 	// 활성화된 퀘스트에 쿼리 보내기
 	UFUNCTION(BlueprintCallable)
@@ -88,9 +90,14 @@ public:
 
 	void ClearQuestList();
 	
+	UFUNCTION(Client, Reliable)
+	void ClientRPCOnObjectiveIDCalled(const FString& objectiveID, int32 value);
+	
 private:
 	bool HasQuest(FName questID);
 	
 	void AcceptQuest(FQuestManagement& quest, FDataTableRowHandle& questRow);
+
+	void saveQuest();
 
 };
