@@ -7,6 +7,8 @@
 #include "EscapeComponent.generated.h"
 
 
+class AExitBase;
+
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UEscapeComponent : public UActorComponent
 {
@@ -20,14 +22,16 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void StartEscape();
-	void EndEscape();
+	void StartEscape(AExitBase* CurrentExit);
+	void EndEscape(AExitBase* CurrentExit);
+
+	void SetExitArray(TArray<AExitBase*> NewExitArray);
 
 	UFUNCTION(Client, Reliable)
 	void ClientRPC_Escape(); 
@@ -43,6 +47,9 @@ private:
 	float MaxEscapeTime = 5.f; 
 	UPROPERTY(ReplicatedUsing = "OnRep_EscapeTime", Meta = (AllowPrivateAccess))
 	float EscapeTime = 0.f;
+
+	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	TArray<AExitBase*> ExitArray;
 	
 public:
 	// Delegate
