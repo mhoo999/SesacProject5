@@ -78,7 +78,7 @@ public:
 	
 	// 퀘스트를 완료하여 보상 받는 함수
 	UFUNCTION(BlueprintCallable)
-	void CompleteQuest();
+	void CompleteQuest(FQuestManagement questData);
 	
 	// 활성화된 퀘스트에 쿼리 보내기
 	UFUNCTION(BlueprintCallable)
@@ -92,9 +92,6 @@ public:
 	
 	UFUNCTION(Client, Reliable)
 	void ClientRPCOnObjectiveIDCalled(const FString& objectiveID, int32 value);
-
-	UFUNCTION(BlueprintCallable)
-	void EndIsProgress(FQuestManagement& quest);
 	
 private:
 	bool HasQuest(FName questID);

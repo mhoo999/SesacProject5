@@ -42,8 +42,9 @@ void UQuestLogComponent::AddNewQuest(FName questID, FDataTableRowHandle questRow
 	questList.Add(NewQuest);
 }
 
-void UQuestLogComponent::CompleteQuest()
+void UQuestLogComponent::CompleteQuest(FQuestManagement questData)
 {
+	questData.isProgress = false;
 }
 
 void UQuestLogComponent::QueryActiveQuest()
@@ -93,11 +94,6 @@ void UQuestLogComponent::saveQuest()
 	gameInstance->questData->SaveQuestLog(questList);
 }
 
-void UQuestLogComponent::EndIsProgress(FQuestManagement& quest)
-{
-	quest.isProgress = false;
-}
-
 void UQuestLogComponent::ClearQuestList()
 {
 	questList.Empty();
@@ -114,7 +110,7 @@ void UQuestLogComponent::ClientRPCOnObjectiveIDCalled_Implementation(const FStri
 				if (objective.objectiveID.Equals(objectiveID, ESearchCase::IgnoreCase) && objective.Quantity == value)
 				{
 					quest.isCompleted = true;
-					UE_LOG(LogTemp, Warning, TEXT("questID : %s is COMPLETE"), *quest.questID.ToString());
+					// UE_LOG(LogTemp, Warning, TEXT("questID : %s is COMPLETE"), *quest.questID.ToString());
 				}
 			}
 		}
