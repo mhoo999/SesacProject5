@@ -3,26 +3,61 @@
 
 #include "GameMode/InGameGameMode.h"
 
+#include "EngineUtils.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "Component/EscapeComponent.h"
+#include "GameFramework/PlayerStart.h"
 #include "GameFramework/PlayerState.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Object/PlayerStartBase.h"
 
-AInGameGameMode::AInGameGameMode()
+void AInGameGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::InitGame"));
+	
+	for (TActorIterator<APlayerStartBase> It(GetWorld()); It; ++It)
+	{
+		SpawnPointArray.Add(*It);
+	}
 }
 
 AActor* AInGameGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-	AActor* PlayerStart = Super::ChoosePlayerStart_Implementation(Player);
-	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), (PlayerStart ? *PlayerStart->GetActorNameOrLabel() : *FString("Empty")));
+	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) PlayerStartArray Num : %d"), SpawnPointArray.Num());
+	if (SpawnPointArray.Num() <= 0) return nullptr;
+
+	APlayerStart* PlayerStart = nullptr;
+	while (SpawnPointArray.Num())
+	{
+		int32 RandIndex = FMath::RandRange(0, SpawnPointArray.Num()-1);
+		if (SpawnPointArray[RandIndex]->IsOccupied())
+		{
+			SpawnPointArray.RemoveAt(RandIndex);
+		}
+		else
+		{
+			PlayerStart = Cast<APlayerStart>(SpawnPointArray[RandIndex]->SetOccupied());
+		}
+	}
+	
+	// AActor* PlayerStart = Super::ChoosePlayerStart_Implementation(Player);
+	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), (PlayerStart ? *PlayerStart->GetActorNameOrLabel() : *FString("Empty")));
+	
 	return PlayerStart;
 }
 
-AActor* AInGameGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
+void AInGameGameMode::InitStartSpot_Implementation(AActor* StartSpot, AController* NewPlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::FindPlayerStart) %s"), *Player->GetActorNameOrLabel());
-	return Super::FindPlayerStart_Implementation(Player, IncomingName);
+	Super::InitStartSpot_Implementation(StartSpot, NewPlayer);
+
+	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::InitStartSpot) Pawn Name : %s"), *NewPlayer->GetPawn()->GetActorNameOrLabel());
+	if (UEscapeComponent* EscapeComponent = NewPlayer->GetPawn()->GetComponentByClass<UEscapeComponent>())
+	{
+		Cast<APlayerStartBase>(StartSpot)->SetExitArrayToComponent(EscapeComponent);
+	}
 }
 
 void AInGameGameMode::PostLogin(APlayerController* NewPlayer)

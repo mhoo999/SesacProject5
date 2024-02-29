@@ -29,7 +29,6 @@ void UEscapeComponent::BeginPlay()
 	EscapeTime = MaxEscapeTime;
 }
 
-
 // Called every frame
 void UEscapeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -57,26 +56,38 @@ void UEscapeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME_CONDITION(UEscapeComponent, EscapeTime, COND_OwnerOnly);
 }
 
-void UEscapeComponent::StartEscape()
+void UEscapeComponent::StartEscape(AExitBase* CurrentExit)
 {
+	if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
+	
 	if (true == bIsEscaping) return;
 	bIsEscaping = true;
 	OnRep_IsEscaping();
 	UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::StartEscape"));
 }
 
-void UEscapeComponent::EndEscape()
+void UEscapeComponent::EndEscape(AExitBase* CurrentExit)
 {
-if (false == bIsEscaping) return;
+	if (ExitArray.Find(CurrentExit) == INDEX_NONE) return;
+	
+	if (false == bIsEscaping) return;
 	bIsEscaping = false;
 	OnRep_IsEscaping();
 	UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::EndEscape"));
 	EscapeTime = MaxEscapeTime;
 }
 
+void UEscapeComponent::SetExitArray(TArray<AExitBase*> NewExitArray)
+{
+	ExitArray = NewExitArray;
+}
+
 void UEscapeComponent::ClientRPC_Escape_Implementation()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::ClientRPC_Escape_Implementation"));
+
+	OnEscape.Broadcast();
+	
 	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
 }
 

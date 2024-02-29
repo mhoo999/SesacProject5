@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "InGameGameMode.generated.h"
 
+class ISpawnPoint;
 /**
  * 
  */
@@ -15,10 +16,14 @@ class SESACPROJECT5_API AInGameGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AInGameGameMode();
 
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
-	virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override; 
+	virtual void InitStartSpot_Implementation(AActor* StartSpot, AController* NewPlayer) override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+private:
+	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	TArray<ISpawnPoint*> SpawnPointArray; 
 };
