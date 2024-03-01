@@ -90,7 +90,7 @@ public:
 
 	void ClearQuestList();
 	
-	UFUNCTION(Client, Reliable)
+	UFUNCTION(Client, Reliable, BlueprintCallable)
 	void ClientRPCOnObjectiveIDCalled(const FString& objectiveID, int32 value);
 	
 private:
