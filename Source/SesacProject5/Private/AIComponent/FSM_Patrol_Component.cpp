@@ -24,8 +24,9 @@ bool UFSM_Patrol_Component::IsAtDestination()
 	return dist <= 100;
 }
 
-void UFSM_Patrol_Component::PerfomLookAround()
+void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("play montage"));
 	ai->GetMesh()->GetAnimInstance()->Montage_Play(lookAroundMontage);
 }
 
@@ -58,22 +59,15 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 	{
 		if (!bHasPerformedLookAround)
 		{
-			PerfomLookAround();
+			MultiRPCPerformLookAround();
 			bHasPerformedLookAround = true;
 		}
 		else
 		{
 			if (LookAroundTimerhandle.IsValid()) return;
 
-			
-			bHasPerformedLookAround = false;
-			SetNextDestination();
-			// GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, FTimerDelegate::CreateLambda([&]
-			// {
-			// 	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
-			// 	bHasPerformedLookAround = false;
-			// 	SetNextDestination();
-			// }), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
+			GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
+			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, this, &UFSM_Patrol_Component::OnLookAtroundTimerExpired, lookAroundMontage->GetPlayLength(), false);
 		}
 	}
 	else
@@ -98,5 +92,11 @@ void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 	
 	ac->SetContext(EEnemystate::search);
 	ac->GetFSM()->SenseNewActor(NewActor);
+}
+
+void UFSM_Patrol_Component::OnLookAtroundTimerExpired()
+{
+	bHasPerformedLookAround = false;
+	SetNextDestination();
 }
 
