@@ -102,11 +102,17 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 
 bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetLocation)
 {
-	if (targetActor == nullptr) return false;
+	if (targetActor == nullptr)
+	{
+		return false;
+	}
 
 	ACharacter* TargetCharacter = Cast<ACharacter>(targetActor);
-	if (TargetCharacter == nullptr) return false;
-	
+	if (TargetCharacter == nullptr)
+	{
+		return false;
+	}
+		
 	TArray<FName> Sockets = TargetCharacter->GetMesh()->GetAllSocketNames();
 
 	TargetPart currentTarget = {"NONE", 4, true};
@@ -119,18 +125,19 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 		FVector SocketLocation = TargetCharacter->GetMesh()->GetSocketLocation(Socket);
 
 		FHitResult checkResult;
+		DrawDebugLine(GetWorld(), ai->GetActorLocation(), SocketLocation, FColor::Magenta, false, 5.f, 1, 1);
+		
 		if (GetWorld()->LineTraceSingleByChannel(checkResult, ai->GetActorLocation(), SocketLocation, ECC_Visibility))
 		{
-			if (SocketName.Equals("spine_03") && checkResult.GetActor() == targetActor)
+			if (SocketName.Equals("spine_03", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
-				// UE_LOG(LogTemp, Warning, TEXT("in Socket Iter == spine_03"));
 				TargetPart THORAX {"THORAX", 1, true, SocketLocation};
 				if (THORAX.priority < currentTarget.priority)
 				{
 					currentTarget = THORAX;
 				}
 			}
-			else if (SocketName.Equals("spine_01") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("spine_01", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart STOMACH {"STOMACH", 2, true, SocketLocation};
 				if (STOMACH.priority < currentTarget.priority)
@@ -138,7 +145,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 					currentTarget = STOMACH;
 				}
 			}
-			else if (SocketName.Equals("head") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("head", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart HEAD {"HEAD", 3, true, SocketLocation};
 				if (HEAD.priority < currentTarget.priority)
@@ -146,7 +153,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 					currentTarget = HEAD;
 				}
 			}
-			else if (SocketName.Equals("Hand_R") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("Hand_R", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart RIGHTARM {"RIGHTARM", 3, true, SocketLocation};
 				if (RIGHTARM.priority < currentTarget.priority)
@@ -154,7 +161,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 					currentTarget = RIGHTARM;
 				}
 			}
-			else if (SocketName.Equals("Hand_L") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("Hand_L", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart LEFTARM {"LEFTARM", 3, true, SocketLocation};
 				if (LEFTARM.priority < currentTarget.priority)
@@ -162,7 +169,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 					currentTarget = LEFTARM;
 				}
 			}
-			else if (SocketName.Equals("calf_r") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("calf_r", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart RIGHTLEG {"RIGHTLEG", 3, true, SocketLocation};
 				if (RIGHTLEG.priority < currentTarget.priority)
@@ -170,7 +177,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 					currentTarget = RIGHTLEG;
 				}
 			}
-			else if (SocketName.Equals("calf_l") && checkResult.GetActor() == targetActor)
+			else if (SocketName.Equals("calf_l", ESearchCase::IgnoreCase) && checkResult.GetActor() == targetActor)
 			{
 				TargetPart LEFTLEG {"LEFTLEG", 3, true, SocketLocation};
 				if (LEFTLEG.priority < currentTarget.priority)

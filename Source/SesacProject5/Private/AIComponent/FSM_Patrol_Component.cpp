@@ -41,6 +41,8 @@ void UFSM_Patrol_Component::SetNextDestination()
 		NextWaypoint = waypointArray[CurrentWaypointIndex];
 		CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointArray.Num();
 	}
+
+	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
 }
 
 void UFSM_Patrol_Component::MoveToDestination()
@@ -69,7 +71,6 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 		{
 			if (LookAroundTimerhandle.IsValid()) return;
 
-			GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
 			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, this, &UFSM_Patrol_Component::OnLookAtroundTimerExpired, lookAroundMontage->GetPlayLength(), false);
 		}
 	}
