@@ -24,10 +24,13 @@ bool UFSM_Patrol_Component::IsAtDestination()
 	return dist <= 100;
 }
 
-void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation()
+void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation(UAnimMontage* MontageToPlay)
 {
-	UE_LOG(LogTemp, Warning, TEXT("play montage"));
-	ai->GetMesh()->GetAnimInstance()->Montage_Play(lookAroundMontage);
+	if (MontageToPlay && ai->GetMesh()->GetAnimInstance())
+	{
+		ai->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
+		// UE_LOG(LogTemp, Warning, TEXT("play montage"));
+	}
 }
 
 void UFSM_Patrol_Component::SetNextDestination()
@@ -59,7 +62,7 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 	{
 		if (!bHasPerformedLookAround)
 		{
-			MultiRPCPerformLookAround();
+			MultiRPCPerformLookAround(lookAroundMontage);
 			bHasPerformedLookAround = true;
 		}
 		else

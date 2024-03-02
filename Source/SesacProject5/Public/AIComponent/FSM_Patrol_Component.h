@@ -26,7 +26,7 @@ protected:
 	bool IsAtDestination();
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPCPerformLookAround();
+	void MultiRPCPerformLookAround(UAnimMontage* MontageToPlay);
 
 	void SetNextDestination();
 
