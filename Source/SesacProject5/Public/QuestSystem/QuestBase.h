@@ -37,13 +37,13 @@ struct FObjectiveDetails
 	FString objectiveID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	int Quantity;
+	int32 Quantity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	bool isOptional;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	int BonusXP;
+	int32 BonusXP;
 };
 
 // 퀘스트의 단계별 세부 정보
@@ -65,13 +65,13 @@ struct FStageDetails
 	UTexture2D* rewardImage;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	int XRReward;
+	int32 XRReward;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	FText itemReward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	int currencyRewards;
+	int32 currencyRewards;
 };
 
 // 전체 퀘스트의 세부 정보

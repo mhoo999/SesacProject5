@@ -30,4 +30,11 @@ private:
 	TSubclassOf<AScavBase> ScavFactory;
 
 	void MakeScave();
+
+	void RespawnScave(bool bNewIsDead);
+
+	FTimerHandle respawnTimer;
+
+	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
+	float respawnTime = 30.f;
 };

@@ -125,7 +125,7 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 		FVector SocketLocation = TargetCharacter->GetMesh()->GetSocketLocation(Socket);
 
 		FHitResult checkResult;
-		DrawDebugLine(GetWorld(), ai->GetActorLocation(), SocketLocation, FColor::Magenta, false, 5.f, 1, 1);
+		// DrawDebugLine(GetWorld(), ai->GetActorLocation(), SocketLocation, FColor::Magenta, false, 5.f, 1, 1);
 		
 		if (GetWorld()->LineTraceSingleByChannel(checkResult, ai->GetActorLocation(), SocketLocation, ECC_Visibility))
 		{

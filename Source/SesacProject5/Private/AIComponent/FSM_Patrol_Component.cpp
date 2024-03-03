@@ -26,10 +26,10 @@ bool UFSM_Patrol_Component::IsAtDestination()
 
 void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation(UAnimMontage* MontageToPlay)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("play montage"));
 	if (MontageToPlay && ai->GetMesh()->GetAnimInstance())
 	{
 		ai->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
-		// UE_LOG(LogTemp, Warning, TEXT("play montage"));
 	}
 }
 
