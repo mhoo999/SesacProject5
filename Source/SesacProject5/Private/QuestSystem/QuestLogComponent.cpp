@@ -5,6 +5,7 @@
 
 #include "Character/CharacterBase.h"
 #include "Component/EscapeComponent.h"
+#include "Component/HealthComponent.h"
 #include "GameInstance/EFSGameInstance.h"
 #include "SaveData/QuestSaveData.h"
 
@@ -20,6 +21,7 @@ void UQuestLogComponent::BeginPlay()
 	auto player = Cast<ACharacterBase>(GetOwner());
 	auto escapeComp = player->GetComponentByClass<UEscapeComponent>();
 	escapeComp->OnEscape.AddUObject(this, &UQuestLogComponent::saveQuest);
+	player->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UQuestLogComponent::ReleaseComplete);
 }
 
 void UQuestLogComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -90,6 +92,21 @@ void UQuestLogComponent::AcceptQuest(FQuestManagement& quest, FDataTableRowHandl
 
 void UQuestLogComponent::saveQuest()
 {
+	auto gameInstance = GetWorld()->GetGameInstance<UEFSGameInstance>();
+	gameInstance->questData->SaveQuestLog(questList);
+}
+
+void UQuestLogComponent::ReleaseComplete(bool bNewIsDead)
+{
+	if (bNewIsDead)
+	{
+		for (FQuestManagement& quest : questList)
+		{
+			quest.isCompleted = false;
+			UE_LOG(LogTemp, Warning, TEXT("questID : %hhd"), quest.isCompleted);
+		}
+	}
+
 	auto gameInstance = GetWorld()->GetGameInstance<UEFSGameInstance>();
 	gameInstance->questData->SaveQuestLog(questList);
 }

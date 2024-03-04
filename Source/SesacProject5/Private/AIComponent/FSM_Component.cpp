@@ -25,6 +25,7 @@ void UFSM_Component::BeginPlay()
 	Super::BeginPlay();
 
 	ac = Cast<AEOSAIController>(GetOwner());
+	SetIsReplicated(true);
 }
 
 // bool UFSM_Component::bFocusTarget() const

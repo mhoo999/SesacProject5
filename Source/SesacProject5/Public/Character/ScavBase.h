@@ -6,7 +6,8 @@
 #include "Character/CharacterBase.h"
 #include "ScavBase.generated.h"
 
-class UFSMComponent;
+class UAIMumbleComponent;
+class UAIMontageComponent;
 /**
  * 
  */
@@ -17,5 +18,12 @@ class SESACPROJECT5_API AScavBase : public ACharacterBase
 
 public:
 	AScavBase();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UAIMontageComponent* AIMontageComp;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UAIMumbleComponent* AIMumbleComp;
 
 };

@@ -12,7 +12,7 @@
 class AHoonsAIController;
 class ACharacterBase;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Search_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()

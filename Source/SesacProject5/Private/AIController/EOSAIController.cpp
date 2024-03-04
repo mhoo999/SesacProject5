@@ -34,6 +34,8 @@ AEOSAIController::AEOSAIController()
 	sight->PeripheralVisionAngleDegrees = 65.f;
 	sight->DetectionByAffiliation.bDetectNeutrals = true;
 	sight->DetectionByAffiliation.bDetectFriendlies = true;
+
+	bReplicates = true;
 }
 
 void AEOSAIController::BeginPlay()
@@ -56,6 +58,7 @@ void AEOSAIController::ChangeDead(bool bNewIsDead)
 {
 	if (bNewIsDead)
 	{
+		FSMInterface->StopExecute();
 		this->Destroy();
 	}
 }

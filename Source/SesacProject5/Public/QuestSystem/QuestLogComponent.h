@@ -100,4 +100,5 @@ private:
 
 	void saveQuest();
 
+	void ReleaseComplete(bool bNewIsDead);
 };

@@ -26,7 +26,7 @@ struct TargetPart
 	}
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Chase_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()
