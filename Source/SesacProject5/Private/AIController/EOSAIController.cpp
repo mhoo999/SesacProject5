@@ -56,6 +56,7 @@ void AEOSAIController::ChangeDead(bool bNewIsDead)
 {
 	if (bNewIsDead)
 	{
+		FSMInterface->StopExecute();
 		this->Destroy();
 	}
 }

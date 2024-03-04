@@ -12,7 +12,7 @@ class AHoonsAIController;
 class AAIPatrolWaypoint;
 class AAIController;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Patrol_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()
@@ -52,4 +52,25 @@ public:
 	FTimerHandle LookAroundTimerhandle;
 	UFUNCTION()
 	void OnLookAtroundTimerExpired();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category="MySettings")
+	USoundBase* mumble1;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings")
+	USoundBase* mumble2;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings")
+	USoundBase* mumble3;
+
+	bool bMumble = false;
+	
+	FTimerHandle mumbleTimerhandle;
+	UFUNCTION()
+	void OnMumbleTimerExpired();
+
+	UPROPERTY(EditAnywhere, Category="MySettings")
+	float mumblingTime = 5.0f;
+
+	USoundBase* mumbleSound;
 };

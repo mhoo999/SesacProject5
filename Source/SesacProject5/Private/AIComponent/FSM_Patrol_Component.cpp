@@ -5,6 +5,7 @@
 
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
+#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {
@@ -58,6 +59,37 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 		return;
 	}
 
+	if (!bMumble)
+	{
+		bMumble = true;
+		
+		int32 randValue = FMath::RandRange(0,9);
+		if (randValue == 0)
+		{
+			mumbleSound = mumble1;
+		}
+		else if (randValue == 1)
+		{
+			mumbleSound = mumble2;
+		}
+		else if (randValue == 2)
+		{
+			mumbleSound = mumble3;
+		}
+		else
+		{
+			mumbleSound = nullptr;
+		}
+
+		if (mumbleSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), mumbleSound, ai->GetActorLocation(), ai->GetActorRotation());
+		}
+		float duration = (mumbleSound != nullptr ? (mumbleSound->Duration + mumblingTime) : mumblingTime);
+		
+		GetWorld()->GetTimerManager().SetTimer(mumbleTimerhandle, this, &UFSM_Patrol_Component::OnMumbleTimerExpired, duration, false);
+	}
+	
 	NextWaypoint = waypointArray[CurrentWaypointIndex];
 	
 	if (IsAtDestination())
@@ -102,5 +134,10 @@ void UFSM_Patrol_Component::OnLookAtroundTimerExpired()
 {
 	bHasPerformedLookAround = false;
 	SetNextDestination();
+}
+
+void UFSM_Patrol_Component::OnMumbleTimerExpired()
+{
+	bMumble = false;
 }
 
