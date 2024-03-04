@@ -42,6 +42,8 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MultRPC_SpawnBulletDecal(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation);
+
+	void Init(AActor* NewOwner);
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FProjectileInfo ProjectileInfo;
