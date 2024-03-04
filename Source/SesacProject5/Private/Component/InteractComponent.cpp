@@ -132,4 +132,9 @@ void UInteractComponent::SelectInteractionAction(const FInputActionValue& Value)
 void UInteractComponent::TabAction(const FInputActionValue& Value)
 {
 	OwningCharacter->GetController<AInGamePlayerController>()->ToggleTabWidget();
+	BP_TabAction();
+}
+
+void UInteractComponent::BP_TabAction_Implementation()
+{
 }

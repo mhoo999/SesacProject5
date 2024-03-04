@@ -157,6 +157,8 @@ void AGun::ControllerRecoil(float Value)
 	// UE_LOG(LogTemp, Warning, TEXT(" AGun::ControllerRecoil"));
 	
 	APlayerController* PC = OwningCharacter->GetController<APlayerController>();
+	if (PC == nullptr) return;
+	
 	float LerpValue = FMath::Lerp(0.f, Value, RecoilAmount);
 	PC->AddPitchInput(LerpValue * (bIsAiming ? RecoilPitchSpreadWhenAiming : RecoilPitchSpreadWhenNotAiming));
 
@@ -216,7 +218,7 @@ void AGun::ServerRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVect
 			FActorSpawnParameters Params;
 			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			AProjectileBase* Bullet =  GetWorld()->SpawnActor<AProjectileBase>(BulletClass, MuzzleTransform.GetLocation(), UKismetMathLibrary::FindLookAtRotation(MuzzleTransform.GetLocation(), TargetLocation), Params);
-			Bullet->SetOwner(GetOwner());
+			Bullet->Init(GetOwner());
 		}
 		
 		MultiRPC_FireBullet(MuzzleTransform, TargetLocation);

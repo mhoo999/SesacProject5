@@ -17,6 +17,7 @@ AProjectileBase::AProjectileBase()
 
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetRootComponent(CollisionComponent);
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -77,6 +78,12 @@ float AProjectileBase::GetDamage() const
 AActor* AProjectileBase::GetIndicator() const
 {
 	return GetOwner();
+}
+
+void AProjectileBase::Init(AActor* NewOwner)
+{
+	SetOwner(NewOwner);
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation)

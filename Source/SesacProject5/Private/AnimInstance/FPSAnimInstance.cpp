@@ -24,9 +24,7 @@ void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (ACharacter* Character = Cast<ACharacter>(GetOwningActor()))
 	{
 		bIsCrouch = Character->bIsCrouched;
-		// UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::NativeUpdateAnimation) Owning Actor : %s"), *GetOwningActor()->GetActorNameOrLabel());	
 	}
-	// bIsCrouch = GetOwningActor()->GetComponentByClass<UCharacterMovementComponent>()->IsCrouching();
 }
 
 void UFPSAnimInstance::Die(bool bNewIsDead)
@@ -44,6 +42,7 @@ void UFPSAnimInstance::Die(bool bNewIsDead)
 
 void UFPSAnimInstance::AnimNotify_OnDieEnd()
 {
+	UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::AnimNotify_OnDieEnd) %s"), *GetOwningActor()->GetActorNameOrLabel());
 	if (ACharacterBase* Character = Cast<ACharacterBase>(GetOwningActor()))
 	{
 		if (Character->IsLocallyControlled())
@@ -51,5 +50,4 @@ void UFPSAnimInstance::AnimNotify_OnDieEnd()
 			Character->DieEnd();
 		}
 	}
-	// UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::AnimNotify_OnDieEnd) %s"), *GetOwningActor()->GetActorNameOrLabel());
 }

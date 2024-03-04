@@ -41,6 +41,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_Interact(AActor* InteractTarget, const FText& InteractionName); 
 
+	UFUNCTION(BlueprintNativeEvent)
+	void BP_TabAction();
+	
 private:
 	void InteractAction(const FInputActionValue& Value);
 	void SelectInteractionAction(const FInputActionValue& Value);
@@ -50,7 +53,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	AActor* InteractActor;
 
-	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	ACharacter* OwningCharacter;
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	UCameraComponent* CameraComponent;

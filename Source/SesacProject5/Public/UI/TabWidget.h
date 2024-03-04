@@ -8,6 +8,7 @@
 
 class UGearWidget;
 class UWidgetSwitcher;
+class UButton;
 /**
  * 
  */
@@ -26,8 +27,11 @@ public:
 	void SwitchToGearWidget();
 
 private:
-	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess, BindWidget))
 	UWidgetSwitcher* WidgetSwitcher;
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UGearWidget* GearWidget;
+
+	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
+	UButton* Btn_Tasks;
 };
