@@ -61,7 +61,11 @@ bool UEquipmentComponent::PutItem(AItemBase* Item)
 {
 	for (auto& Iter : StorageArray)
 	{
-		if (Iter.PutItemToStorage(Item)) return true;
+		if (Iter.PutItemToStorage(Item))
+		{
+			OnInventoryChanged.Broadcast(StorageArray);
+			return true;
+		}
 	}
 
 	return false;

@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "StorageWidget.generated.h"
 
+class UGridPanel;
+class UItemWidget;
 /**
  * 
  */
@@ -17,4 +19,11 @@ class SESACPROJECT5_API UStorageWidget : public UUserWidget
 
 public:
 	void SetStorage(FStorage& Storage);
+
+private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TSubclassOf<UItemWidget> ItemWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess, BindWidget))
+	UGridPanel* GP_ItemSlot;
 };
