@@ -6,6 +6,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "PlayerController/InGamePlayerController.h"
 #include "UI/GearWidget.h"
+#include "UI/HealthWidget.h"
 
 void UTabWidget::NativeConstruct()
 {
@@ -16,7 +17,8 @@ void UTabWidget::NativeConstruct()
 
 void UTabWidget::InitWidget(APawn* Pawn)
 {
-	// GearWidget->
+	GearWidget->InitWidget(Pawn);
+	HealthWidget->InitWidget(Pawn);
 }
 
 FReply UTabWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)

@@ -33,6 +33,7 @@ struct FStorage
 	}
 
 private:
+	
 	bool CanPutItemAt(const FIntPoint& At, const FIntPoint& ItemSize)
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("FStorage::CanPutItemAt : At : %s"), *At.ToString());
@@ -63,6 +64,19 @@ private:
 	}
 
 public:
+	int32 GetItemCount(const FString& ItemName) const
+	{
+		int32 ItemCount = 0;
+		for (const FItemInstance& Iter : ItemArray)
+		{
+			if (Iter.ItemRow.ToString().Equals(ItemName))
+			{
+				ItemCount += Iter.CurrentStack;
+			}
+		}
+		
+		return ItemCount;
+	}
 	bool PutItemToStorage(AItemBase* TargetItem)
 	{
 		if (TargetItem == nullptr) return false;

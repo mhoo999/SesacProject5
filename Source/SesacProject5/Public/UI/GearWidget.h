@@ -16,9 +16,10 @@ class SESACPROJECT5_API UGearWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	void Init(APawn* Pawn);
+public:
+	void InitWidget(APawn* Pawn);
 
-	void UpdateInventory(TArray<FStorage>& StorageArray);
+	void UpdateInventory(const TArray<FStorage>& StorageArray);
 private:
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UStorageWidget* StorageWidget;

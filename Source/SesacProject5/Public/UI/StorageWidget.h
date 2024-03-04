@@ -18,7 +18,7 @@ class SESACPROJECT5_API UStorageWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetStorage(FStorage& Storage);
+	void SetStorage(const FStorage& Storage);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
