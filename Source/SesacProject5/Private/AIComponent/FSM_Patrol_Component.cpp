@@ -3,8 +3,11 @@
 
 #include "AIComponent/FSM_Patrol_Component.h"
 
+#include "AIComponent/AIMontageComponent.h"
+#include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
+#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {
@@ -24,12 +27,13 @@ bool UFSM_Patrol_Component::IsAtDestination()
 	return dist <= 100;
 }
 
-void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation(UAnimMontage* MontageToPlay)
+void UFSM_Patrol_Component::PerformLookAround()
 {
-	UE_LOG(LogTemp, Warning, TEXT("play montage"));
-	if (MontageToPlay && ai->GetMesh()->GetAnimInstance())
+	auto montageComp = Cast<UAIMontageComponent>(ai->GetComponentByClass<UAIMontageComponent>());
+	
+	if (montageComp)
 	{
-		ai->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
+		montageComp->MultiRPCPlayLookAround();
 	}
 }
 
@@ -58,20 +62,48 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 		return;
 	}
 
+	if (!bMumble)
+	{
+		bMumble = true;
+		float duration = 6.f;
+		
+		auto mumbleComp = Cast<UAIMumbleComponent>(ai->GetComponentByClass<UAIMumbleComponent>());
+		mumbleComp->ServerRPCPlayPatrolMumble();
+
+		int32 randValue = FMath::RandRange(0,9);
+		if (randValue == 0)
+		{
+			duration = 4.f;
+		}
+		else if (randValue == 1)
+		{
+			duration = 8.f;
+		}
+		else if (randValue == 2)
+		{
+			duration = 12.f;
+		}
+		
+		GetWorld()->GetTimerManager().ClearTimer(mumbleTimerhandle);
+		GetWorld()->GetTimerManager().SetTimer(mumbleTimerhandle, this, &UFSM_Patrol_Component::OnMumbleTimerExpired, duration, false);
+	}
+	
 	NextWaypoint = waypointArray[CurrentWaypointIndex];
 	
 	if (IsAtDestination())
 	{
 		if (!bHasPerformedLookAround)
 		{
-			MultiRPCPerformLookAround(lookAroundMontage);
+			PerformLookAround();
 			bHasPerformedLookAround = true;
 		}
 		else
 		{
 			if (LookAroundTimerhandle.IsValid()) return;
 
-			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, this, &UFSM_Patrol_Component::OnLookAtroundTimerExpired, lookAroundMontage->GetPlayLength(), false);
+			auto montageComp = Cast<UAIMontageComponent>(ai->GetComponentByClass<UAIMontageComponent>());
+			lookAroundTime = montageComp->getLookAtoundMontageTime();
+			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, this, &UFSM_Patrol_Component::OnLookAtroundTimerExpired, lookAroundTime, false);
 		}
 	}
 	else
@@ -102,5 +134,10 @@ void UFSM_Patrol_Component::OnLookAtroundTimerExpired()
 {
 	bHasPerformedLookAround = false;
 	SetNextDestination();
+}
+
+void UFSM_Patrol_Component::OnMumbleTimerExpired()
+{
+	bMumble = false;
 }
 

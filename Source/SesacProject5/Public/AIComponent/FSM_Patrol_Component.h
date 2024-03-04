@@ -12,7 +12,7 @@ class AHoonsAIController;
 class AAIPatrolWaypoint;
 class AAIController;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UFSM_Patrol_Component : public UFSM_Component, public IFSMInterface
 {
 	GENERATED_BODY()
@@ -25,8 +25,8 @@ protected:
 
 	bool IsAtDestination();
 
-	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPCPerformLookAround(UAnimMontage* MontageToPlay);
+	// UFUNCTION(NetMulticast, Reliable)
+	void PerformLookAround();
 
 	void SetNextDestination();
 
@@ -43,13 +43,22 @@ public:
 	UPROPERTY(EditAnywhere, Category="MySettings")
 	float AcceptanceRadius = 1.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	UAnimMontage* lookAroundMontage;
-
 	bool bHasPerformedLookAround = false;
 	bool bHasNextWaypoint = false;
 
 	FTimerHandle LookAroundTimerhandle;
 	UFUNCTION()
 	void OnLookAtroundTimerExpired();
+
+private:
+	float lookAroundTime;
+
+	bool bMumble;
+
+	UPROPERTY(EditAnywhere, Category="MySettings", meta=(AllowPrivateAccess))
+	float mumblingTime = 5.f;
+
+	FTimerHandle mumbleTimerhandle;
+	UFUNCTION()
+	void OnMumbleTimerExpired();
 };

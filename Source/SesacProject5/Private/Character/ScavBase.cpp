@@ -3,6 +3,8 @@
 
 #include "Character/ScavBase.h"
 
+#include "AIComponent/AIMontageComponent.h"
+#include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
 
 AScavBase::AScavBase()
@@ -16,4 +18,8 @@ AScavBase::AScavBase()
 	TeamId = FGenericTeamId(1);
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	AIMontageComp = CreateDefaultSubobject<UAIMontageComponent>(TEXT("Montage Component"));
+	AIMumbleComp = CreateDefaultSubobject<UAIMumbleComponent>(TEXT("Mumble Component"));
+	
 }
