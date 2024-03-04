@@ -5,6 +5,7 @@
 
 #include "Character/CharacterBase.h"
 #include "Component/HealthComponent.h"
+#include "Component/MoveComponent.h"
 #include "GameFramework/Character.h"
 
 void UFPSAnimInstance::NativeBeginPlay()
@@ -12,6 +13,7 @@ void UFPSAnimInstance::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	GetOwningActor()->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
+	GetOwningActor()->GetComponentByClass<UMoveComponent>()->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
 }
 
 void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -50,4 +52,9 @@ void UFPSAnimInstance::AnimNotify_OnDieEnd()
 			Character->DieEnd();
 		}
 	}
+}
+
+void UFPSAnimInstance::UpdateIsSprint(bool bNewIsSprint)
+{
+	bIsSprint = bNewIsSprint;
 }

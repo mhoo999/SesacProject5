@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "FPSAnim_CharacterComponent.h"
+#include "../../../../../../UnrealEngine-release/UnrealEngine-release/Engine/Source/Runtime/Engine/Public/Net/UnrealNetwork.h"
 #include "EntitySystem/MovieSceneComponentDebug.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -43,6 +44,12 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+void UMoveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UMoveComponent, bIsSprint);
+}
+
 void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &UMoveComponent::MoveAction);
@@ -58,18 +65,9 @@ void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(IA_LeanRight, ETriggerEvent::Completed, this, &UMoveComponent::LeanRightEndAction);
 }
 
-bool UMoveComponent::IsSprint() const
-{
-	return bIsSprint;
-}
-
 void UMoveComponent::StopSprint()
 {
-	if (bIsSprint)
-	{
-		bIsSprint = false;
-		ServerRPC_SetMaxWalkSpeed(300.f);	
-	}
+	SprintEndAction(FInputActionValue());
 }
 
 void UMoveComponent::MoveAction(const FInputActionValue& Value)
@@ -132,13 +130,14 @@ void UMoveComponent::SprintStartAction(const FInputActionValue& Value)
 		OwningCharacter->UnCrouch();
 	}
 
-	bIsSprint = true;
-	ServerRPC_SetMaxWalkSpeed(600.f);
+	ServerRPC_StartSprint_Implementation();
+	ServerRPC_StartSprint();
 }
 
 void UMoveComponent::SprintEndAction(const FInputActionValue& Value)
 {
-	StopSprint();
+	ServerRPC_StopSprint_Implementation();
+	ServerRPC_StopSprint();
 }
 
 void UMoveComponent::JumpAction(const FInputActionValue& Value)
@@ -165,15 +164,34 @@ void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
 {
 }
 
-void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+void UMoveComponent::ServerRPC_StartSprint_Implementation()
 {
-	MultiRPC_SetMaxWalkSpeed(NewMaxWalkSpeed);
+	// Todo : Check Sprint
+	bIsSprint = true;
+	OnRep_IsSprint();
 }
 
-void UMoveComponent::MultiRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+void UMoveComponent::ServerRPC_StopSprint_Implementation()
 {
-	if (OwningCharacter)
+	// Todo : Check Sprint
+	bIsSprint = false;
+	OnRep_IsSprint();
+}
+
+void UMoveComponent::OnRep_IsSprint()
+{
+	if (OwningCharacter == nullptr)
 	{
-		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+		UE_LOG(LogTemp, Error, TEXT("UMoveComponent::OnRep_IsSprint) OwningCharacter is nullptr"));
+		return;
 	}
+	if (bIsSprint)
+	{
+		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	}
+	else
+	{
+		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	}
+	OnIsSprintChanged.Broadcast(bIsSprint);
 }

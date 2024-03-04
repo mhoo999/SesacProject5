@@ -25,11 +25,16 @@ public:
 	UFUNCTION()
 	void AnimNotify_OnDieEnd();
 
+	UFUNCTION()
+	void UpdateIsSprint(bool bNewIsSprint);
+
 private:
 	UPROPERTY()
 	bool bIsDead = false;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	bool bIsCrouch = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsSprint = false;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DieMontageArray;
