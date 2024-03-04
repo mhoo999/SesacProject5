@@ -54,7 +54,19 @@ public:
 	UFUNCTION()
 	void OnRep_IsSprint();
 
+	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
+
+	UFUNCTION()
+	void SwayFloatTimerFunction();
+	
 private:
+	UPROPERTY()
+	FTimerHandle SwayFloatTimerHandle;
+
+	float SideMove;
+	float MouseX;
+	float MouseY;
+	
 	UPROPERTY(ReplicatedUsing = OnRep_IsSprint, Meta = (AllowPrivateAccess))
 	bool bIsSprint = false;
 	
@@ -79,4 +91,8 @@ private:
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_IsSprint, bool);
 	FDele_IsSprint OnIsSprintChanged;
+
+	// Side Move, MouseX, MouseY
+	DECLARE_DELEGATE_ThreeParams(FDele_HandSway, float, float, float);
+	FDele_HandSway OnHandSwayFloatsChanged;
 };

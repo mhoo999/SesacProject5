@@ -103,11 +103,17 @@ void UWeaponComponent::ReloadAction(const FInputActionValue& Value)
 
 void UWeaponComponent::AimStartAction(const FInputActionValue& Value)
 {
+	// if (WeaponInterface) WeaponInterface->StartAim();
+	if (true == bIsAiming) return;
+	bIsAiming = true;
 	if (WeaponInterface) WeaponInterface->StartAim();
 }
 
 void UWeaponComponent::AimEndAction(const FInputActionValue& Value)
 {
+	// if (WeaponInterface) WeaponInterface->StopAim();
+	if (false == bIsAiming) return;
+	bIsAiming = false;
 	if (WeaponInterface) WeaponInterface->StopAim();
 }
 

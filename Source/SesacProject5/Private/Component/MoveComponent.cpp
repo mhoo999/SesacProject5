@@ -4,9 +4,7 @@
 #include "Component/MoveComponent.h"
 
 #include "EnhancedInputComponent.h"
-#include "FPSAnim_CharacterComponent.h"
-#include "../../../../../../UnrealEngine-release/UnrealEngine-release/Engine/Source/Runtime/Engine/Public/Net/UnrealNetwork.h"
-#include "EntitySystem/MovieSceneComponentDebug.h"
+#include "Net/UnrealNetwork.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -32,6 +30,14 @@ void UMoveComponent::BeginPlay()
 	if (OwningCharacter->HasAuthority())
 	{
 		SetIsReplicated(true);
+	}
+
+	if (OwningCharacter->IsLocallyControlled())
+	{
+		if (UWorld* World = GetWorld())
+		{
+			World->GetTimerManager().SetTimer(SwayFloatTimerHandle, this, &UMoveComponent::SwayFloatTimerFunction, 0.015f, true);	
+		}
 	}
 }
 
@@ -76,6 +82,8 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 	FVector2D Vector2DValue = Value.Get<FVector2D>();
 
+	SideMove = Vector2DValue.X;
+
 	if (Vector2DValue == FVector2D::ZeroVector) return;
 
 	FRotationMatrix RotationMatrix(FRotator(0, OwningCharacter->GetControlRotation().Yaw, 0));
@@ -96,6 +104,9 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 void UMoveComponent::MoveEndAction(const FInputActionValue& Value)
 {
+	FVector2D Vector2DValue = Value.Get<FVector2D>();
+	SideMove = Vector2DValue.X;
+	
 	bIsSprint = false;
 }
 
@@ -194,4 +205,18 @@ void UMoveComponent::OnRep_IsSprint()
 		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	}
 	OnIsSprintChanged.Broadcast(bIsSprint);
+}
+
+void UMoveComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
+{
+	Super::OnComponentDestroyed(bDestroyingHierarchy);
+}
+
+void UMoveComponent::SwayFloatTimerFunction()
+{
+	if (APlayerController* PC = OwningCharacter->GetController<APlayerController>())
+	{
+		PC->GetMousePosition(MouseX, MouseY);
+		OnHandSwayFloatsChanged.ExecuteIfBound(SideMove, MouseX, MouseY);
+	}
 }
