@@ -27,7 +27,6 @@ void UMoveComponent::BeginPlay()
 	// ...
 	OwningCharacter = GetOwner<ACharacter>();
 	check(OwningCharacter != nullptr && OwningCharacter->IsValidLowLevelFast());
-	FPSAnim_Character = OwningCharacter->GetComponentByClass<UFPSAnim_CharacterComponent>();
 
 	if (OwningCharacter->HasAuthority())
 	{
@@ -68,7 +67,6 @@ void UMoveComponent::StopSprint()
 {
 	if (bIsSprint)
 	{
-		FPSAnim_Character->StopHighAndLowPortPose();
 		bIsSprint = false;
 		ServerRPC_SetMaxWalkSpeed(300.f);	
 	}
@@ -91,11 +89,7 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 	if (bIsSprint)
 	{
-		if (Vector2DValue.Y > 0.f)
-		{
-			FPSAnim_Character->SetLowPortPose();
-		}
-		else
+		if (Vector2DValue.Y <= 0.f)
 		{
 			SprintEndAction(FInputActionValue());
 		}
@@ -104,10 +98,7 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 void UMoveComponent::MoveEndAction(const FInputActionValue& Value)
 {
-	if (bIsSprint)
-	{
-		FPSAnim_Character->StopHighAndLowPortPose();	
-	}
+	bIsSprint = false;
 }
 
 void UMoveComponent::LookAction(const FInputActionValue& Value)
@@ -160,22 +151,18 @@ void UMoveComponent::JumpAction(const FInputActionValue& Value)
 
 void UMoveComponent::LeanLeftStartAction(const FInputActionValue& Value)
 {
-	FPSAnim_Character->LeanLeft();
 }
 
 void UMoveComponent::LeanLeftEndAction(const FInputActionValue& Value)
 {
-	FPSAnim_Character->StopLeanLeft();
 }
 
 void UMoveComponent::LeanRightStartAction(const FInputActionValue& Value)
 {
-	FPSAnim_Character->LeanRight();
 }
 
 void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
 {
-	FPSAnim_Character->StopLeanRight();
 }
 
 void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)

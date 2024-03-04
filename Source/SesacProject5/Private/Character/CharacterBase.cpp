@@ -14,6 +14,7 @@
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "GameInstance/EFSGameInstance.h"
 #include "QuestSystem/QuestLogComponent.h"
 #include "SaveData/QuestSaveData.h"
@@ -23,9 +24,11 @@ ACharacterBase::ACharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	SpringArmComponent->SetupAttachment(GetMesh());
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	// CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>(TEXT("MoveComponent"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
@@ -35,8 +38,6 @@ ACharacterBase::ACharacterBase()
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("EquipmentComponent"));
 
 	QuestLogComponent = CreateDefaultSubobject<UQuestLogComponent>(TEXT("QuestLogComponent"));
-
-	FPSAnim_Character = CreateDefaultSubobject<UFPSAnim_CharacterComponent>(TEXT("FPSAnim_Character"));
 
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 100.f;
@@ -54,13 +55,14 @@ void ACharacterBase::BeginPlay()
 	{
 		if (IsLocallyControlled())
 		{
+			SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Camera"));
 			HealthComponent->OnIsDeadChanged.AddUObject(this, &ACharacterBase::Die);
 			if (DefaultIMC)
 			{
 				if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-                {
-                	Subsystem->AddMappingContext(DefaultIMC, 0);
-                }
+				{
+					Subsystem->AddMappingContext(DefaultIMC, 0);
+				}
 			}
 
 			if (QuestLogComponent)
@@ -69,12 +71,6 @@ void ACharacterBase::BeginPlay()
 			}
 		}
 	}
-
-	// FPS Anim Character Component
-
-	FPSAnim_Character->Init(CameraComponent, true, GetMesh(), GetMesh());
-	// CameraComponent->SetRelativeRotation(FRotator(90, 0, -90));
-	// CameraComponent->SetRelativeRotation(FRotator(0, 90, -90));
 }
 
 // Called every frame

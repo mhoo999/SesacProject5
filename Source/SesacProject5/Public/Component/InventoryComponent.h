@@ -7,44 +7,119 @@
 #include "Item/ItemBase.h"
 #include "InventoryComponent.generated.h"
 
-class AItemBase;
+USTRUCT(BlueprintType)
+struct FOccupiedArray
+{
+	GENERATED_BODY()
+public:
+	FOccupiedArray(int Length = 1)
+	{
+		Occupied.Init(false, Length);
+	}
+
+	UPROPERTY(EditAnywhere)
+	TArray<bool> Occupied;
+};
 
 USTRUCT(BlueprintType)
 struct FStorage
 {
 	GENERATED_BODY()
-	
-	FStorage()
-		: Size(0, 0)
+
+	public:
+	FStorage(FIntPoint NewSize = { 3,3 }) : Size(NewSize)
 	{
+		OccupiedArray.Init(FOccupiedArray(Size.X), Size.Y);
 	}
 
-	bool AddItem(AItemBase* Item)
+private:
+	bool CanPutItemAt(const FIntPoint& At, const FIntPoint& ItemSize)
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("FStorage::CanPutItemAt : At : %s"), *At.ToString());
+		if (At.Y + ItemSize.Y > Size.Y || At.X + ItemSize.X > Size.X)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FStorage::CanPutItemAt : Too Big Than Storage Size"));
+			return false;
+		}
+		for (int i = At.Y; i < At.Y + ItemSize.Y; ++i)
+		{
+			for (int j = At.X; j < At.X + ItemSize.X; ++j)
+			{
+				if (OccupiedArray[i].Occupied[j] == true) return false;
+			}
+		}
+
+		return true;
+	}
+	void FillSpace(const FIntPoint& At, const FIntPoint& ItemSize)
+	{
+		for (int i = At.Y; i < At.Y + ItemSize.Y; ++i)
+		{
+			for (int j = At.X; j < At.X + ItemSize.X; ++j)
+			{
+				OccupiedArray[i].Occupied[j] = true;
+			}
+		}
+	}
+
+public:
+	bool PutItemToStorage(AItemBase* TargetItem)
+	{
+		if (TargetItem == nullptr) return false;
+
+		bool bShouldRotate;
+		return CheckEmptySpace(true, TargetItem, bShouldRotate).X != -1;
+	}
+	FIntPoint CheckEmptySpace(bool bPutItem, AItemBase* TargetItem, bool& bShouldRotate)
+	{
+		if (TargetItem == nullptr) return { -1, -1 };
+		// FIntPoint ItemSize = TargetItem->GetSize();
+		FIntPoint ItemSize = {1,1};
 		for (int i = 0; i < Size.Y; ++i)
 		{
 			for (int j = 0; j < Size.X; ++j)
 			{
-				if (false == IsOccupied[i * Size.X + j])
+				// UE_LOG(LogTemp, Warning, TEXT("FStorage::CheckEmptySpace : X : %d, Y : %d"), j, i);
+				if (OccupiedArray[i].Occupied[j] == true) continue;
+				if (CanPutItemAt({ j, i }, ItemSize))
 				{
-					IsOccupied[i * Size.X + j] = true;
-					ItemArray.Add(Item);
-					Item->PutToInventory(this, FIntPoint(i, j));
-					return true;
+					if (bPutItem)
+					{
+						ItemArray.Emplace(TargetItem->GetItemInstance());
+						ItemArray.Last().StoragePosition = { j, i };
+						FillSpace({ j, i }, ItemSize);
+						TargetItem->Destroy();
+					}
+
+					return { j, i };
 				}
+				// else if (CanPutItemAt({ j, i }, { ItemSize.Y, ItemSize.X }))
+				// {
+				// 	bShouldRotate = true;
+				//
+				// 	if (bPutItem)
+				// 	{
+				// 		TargetItem->Rotate();
+				// 		ItemArray.Emplace(TargetItem->GetItemInstance());
+				// 		ItemArray.Last().StoragePosition = { j, i };
+				// 		FillSpace({ j, i }, TargetItem->GetItemData().Size);
+				// 		TargetItem->Destroy();
+				// 	}
+				//
+				// 	return { j, i };
+				// }
 			}
 		}
-		return false;
+
+		return { -1, -1 };
 	}
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<bool> IsOccupied;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<AItemBase*> ItemArray;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	FIntPoint Size;
+	UPROPERTY(EditAnywhere)
+	TArray<FOccupiedArray> OccupiedArray;
+	UPROPERTY(EditAnywhere)
+	TArray<FItemInstance> ItemArray;
 };
 
 

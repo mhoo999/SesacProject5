@@ -72,6 +72,7 @@ public:
 	virtual float GetRecoilYaw() const override;
 
 	void AddRecoil();
+	virtual void ToggleFireMode() override;
 
 private:
 	// Recoil Property

@@ -7,9 +7,9 @@
 
 void APlayerStartBase::SetExitArrayToComponent(UEscapeComponent* EscapeComponent)
 {
-	if (ParentSpawnPoint)
+	if (ParentPlayerStart)
 	{
-		ParentSpawnPoint->SetExitArrayToComponent(EscapeComponent);
+		ParentPlayerStart->SetExitArrayToComponent(EscapeComponent);
 	}
 	else
 	{
@@ -21,7 +21,7 @@ bool APlayerStartBase::IsOccupied() const
 {
 	if (ExitArray.Num() > 0)
 	{
-		for (auto Iter : SpawnPointArray)
+		for (auto Iter : PlayerStartArray)
 		{
 			if (Iter->IsOccupied() == false) return false;
 		}
@@ -30,11 +30,11 @@ bool APlayerStartBase::IsOccupied() const
 	return bIsOccupied;
 }
 
-ISpawnPoint* APlayerStartBase::SetOccupied()
+APlayerStartBase* APlayerStartBase::SetOccupied()
 {
 	if (ExitArray.Num() > 0)
 	{
-		for (auto Iter : SpawnPointArray)
+		for (auto Iter : PlayerStartArray)
 		{
 			if (Iter->IsOccupied() == false)
 			{
@@ -53,7 +53,7 @@ ISpawnPoint* APlayerStartBase::SetOccupied()
 	return nullptr;
 }
 
-void APlayerStartBase::SetParent(ISpawnPoint* NewParent)
+void APlayerStartBase::SetParent(APlayerStartBase* NewParent)
 {
-	ParentSpawnPoint = NewParent;
+	ParentPlayerStart = NewParent;
 }

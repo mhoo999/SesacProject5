@@ -53,9 +53,6 @@ public:
 	
 	
 private:
-	UPROPERTY()
-	UFPSAnim_CharacterComponent* FPSAnim_Character;
-	
 	bool bIsSprint;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))

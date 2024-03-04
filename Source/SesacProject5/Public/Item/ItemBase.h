@@ -8,40 +8,55 @@
 #include "Interface/InteractInterface.h"
 #include "ItemBase.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {
 	GENERATED_BODY()
-
+public:
 	FItemData()
-		: Name("None"), ItemSize(0,0), MaxStack(-1)
+		: Name(FText()), Class(nullptr), /*Type(EItemType::NONE), */Image(nullptr)
 	{
 	}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
+	FText Name;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AItemBase> Class;
+	// UPROPERTY(EditAnywhere)
+	// EItemType Type;
+	UPROPERTY(EditAnywhere)
+	UTexture2D* Image;
+	UPROPERTY(EditAnywhere)
+	FIntPoint Size;
+	UPROPERTY(EditAnywhere)
+	uint32 MaxStack;
+	UPROPERTY(EditAnywhere)
 	TArray<FText> InteractionNameArray;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FIntPoint ItemSize;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxStack;
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FItemInstance : public FTableRowBase
 {
 	GENERATED_BODY()
+public:
+	FItemInstance() : Guid(FGuid::NewGuid()), ItemRow(FName()), bIsInStorage(false), bIsRotated(false), CurrentStack(1), bIsFromRaid(false)
+	{}
 
-	FItemInstance()
-		: InventoryPos(-1, -1), CurrentStack(-1)
-	{
-	}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FIntPoint InventoryPos;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CurrentStack;
+	UPROPERTY(EditAnywhere)
+	FGuid Guid;
+	UPROPERTY(EditAnywhere)
+	FName ItemRow;
+	UPROPERTY(EditAnywhere)
+	TArray<FGuid> ChildArray;
+	UPROPERTY(EditAnywhere)
+	bool bIsInStorage;
+	UPROPERTY(EditAnywhere)
+	bool bIsRotated;
+	UPROPERTY(EditAnywhere)
+	FIntPoint StoragePosition;
+	UPROPERTY(EditAnywhere)
+	int CurrentStack;
+	UPROPERTY(EditAnywhere)
+	bool bIsFromRaid;
 };
 
 struct FStorage;
@@ -69,13 +84,16 @@ public:
 	virtual const TArray<FText>& GetInteractionNameArray() override;
 	virtual FText GetActorName() const override;
 
-	void PutToInventory(FStorage* Storage, FIntPoint InventoryPos);
+	void PutToInventory(FStorage* Storage, FIntPoint StoragePosition);
 	void PopFromInventory();
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPC_PutToInventory(); 
+	void MultiRPC_PutToInventory();
 	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPC_PopFromInventory(); 
+	void MultiRPC_PopFromInventory();
+
+	FItemData GetItemData() const;
+	FItemInstance GetItemInstance() const;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))

@@ -3,7 +3,10 @@
 
 #include "Item/ItemBase.h"
 
+#include "Component/EquipmentComponent.h"
+#include "Component/EscapeComponent.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -52,7 +55,10 @@ void AItemBase::Interact(ACharacter* InteractCharacter, FText InteractionName)
 
 	if (Interaction.Equals("Get"))
 	{
-		Destroy();
+		if (InteractCharacter->GetComponentByClass<UEquipmentComponent>()->PutItem(this))
+		{
+			Destroy();	
+		}
 	}
 }
 
@@ -63,12 +69,12 @@ const TArray<FText>& AItemBase::GetInteractionNameArray()
 
 FText AItemBase::GetActorName() const
 {
-	return FText::FromName(ItemData.Name);
+	return ItemData.Name;
 }
 
-void AItemBase::PutToInventory(FStorage* Storage, FIntPoint InventoryPos)
+void AItemBase::PutToInventory(FStorage* Storage, FIntPoint StoragePosition)
 {
-	ItemInstance.InventoryPos = InventoryPos;
+	ItemInstance.StoragePosition = StoragePosition;
 
 	MultiRPC_PutToInventory();
 }
@@ -76,6 +82,17 @@ void AItemBase::PutToInventory(FStorage* Storage, FIntPoint InventoryPos)
 void AItemBase::PopFromInventory()
 {
 	MultiRPC_PopFromInventory();
+}
+
+FItemData AItemBase::GetItemData() const
+{
+	return ItemData;
+}
+
+FItemInstance AItemBase::GetItemInstance() const
+{
+
+	return ItemInstance;
 }
 
 void AItemBase::MultiRPC_PopFromInventory_Implementation()

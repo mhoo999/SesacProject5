@@ -12,6 +12,8 @@ void AInGamePlayerController::BeginPlay()
 
 	if (IsLocalController())
 	{
+		PlayerCameraManager->ViewPitchMax = 60.f;
+		PlayerCameraManager->ViewPitchMin = -60.f;
 		if (InGameWidgetClass)
 		{
 			InGameWidget = CreateWidget<UInGameWidget>(this, InGameWidgetClass);
