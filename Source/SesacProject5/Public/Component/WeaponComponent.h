@@ -42,7 +42,7 @@ public:
 	void ReloadAction(const FInputActionValue& Value);
 
 	void AimStartAction(const FInputActionValue& Value);
-	void AimEndAction(const FInputActionValue& Value); 
+	void AimEndAction(const FInputActionValue& Value);
 
 	void ToggleFireModeAction(const FInputActionValue& Value);
 
@@ -68,6 +68,8 @@ protected:
 	AActor* Weapon;
 	IWeaponInterface* WeaponInterface;
 private:
+	UPROPERTY()
+	bool bIsAiming;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Fire;
@@ -81,4 +83,8 @@ private:
 	// Todo : Delete this
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<class AGun> GunClass;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_IsAiming, bool);
+	FDele_IsAiming OnIsAimingChanged;
 };

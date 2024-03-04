@@ -4,8 +4,7 @@
 #include "Component/MoveComponent.h"
 
 #include "EnhancedInputComponent.h"
-#include "FPSAnim_CharacterComponent.h"
-#include "EntitySystem/MovieSceneComponentDebug.h"
+#include "Net/UnrealNetwork.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -32,6 +31,14 @@ void UMoveComponent::BeginPlay()
 	{
 		SetIsReplicated(true);
 	}
+
+	if (OwningCharacter->IsLocallyControlled())
+	{
+		if (UWorld* World = GetWorld())
+		{
+			World->GetTimerManager().SetTimer(SwayFloatTimerHandle, this, &UMoveComponent::SwayFloatTimerFunction, 0.015f, true);	
+		}
+	}
 }
 
 
@@ -41,6 +48,12 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UMoveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UMoveComponent, bIsSprint);
 }
 
 void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
@@ -58,18 +71,9 @@ void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(IA_LeanRight, ETriggerEvent::Completed, this, &UMoveComponent::LeanRightEndAction);
 }
 
-bool UMoveComponent::IsSprint() const
-{
-	return bIsSprint;
-}
-
 void UMoveComponent::StopSprint()
 {
-	if (bIsSprint)
-	{
-		bIsSprint = false;
-		ServerRPC_SetMaxWalkSpeed(300.f);	
-	}
+	SprintEndAction(FInputActionValue());
 }
 
 void UMoveComponent::MoveAction(const FInputActionValue& Value)
@@ -77,6 +81,8 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 	// UE_LOG(LogTemp, Warning, TEXT("UMoveComponent::MoveAction"));
 
 	FVector2D Vector2DValue = Value.Get<FVector2D>();
+
+	SideMove = Vector2DValue.X;
 
 	if (Vector2DValue == FVector2D::ZeroVector) return;
 
@@ -98,6 +104,9 @@ void UMoveComponent::MoveAction(const FInputActionValue& Value)
 
 void UMoveComponent::MoveEndAction(const FInputActionValue& Value)
 {
+	FVector2D Vector2DValue = Value.Get<FVector2D>();
+	SideMove = Vector2DValue.X;
+	
 	bIsSprint = false;
 }
 
@@ -132,13 +141,14 @@ void UMoveComponent::SprintStartAction(const FInputActionValue& Value)
 		OwningCharacter->UnCrouch();
 	}
 
-	bIsSprint = true;
-	ServerRPC_SetMaxWalkSpeed(600.f);
+	ServerRPC_StartSprint_Implementation();
+	ServerRPC_StartSprint();
 }
 
 void UMoveComponent::SprintEndAction(const FInputActionValue& Value)
 {
-	StopSprint();
+	ServerRPC_StopSprint_Implementation();
+	ServerRPC_StopSprint();
 }
 
 void UMoveComponent::JumpAction(const FInputActionValue& Value)
@@ -165,15 +175,48 @@ void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
 {
 }
 
-void UMoveComponent::ServerRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+void UMoveComponent::ServerRPC_StartSprint_Implementation()
 {
-	MultiRPC_SetMaxWalkSpeed(NewMaxWalkSpeed);
+	// Todo : Check Sprint
+	bIsSprint = true;
+	OnRep_IsSprint();
 }
 
-void UMoveComponent::MultiRPC_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+void UMoveComponent::ServerRPC_StopSprint_Implementation()
 {
-	if (OwningCharacter)
+	// Todo : Check Sprint
+	bIsSprint = false;
+	OnRep_IsSprint();
+}
+
+void UMoveComponent::OnRep_IsSprint()
+{
+	if (OwningCharacter == nullptr)
 	{
-		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+		UE_LOG(LogTemp, Error, TEXT("UMoveComponent::OnRep_IsSprint) OwningCharacter is nullptr"));
+		return;
+	}
+	if (bIsSprint)
+	{
+		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	}
+	else
+	{
+		OwningCharacter->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	}
+	OnIsSprintChanged.Broadcast(bIsSprint);
+}
+
+void UMoveComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
+{
+	Super::OnComponentDestroyed(bDestroyingHierarchy);
+}
+
+void UMoveComponent::SwayFloatTimerFunction()
+{
+	if (APlayerController* PC = OwningCharacter->GetController<APlayerController>())
+	{
+		PC->GetMousePosition(MouseX, MouseY);
+		OnHandSwayFloatsChanged.ExecuteIfBound(SideMove, MouseX, MouseY);
 	}
 }

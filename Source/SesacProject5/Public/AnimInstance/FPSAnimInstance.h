@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FPSAnim_AnimInstance.h"
+#include "Animation/AnimInstance.h"
 #include "FPSAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SESACPROJECT5_API UFPSAnimInstance : public UFPSAnim_AnimInstance
+class SESACPROJECT5_API UFPSAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 	
@@ -25,11 +25,28 @@ public:
 	UFUNCTION()
 	void AnimNotify_OnDieEnd();
 
+	UFUNCTION()
+	void UpdateIsSprint(bool bNewIsSprint);
+	UFUNCTION()
+	void UpdateIsAiming(bool bNewIsAiming);
+	UFUNCTION()
+	void UpdateHandSwayFloats(float NewSidMove, float NewMouseX, float NewMouseY);
+
 private:
 	UPROPERTY()
 	bool bIsDead = false;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	bool bIsCrouch = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsSprint = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	bool bIsAiming = false;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float SideMove;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float MouseX;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float MouseY;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DieMontageArray;

@@ -27,9 +27,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	bool IsSprint() const;
+	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
 
 	void StopSprint();
 
@@ -47,13 +47,28 @@ public:
 	void LeanRightEndAction(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
-	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPC_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+	void ServerRPC_StartSprint();
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_StopSprint();
 	
+	UFUNCTION()
+	void OnRep_IsSprint();
+
+	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
+
+	UFUNCTION()
+	void SwayFloatTimerFunction();
 	
 private:
-	bool bIsSprint;
+	UPROPERTY()
+	FTimerHandle SwayFloatTimerHandle;
+
+	float SideMove;
+	float MouseX;
+	float MouseY;
+	
+	UPROPERTY(ReplicatedUsing = OnRep_IsSprint, Meta = (AllowPrivateAccess))
+	bool bIsSprint = false;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Move;
@@ -72,4 +87,12 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	ACharacter* OwningCharacter;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_IsSprint, bool);
+	FDele_IsSprint OnIsSprintChanged;
+
+	// Side Move, MouseX, MouseY
+	DECLARE_DELEGATE_ThreeParams(FDele_HandSway, float, float, float);
+	FDele_HandSway OnHandSwayFloatsChanged;
 };
