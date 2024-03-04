@@ -10,6 +10,7 @@
 #include "EFSGameInstance.generated.h"
 
 class UQuestSaveData;
+struct FItemData;
 /**
  * 
  */
@@ -44,6 +45,10 @@ public:
 	void OnFindSessionCompleted(bool bWasSuccessful);
 	void OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	void OnDestroySessionCompleted(FName SessionName, bool bWasSuccessful);
+
+	
+	// DataTable
+	FItemData* GetItemData(FName ItemDataRow);
 private:
 	class IOnlineSubsystem* SubsystemRef;
 	TSharedPtr<class IOnlineIdentity, ESPMode::ThreadSafe>  IdentityPtrRef;
@@ -63,4 +68,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ClearSaveData();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UDataTable* DT_ItemData;
 };

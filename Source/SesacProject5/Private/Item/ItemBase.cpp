@@ -30,6 +30,8 @@ void AItemBase::BeginPlay()
 	if (HasAuthority())
 	{
 		SetReplicates(true);
+
+		ItemInstance.Guid = FGuid::NewGuid();
 	}
 }
 

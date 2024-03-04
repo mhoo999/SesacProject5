@@ -46,4 +46,9 @@ private:
 
 	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRepStorageArray, Meta = (AllowPrivateAccess))
 	TArray<FStorage> StorageArray;
+
+public:
+	// Delegate
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_StorageArray, TArray<FStorage>&);
+	FDele_StorageArray OnInventoryChanged;
 };
