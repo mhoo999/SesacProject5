@@ -17,10 +17,14 @@ class SESACPROJECT5_API AInGamePlayerController : public APlayerController
 
 public:
 	void ToggleTabWidget();
+	UFUNCTION(BlueprintNativeEvent)
+	void BP_ToggleTabWidget();
 protected:
 	//virtual void OnNetCleanup(UNetConnection* Connection) override;
 
 	virtual void BeginPlay() override;
+
+	
 
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))

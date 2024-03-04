@@ -26,4 +26,9 @@ void AInGamePlayerController::BeginPlay()
 void AInGamePlayerController::ToggleTabWidget()
 {
 	InGameWidget->ToggleTabWidget();
+	BP_ToggleTabWidget();
+}
+
+void AInGamePlayerController::BP_ToggleTabWidget_Implementation()
+{
 }
