@@ -6,13 +6,15 @@
 #include "Component/EquipmentComponent.h"
 #include "UI/StorageWidget.h"
 
-void UGearWidget::Init(APawn* Pawn)
+void UGearWidget::InitWidget(APawn* Pawn)
 {
-	Pawn->GetComponentByClass<UEquipmentComponent>()->OnInventoryChanged.AddUObject(this, &UGearWidget::UpdateInventory);
-	
+	UEquipmentComponent* EquipmentComponent = Pawn->GetComponentByClass<UEquipmentComponent>();
+	if (EquipmentComponent == nullptr) return;
+	EquipmentComponent->OnInventoryChanged.AddUObject(this, &UGearWidget::UpdateInventory);
+	UpdateInventory(EquipmentComponent->GetStorageArray());
 }
 
-void UGearWidget::UpdateInventory(TArray<FStorage>& StorageArray)
+void UGearWidget::UpdateInventory(const TArray<FStorage>& StorageArray)
 {
 	if (StorageArray.Num() <= 0)
 	{

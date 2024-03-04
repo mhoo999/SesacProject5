@@ -46,15 +46,18 @@ void UEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UEquipmentComponent, EquipmentArray);
+	DOREPLIFETIME(UEquipmentComponent, StorageArray);
 }
 
-void UEquipmentComponent::OnRepEquipmentArray()
+void UEquipmentComponent::OnRep_EquipmentArray()
 {
 	
 }
 
-void UEquipmentComponent::OnRepStorageArray()
+void UEquipmentComponent::OnRep_StorageArray()
 {
+	UE_LOG(LogTemp, Warning, TEXT("UEquipmentComponent::OnRep_StorageArray"));
+	OnInventoryChanged.Broadcast(StorageArray);
 }
 
 bool UEquipmentComponent::PutItem(AItemBase* Item)
@@ -69,6 +72,27 @@ bool UEquipmentComponent::PutItem(AItemBase* Item)
 	}
 
 	return false;
+}
+
+const TArray<FStorage>& UEquipmentComponent::GetStorageArray() const
+{
+	return StorageArray;
+}
+
+int32 UEquipmentComponent::GetItemCount(const FString& ItemName) const
+{
+	int32 CurrentCount = 0;
+	for (const FStorage& Iter : StorageArray)
+	{
+		CurrentCount += Iter.GetItemCount(ItemName);
+	}
+
+	return CurrentCount;
+}
+
+void UEquipmentComponent::TestCheckCan()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UEquipmentComponent::TestCheckCan) Can Count : %d"), GetItemCount(FString("Can")));
 }
 
 void UEquipmentComponent::ClientRPC_LootItem_Implementation(UInventoryComponent* TargetInventory)
