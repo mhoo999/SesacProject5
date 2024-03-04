@@ -91,7 +91,7 @@ public:
 	void MultiRPC_PutToInventory();
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiRPC_PopFromInventory();
-
+	
 	FItemData GetItemData() const;
 	FItemInstance GetItemInstance() const;
 

@@ -100,7 +100,7 @@ private:
 	
 	UPROPERTY()
 	int32 AmmoCount = 30;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	EFireMode FireMode = EFireMode::Single;
 	UPROPERTY()
 	bool bIsAttacking;
