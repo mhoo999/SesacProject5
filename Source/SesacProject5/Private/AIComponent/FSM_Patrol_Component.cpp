@@ -24,9 +24,13 @@ bool UFSM_Patrol_Component::IsAtDestination()
 	return dist <= 100;
 }
 
-void UFSM_Patrol_Component::PerfomLookAround()
+void UFSM_Patrol_Component::MultiRPCPerformLookAround_Implementation(UAnimMontage* MontageToPlay)
 {
-	ai->GetMesh()->GetAnimInstance()->Montage_Play(lookAroundMontage);
+	// UE_LOG(LogTemp, Warning, TEXT("play montage"));
+	if (MontageToPlay && ai->GetMesh()->GetAnimInstance())
+	{
+		ai->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
+	}
 }
 
 void UFSM_Patrol_Component::SetNextDestination()
@@ -37,6 +41,8 @@ void UFSM_Patrol_Component::SetNextDestination()
 		NextWaypoint = waypointArray[CurrentWaypointIndex];
 		CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointArray.Num();
 	}
+
+	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
 }
 
 void UFSM_Patrol_Component::MoveToDestination()
@@ -58,22 +64,14 @@ void UFSM_Patrol_Component::ExecuteBehavior()
 	{
 		if (!bHasPerformedLookAround)
 		{
-			PerfomLookAround();
+			MultiRPCPerformLookAround(lookAroundMontage);
 			bHasPerformedLookAround = true;
 		}
 		else
 		{
 			if (LookAroundTimerhandle.IsValid()) return;
 
-			
-			bHasPerformedLookAround = false;
-			SetNextDestination();
-			// GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, FTimerDelegate::CreateLambda([&]
-			// {
-			// 	GetWorld()->GetTimerManager().ClearTimer(LookAroundTimerhandle);
-			// 	bHasPerformedLookAround = false;
-			// 	SetNextDestination();
-			// }), lookAroundMontage->GetPlayLength(), false, lookAroundMontage->GetPlayLength());
+			GetWorld()->GetTimerManager().SetTimer(LookAroundTimerhandle, this, &UFSM_Patrol_Component::OnLookAtroundTimerExpired, lookAroundMontage->GetPlayLength(), false);
 		}
 	}
 	else
@@ -98,5 +96,11 @@ void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 	
 	ac->SetContext(EEnemystate::search);
 	ac->GetFSM()->SenseNewActor(NewActor);
+}
+
+void UFSM_Patrol_Component::OnLookAtroundTimerExpired()
+{
+	bHasPerformedLookAround = false;
+	SetNextDestination();
 }
 

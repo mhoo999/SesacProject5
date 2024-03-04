@@ -29,9 +29,6 @@ void UEFSGameInstance::Init()
 	SessionPtrRef->OnFindSessionsCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnFindSessionCompleted);
 	SessionPtrRef->OnDestroySessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnDestroySessionCompleted);
 	SessionPtrRef->OnJoinSessionCompleteDelegates.AddUObject(this, &UEFSGameInstance::OnJoinSessionCompleted);
-
-	// Save quest data
-	const FString slotName = "questdata";
 	
 	if (UGameplayStatics::DoesSaveGameExist(slotName, 0))
 	{
@@ -181,7 +178,7 @@ void UEFSGameInstance::OnDestroySessionCompleted(FName SessionName, bool bWasSuc
 
 void UEFSGameInstance::ClearSaveData()
 {
-	UGameplayStatics::DeleteGameInSlot("questdata", 0);
+	UGameplayStatics::DeleteGameInSlot(slotName, 0);
 	ACharacterBase* player = Cast<ACharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 	if (player)

@@ -50,8 +50,6 @@ void AEOSAIController::Tick(float DeltaSeconds)
 
 	FSMInterface->ExecuteBehavior();
 	printLog();
-
-	// UpdateControlRotation()
 }
 
 void AEOSAIController::ChangeDead(bool bNewIsDead)
@@ -59,8 +57,6 @@ void AEOSAIController::ChangeDead(bool bNewIsDead)
 	if (bNewIsDead)
 	{
 		this->Destroy();
-		// FSMInterface->StopExecute();
-		// SetActorTickEnabled(false);
 	}
 }
 

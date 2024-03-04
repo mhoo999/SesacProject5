@@ -25,7 +25,8 @@ protected:
 
 	bool IsAtDestination();
 
-	void PerfomLookAround();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPCPerformLookAround(UAnimMontage* MontageToPlay);
 
 	void SetNextDestination();
 
@@ -49,4 +50,6 @@ public:
 	bool bHasNextWaypoint = false;
 
 	FTimerHandle LookAroundTimerhandle;
+	UFUNCTION()
+	void OnLookAtroundTimerExpired();
 };

@@ -52,6 +52,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FString ServerURL;
+	
+	// Save quest data
+	const FString slotName = "questdata";
 
 public:
 	// Save quest data
