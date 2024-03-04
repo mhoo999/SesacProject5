@@ -117,6 +117,10 @@ void AGunBase::AddRecoil()
 	RecoilYaw += FMath::RandRange(-3.f, 3.f);
 }
 
+void AGunBase::ToggleFireMode()
+{
+}
+
 void AGunBase::ServerRPC_Reload_Implementation()
 {
 	MultiRPC_Reload();

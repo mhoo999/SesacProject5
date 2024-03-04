@@ -48,6 +48,8 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess))
 	UQuestLogComponent* QuestLogComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	USpringArmComponent* SpringArmComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
@@ -62,8 +64,6 @@ private:
 	UEscapeComponent* EscapeComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UEquipmentComponent* EquipmentComponent;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	UFPSAnim_CharacterComponent* FPSAnim_Character;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input", Meta = (AllowPrivateAccess))
 	UInputMappingContext* DefaultIMC;

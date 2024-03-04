@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "InGameGameMode.generated.h"
 
-class ISpawnPoint;
+class APlayerStartBase;
 /**
  * 
  */
@@ -25,5 +25,5 @@ public:
 
 private:
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
-	TArray<ISpawnPoint*> SpawnPointArray; 
+	TArray<APlayerStartBase*> PlayerStartArray; 
 };

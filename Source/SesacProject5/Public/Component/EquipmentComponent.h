@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "InventoryComponent.h"
 #include "EquipmentComponent.generated.h"
 
 
-class UInventoryComponent;
+// class UInventoryComponent;
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UEquipmentComponent : public UActorComponent
@@ -31,9 +32,18 @@ public:
 	UFUNCTION()
 	void OnRepEquipmentArray();
 
+	UFUNCTION()
+	void OnRepStorageArray();
+
+	bool PutItem(AItemBase* Item);
+
+	
 	UFUNCTION(Client, Reliable)
 	void ClientRPC_LootItem(UInventoryComponent* TargetInventory);
 private:
 	UPROPERTY(ReplicatedUsing = OnRepEquipmentArray, Meta = (AllowPrivateAccess))
 	TArray<AActor*> EquipmentArray;
+
+	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRepStorageArray, Meta = (AllowPrivateAccess))
+	TArray<FStorage> StorageArray;
 };

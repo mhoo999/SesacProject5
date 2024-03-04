@@ -20,26 +20,26 @@ void AInGameGameMode::InitGame(const FString& MapName, const FString& Options, F
 	
 	for (TActorIterator<APlayerStartBase> It(GetWorld()); It; ++It)
 	{
-		SpawnPointArray.Add(*It);
+		PlayerStartArray.Add(*It);
 	}
 }
 
 AActor* AInGameGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) PlayerStartArray Num : %d"), SpawnPointArray.Num());
-	if (SpawnPointArray.Num() <= 0) return nullptr;
+	if (PlayerStartArray.Num() <= 0) return nullptr;
 
 	APlayerStart* PlayerStart = nullptr;
-	while (SpawnPointArray.Num())
+	while (PlayerStartArray.Num())
 	{
-		int32 RandIndex = FMath::RandRange(0, SpawnPointArray.Num()-1);
-		if (SpawnPointArray[RandIndex]->IsOccupied())
+		int32 RandIndex = FMath::RandRange(0, PlayerStartArray.Num()-1);
+		if (PlayerStartArray[RandIndex]->IsOccupied())
 		{
-			SpawnPointArray.RemoveAt(RandIndex);
+			PlayerStartArray.RemoveAt(RandIndex);
 		}
 		else
 		{
-			PlayerStart = Cast<APlayerStart>(SpawnPointArray[RandIndex]->SetOccupied());
+			PlayerStart = Cast<APlayerStart>(PlayerStartArray[RandIndex]->SetOccupied());
 		}
 	}
 	

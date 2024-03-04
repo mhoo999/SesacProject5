@@ -41,8 +41,10 @@ public:
 
 	void ReloadAction(const FInputActionValue& Value);
 
-	void AimStartAction();
-	void AimEndAction();
+	void AimStartAction(const FInputActionValue& Value);
+	void AimEndAction(const FInputActionValue& Value); 
+
+	void ToggleFireModeAction(const FInputActionValue& Value);
 
 	float GetWeaponAttackRange() const;
 
@@ -54,6 +56,8 @@ public:
 	
 	virtual float GetRecoilPitch() const { return 0.f; }
 	virtual float GetRecoilYaw() const { return 0.f; }
+
+	virtual FVector GetTargetLocation() const;
 
 protected:
 	UPROPERTY()
@@ -71,8 +75,10 @@ private:
 	UInputAction* IA_Reload;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Aim;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UInputAction* IA_ToggleFireMode;
 
 	// Todo : Delete this
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	TSubclassOf<class AGunBase> GunClass;
+	TSubclassOf<class AGun> GunClass;
 };

@@ -8,7 +8,9 @@
 
 #include "Character/CharacterBase.h"
 // Todo : Delete this after test
+#include "Camera/CameraComponent.h"
 #include "Component/MoveComponent.h"
+#include "Item/Weapon/Gun.h"
 #include "Item/Weapon/GunBase.h"
 #include "Net/UnrealNetwork.h"
 
@@ -36,6 +38,7 @@ void UWeaponComponent::SetupPlayerInputComponent(UEnhancedInputComponent* Player
 	PlayerInputComponent->BindAction(IA_Reload, ETriggerEvent::Started, this, &UWeaponComponent::ReloadAction);
 	PlayerInputComponent->BindAction(IA_Aim, ETriggerEvent::Started, this, &UWeaponComponent::AimStartAction);
 	PlayerInputComponent->BindAction(IA_Aim, ETriggerEvent::Completed, this, &UWeaponComponent::AimEndAction);
+	PlayerInputComponent->BindAction(IA_ToggleFireMode, ETriggerEvent::Started, this, &UWeaponComponent::ToggleFireModeAction);
 }
 
 // Called when the game starts
@@ -53,7 +56,7 @@ void UWeaponComponent::BeginPlay()
 	{
 		if (GunClass)
 		{
-			AGunBase* Gun = GetWorld()->SpawnActor<AGunBase>(GunClass);
+			AGun* Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 			Weapon = Gun;
 			Gun->SetOwner(GetOwner());
 			Gun->OnRep_Owner();
@@ -98,14 +101,19 @@ void UWeaponComponent::ReloadAction(const FInputActionValue& Value)
 	if (WeaponInterface) WeaponInterface->Reload();
 }
 
-void UWeaponComponent::AimStartAction()
+void UWeaponComponent::AimStartAction(const FInputActionValue& Value)
 {
 	if (WeaponInterface) WeaponInterface->StartAim();
 }
 
-void UWeaponComponent::AimEndAction()
+void UWeaponComponent::AimEndAction(const FInputActionValue& Value)
 {
 	if (WeaponInterface) WeaponInterface->StopAim();
+}
+
+void UWeaponComponent::ToggleFireModeAction(const FInputActionValue& Value)
+{
+	if (WeaponInterface) WeaponInterface->ToggleFireMode();
 }
 
 float UWeaponComponent::GetWeaponAttackRange() const
@@ -125,4 +133,9 @@ FVector UWeaponComponent::GetFocusLocation() const
 
 void UWeaponComponent::AddRecoil(float Pitch, float Yaw)
 {
+}
+
+FVector UWeaponComponent::GetTargetLocation() const
+{
+	return OwningCharacter->GetCameraLocation() + (OwningCharacter->GetComponentByClass<UCameraComponent>()->GetForwardVector() * 2500.f);
 }

@@ -41,7 +41,7 @@ public:
 	virtual AActor* GetIndicator() const override;
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MultRPC_SpawnBulletDecal(FVector SpawnLocation, FRotator SpawnRotation);
+	void MultRPC_SpawnBulletDecal(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation);
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FProjectileInfo ProjectileInfo;
@@ -52,6 +52,13 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	// Decal
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
-	UMaterialInstance* DecalInstance;
+	TMap<FName, UMaterialInstance*> DecalMap;
+	// Emitter
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TMap<FName, UParticleSystem*> EmitterMap;
+	// Sound
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TMap<FName, USoundBase*> SoundMap;
 };

@@ -50,17 +50,17 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
 	
 	if (OtherActor == GetOwner()) return;
+	
+	MultRPC_SpawnBulletDecal(OtherActor, SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
 
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
 		HealthComponent->ApplyDamage(this, SweepResult.BoneName);
 	}
-	
-	MultRPC_SpawnBulletDecal(SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
-	
+
 	Destroy();
 }
 
@@ -79,8 +79,20 @@ AActor* AProjectileBase::GetIndicator() const
 	return GetOwner();
 }
 
-void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(FVector SpawnLocation, FRotator SpawnRotation)
+void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation)
 {
-	UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalInstance, FVector(5,5,5)
-                			, SpawnLocation, SpawnRotation);
+	FName Material;
+	if (HitActor->ActorHasTag(FName("Flesh")))
+	{
+		Material = FName("Flesh");
+	}
+	else
+	{
+		Material = FName("Other");
+	}
+
+	UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalMap[Material], FVector(5,5,5)
+    							, SpawnLocation, SpawnRotation);
+    		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMap[Material], SpawnLocation, SpawnRotation);
+    		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundMap[Material], SpawnLocation, SpawnRotation);
 }

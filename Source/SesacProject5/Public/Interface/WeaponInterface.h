@@ -39,4 +39,6 @@ public:
 
 	virtual float GetRecoilPitch() const {return 0;}
 	virtual float GetRecoilYaw() const {return 0;}
+
+	virtual void ToggleFireMode() = 0;
 };

@@ -31,11 +31,6 @@ void UInventoryComponent::BeginPlay()
 	// ...
 	SetIsReplicated(true);
 
-	for (int i = 0; i < StorageArray.Num(); ++i)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UInventoryComponent::BeginPlay"));
-		StorageArray[i].IsOccupied.Init(false, StorageArray[i].Size.X * StorageArray[i].Size.Y);
-	}
 }
 
 UInventoryWidget* UInventoryComponent::GetInventoryWidget()
@@ -80,6 +75,6 @@ void UInventoryComponent::AddItem(AItemBase* Item)
 {
 	for (int i = 0; i < StorageArray.Num(); ++i)
 	{
-		if (StorageArray[i].AddItem(Item) == true) break;
+		if (StorageArray[i].PutItemToStorage(Item) == true) break;
 	}
 }

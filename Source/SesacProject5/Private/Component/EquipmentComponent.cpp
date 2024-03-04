@@ -24,6 +24,12 @@ void UEquipmentComponent::BeginPlay()
 	// ...
 
 	SetIsReplicated(true);
+
+	// for (auto Iter : StorageArray)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("UEquipmentComponent::BeginPlay) Size X : %f, Size Y : %f"), Iter.Size.X , Iter.Size.Y);
+	// 	Iter.IsOccupied.Init(false, Iter.Size.X * Iter.Size.Y);
+	// }
 }
 
 
@@ -45,6 +51,20 @@ void UEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 void UEquipmentComponent::OnRepEquipmentArray()
 {
 	
+}
+
+void UEquipmentComponent::OnRepStorageArray()
+{
+}
+
+bool UEquipmentComponent::PutItem(AItemBase* Item)
+{
+	for (auto Iter : StorageArray)
+	{
+		if (Iter.PutItemToStorage(Item)) return true;
+	}
+
+	return false;
 }
 
 void UEquipmentComponent::ClientRPC_LootItem_Implementation(UInventoryComponent* TargetInventory)
