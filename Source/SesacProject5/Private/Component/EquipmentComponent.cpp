@@ -59,7 +59,7 @@ void UEquipmentComponent::OnRepStorageArray()
 
 bool UEquipmentComponent::PutItem(AItemBase* Item)
 {
-	for (auto Iter : StorageArray)
+	for (auto& Iter : StorageArray)
 	{
 		if (Iter.PutItemToStorage(Item)) return true;
 	}

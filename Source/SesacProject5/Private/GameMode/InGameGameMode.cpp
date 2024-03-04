@@ -26,23 +26,21 @@ void AInGameGameMode::InitGame(const FString& MapName, const FString& Options, F
 
 AActor* AInGameGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) PlayerStartArray Num : %d"), SpawnPointArray.Num());
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) PlayerStartArray Num : %d"), PlayerStartArray.Num());
 	if (PlayerStartArray.Num() <= 0) return nullptr;
 
 	APlayerStart* PlayerStart = nullptr;
 	while (PlayerStartArray.Num())
 	{
 		int32 RandIndex = FMath::RandRange(0, PlayerStartArray.Num()-1);
+		PlayerStart = Cast<APlayerStart>(PlayerStartArray[RandIndex]->SetOccupied());
 		if (PlayerStartArray[RandIndex]->IsOccupied())
 		{
 			PlayerStartArray.RemoveAt(RandIndex);
 		}
-		else
-		{
-			PlayerStart = Cast<APlayerStart>(PlayerStartArray[RandIndex]->SetOccupied());
-		}
+		break;
 	}
-	
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) PlayerStartArray Num : %d"), PlayerStartArray.Num());
 	// AActor* PlayerStart = Super::ChoosePlayerStart_Implementation(Player);
 	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::ChoosePlayerStart) %s"), (PlayerStart ? *PlayerStart->GetActorNameOrLabel() : *FString("Empty")));
 	
@@ -53,7 +51,7 @@ void AInGameGameMode::InitStartSpot_Implementation(AActor* StartSpot, AControlle
 {
 	Super::InitStartSpot_Implementation(StartSpot, NewPlayer);
 
-	// UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::InitStartSpot) Pawn Name : %s"), *NewPlayer->GetPawn()->GetActorNameOrLabel());
+	UE_LOG(LogTemp, Warning, TEXT("AInGameGameMode::InitStartSpot) Pawn Name : %s"), *NewPlayer->GetPawn()->GetActorNameOrLabel());
 	if (UEscapeComponent* EscapeComponent = NewPlayer->GetPawn()->GetComponentByClass<UEscapeComponent>())
 	{
 		Cast<APlayerStartBase>(StartSpot)->SetExitArrayToComponent(EscapeComponent);

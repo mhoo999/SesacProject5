@@ -55,10 +55,7 @@ void AItemBase::Interact(ACharacter* InteractCharacter, FText InteractionName)
 
 	if (Interaction.Equals("Get"))
 	{
-		if (InteractCharacter->GetComponentByClass<UEquipmentComponent>()->PutItem(this))
-		{
-			Destroy();	
-		}
+		InteractCharacter->GetComponentByClass<UEquipmentComponent>()->PutItem(this);
 	}
 }
 

@@ -88,7 +88,7 @@ void UEscapeComponent::ClientRPC_Escape_Implementation()
 
 	OnEscape.Broadcast();
 	
-	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Title_YMH", TRAVEL_Absolute);
+	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Result_YMH", TRAVEL_Absolute);
 }
 
 void UEscapeComponent::OnRep_IsEscaping()
