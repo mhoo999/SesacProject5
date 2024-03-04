@@ -10,6 +10,7 @@
 #include "PlayerController/MainMenuPlayerController.h"
 #include "QuestSystem/QuestLogComponent.h"
 #include "SaveData/QuestSaveData.h"
+#include "Item/ItemBase.h"
 
 
 void UEFSGameInstance::Init()
@@ -174,6 +175,11 @@ void UEFSGameInstance::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionC
 void UEFSGameInstance::OnDestroySessionCompleted(FName SessionName, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UEFSGameInstance::OnDestroySessionCompleted"));
+}
+
+FItemData* UEFSGameInstance::GetItemData(FName ItemDataRow)
+{
+	return DT_ItemData->FindRow<FItemData>(ItemDataRow, "");
 }
 
 void UEFSGameInstance::ClearSaveData()

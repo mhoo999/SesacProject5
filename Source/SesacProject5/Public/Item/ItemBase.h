@@ -38,7 +38,7 @@ struct FItemInstance : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
-	FItemInstance() : Guid(FGuid::NewGuid()), ItemRow(FName()), bIsInStorage(false), bIsRotated(false), CurrentStack(1), bIsFromRaid(false)
+	FItemInstance() : bIsInStorage(false), bIsRotated(false), CurrentStack(1), bIsFromRaid(false)
 	{}
 
 	UPROPERTY(EditAnywhere)

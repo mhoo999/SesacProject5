@@ -72,7 +72,7 @@ void AGun::Tick(float DeltaTime)
 		if (CurrentFireCool <= 0.f)
 		{
 			CurrentFireCool = FireRate;
-			FireBullet(WeaponComponent->GetTargetLocation());
+			FireBullet(WeaponComponent->GetFocusLocation());
 			if (FireMode == EFireMode::Single)
 			{
 				bIsAttacking = false;
