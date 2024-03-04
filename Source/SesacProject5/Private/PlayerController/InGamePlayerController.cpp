@@ -8,7 +8,7 @@ void AInGamePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("AInGamePlayerController::BeginPlay"));
+	// UE_LOG(LogTemp, Warning, TEXT("AInGamePlayerController::BeginPlay"));
 
 	if (IsLocalController())
 	{

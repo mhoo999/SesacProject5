@@ -30,25 +30,31 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	void OnRepEquipmentArray();
+	void OnRep_EquipmentArray();
 
 	UFUNCTION()
-	void OnRepStorageArray();
+	void OnRep_StorageArray();
 
 	bool PutItem(AItemBase* Item);
 
 	
 	UFUNCTION(Client, Reliable)
 	void ClientRPC_LootItem(UInventoryComponent* TargetInventory);
+
+	const TArray<FStorage>& GetStorageArray() const;
+	int32 GetItemCount(const FString& ItemName) const;
+
+	UFUNCTION(CallInEditor)
+	void TestCheckCan();
 private:
-	UPROPERTY(ReplicatedUsing = OnRepEquipmentArray, Meta = (AllowPrivateAccess))
+	UPROPERTY(ReplicatedUsing = OnRep_EquipmentArray, Meta = (AllowPrivateAccess))
 	TArray<AActor*> EquipmentArray;
 
-	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRepStorageArray, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRep_StorageArray, Meta = (AllowPrivateAccess))
 	TArray<FStorage> StorageArray;
 
 public:
 	// Delegate
-	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_StorageArray, TArray<FStorage>&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_StorageArray, const TArray<FStorage>&);
 	FDele_StorageArray OnInventoryChanged;
 };
