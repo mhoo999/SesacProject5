@@ -3,11 +3,11 @@
 
 #include "AIComponent/FSM_Chase_Component.h"
 #include "InputActionValue.h"
+#include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 #include "AIComponent/AIWeaponComponent.h"
 #include "Component/WeaponComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 UFSM_Chase_Component::UFSM_Chase_Component()
 {
@@ -43,7 +43,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 			if (bIsAttacking == false)
 			{
 				bIsAttacking = true;
-				UGameplayStatics::PlaySoundAtLocation(GetWorld(), Attackmumble, ai->GetActorLocation(), ai->GetActorRotation());
+				auto mumbleComp = Cast<UAIMumbleComponent>(ai->GetComponentByClass<UAIMumbleComponent>());
+				mumbleComp->MultiRPCPlayAttackMumble();
 				ac->StopMovement();
 				WeaponComp->SetFocusLocation(TargetLocation);
 				WeaponComp->StartFireAction(FInputActionValue());

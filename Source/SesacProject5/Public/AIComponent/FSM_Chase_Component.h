@@ -54,8 +54,4 @@ public:
 	
 	bool FocusTargetPart(AActor* targetActor, FVector& TargetLocation);
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	USoundBase* Attackmumble;
-
 };

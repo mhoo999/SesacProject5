@@ -25,8 +25,8 @@ protected:
 
 	bool IsAtDestination();
 
-	UFUNCTION(NetMulticast, Reliable)
-	void MultiRPCPerformLookAround(UAnimMontage* MontageToPlay);
+	// UFUNCTION(NetMulticast, Reliable)
+	void PerformLookAround();
 
 	void SetNextDestination();
 
@@ -43,9 +43,6 @@ public:
 	UPROPERTY(EditAnywhere, Category="MySettings")
 	float AcceptanceRadius = 1.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	UAnimMontage* lookAroundMontage;
-
 	bool bHasPerformedLookAround = false;
 	bool bHasNextWaypoint = false;
 
@@ -54,23 +51,14 @@ public:
 	void OnLookAtroundTimerExpired();
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	USoundBase* mumble1;
+	float lookAroundTime;
 
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	USoundBase* mumble2;
+	bool bMumble;
 
-	UPROPERTY(EditDefaultsOnly, Category="MySettings")
-	USoundBase* mumble3;
+	UPROPERTY(EditAnywhere, Category="MySettings", meta=(AllowPrivateAccess))
+	float mumblingTime = 5.f;
 
-	bool bMumble = false;
-	
 	FTimerHandle mumbleTimerhandle;
 	UFUNCTION()
 	void OnMumbleTimerExpired();
-
-	UPROPERTY(EditAnywhere, Category="MySettings")
-	float mumblingTime = 5.0f;
-
-	USoundBase* mumbleSound;
 };
