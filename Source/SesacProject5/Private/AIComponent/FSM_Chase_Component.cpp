@@ -18,6 +18,13 @@ void UFSM_Chase_Component::BeginPlay()
 	Super::BeginPlay();
 }
 
+void UFSM_Chase_Component::Init(APawn* pawn)
+{
+	Super::Init(pawn);
+
+	WeaponComp->ToggleFireModeAction(FInputActionValue());
+}
+
 void UFSM_Chase_Component::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
