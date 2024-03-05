@@ -43,8 +43,12 @@ void UFSM_Chase_Component::ExecuteBehavior()
 			if (bIsAttacking == false)
 			{
 				bIsAttacking = true;
-				auto mumbleComp = Cast<UAIMumbleComponent>(ai->GetComponentByClass<UAIMumbleComponent>());
-				mumbleComp->MultiRPCPlayAttackMumble();
+				if (!bEnemyMumble)
+				{
+					bEnemyMumble = true;
+					auto mumbleComp = Cast<UAIMumbleComponent>(ai->GetComponentByClass<UAIMumbleComponent>());
+					mumbleComp->MultiRPCPlayAttackMumble();
+				}
 				ac->StopMovement();
 				WeaponComp->SetFocusLocation(TargetLocation);
 				WeaponComp->StartFireAction(FInputActionValue());
