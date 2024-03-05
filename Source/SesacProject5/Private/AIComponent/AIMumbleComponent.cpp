@@ -34,6 +34,11 @@ void UAIMumbleComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
+void UAIMumbleComponent::MultiRPCPlayCuriosityMumble_Implementation()
+{
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Curiositymumble, ai->GetActorLocation(), ai->GetActorRotation());
+}
+
 void UAIMumbleComponent::MultiRPCPlayAttackMumble_Implementation()
 {
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Attackmumble, ai->GetActorLocation(), ai->GetActorRotation());

@@ -3,6 +3,7 @@
 
 #include "AIComponent/FSM_Search_Component.h"
 
+#include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
 
@@ -23,6 +24,20 @@ void UFSM_Search_Component::ExecuteBehavior()
 	
 	// 감지된 구역으로 이동
 	ac->MoveToLocation(targetLastLoc, 50.f, true, true);
+	if (!bCuriosityMumble)
+	{
+		bCuriosityMumble = true;
+		auto mumbleComp = Cast<UAIMumbleComponent>(ai->GetComponentByClass<UAIMumbleComponent>());
+		mumbleComp->MultiRPCPlayCuriosityMumble();
+	}
+
+	
+	if (!bFind)
+	{
+		bFind = true;
+		GetWorld()->GetTimerManager().ClearTimer(returnHandle);
+		GetWorld()->GetTimerManager().SetTimer(returnHandle, this, &UFSM_Search_Component::AIReturnFunc, retrunDuration, false);
+	}
 }
 
 void UFSM_Search_Component::StopExecute()
@@ -37,18 +52,20 @@ void UFSM_Search_Component::SenseNewActor(AActor* NewActor)
 		ac->SetContext(EEnemystate::patrol);
 	}
 
+	target = NewActor;
 	targetLastLoc = NewActor->GetActorLocation();
 
-	// newActor의 TeamId가 본인의 TeamId와 다를 경우, Chase 상태로 전환
-	ACharacterBase* chr = Cast<ACharacterBase>(NewActor);
-	if (ai->TeamId != chr->TeamId && chr->TeamId != 255)
+	if (bFocusTarget())
 	{
 		ac->SetContext(EEnemystate::chase);
 		ac->GetFSM()->SenseNewActor(NewActor);
 	}
-	else // Enemy가 아닐 경우, Patrol 상태로 전환
-	{
-		ac->SetContext(EEnemystate::patrol);
-		ac->GetFSM()->SenseNewActor(nullptr);
-	}
+}
+
+void UFSM_Search_Component::AIReturnFunc()
+{
+	target = nullptr;
+	ac->SetContext(EEnemystate::patrol);
+	bFind = false;
+	bCuriosityMumble = false;
 }

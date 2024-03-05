@@ -30,6 +30,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	FVector TargetLocation;
 	if (FocusTargetPart(target, TargetLocation))
 	{
+		ac->SetFocus(target);
+		
 		float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
 		float attackDist = WeaponComp->GetWeaponAttackRange();
 
@@ -71,18 +73,15 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	// 보이지 않는다면 마지막으로 발견한 타겟의 위치로 이동, 일정 시간 동안 안 보이면 patrol 상태로 변경
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
-		ac->SetContext(EEnemystate::patrol);
-
-		// if (bIsAttacking)
-		// {
-		// 	bIsAttacking = false;
-		// 	GetWorld()->GetTimerManager().ClearTimer(missingHandle);
-		// 	GetWorld()->GetTimerManager().SetTimer(missingHandle, this, &UFSM_Chase_Component::OnMissingTimerExpired, missingDuration, false);
-		// }
-		//
-		// WeaponComp->EndFireAction(FInputActionValue());
-		// ac->MoveToLocation(targetLastLoc, 10.f, true, true);
+		// UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
+		ac->MoveToLocation(targetLastLoc, 10.0f, true, true, true);
+		
+		if (!bFind)
+		{
+			bFind = true;
+			GetWorld()->GetTimerManager().ClearTimer(returnHandle);
+			GetWorld()->GetTimerManager().SetTimer(returnHandle, this, &UFSM_Chase_Component::AIReturnFunc, retrunDuration, false);
+		}
 	}
 }
 
@@ -96,18 +95,10 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 {
 	if (NewActor == nullptr)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(handle);
-		GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&]
-		{
-			target = nullptr;
-			ac->SetContext(EEnemystate::patrol);
-		}), missingTime, false, missingTime);
+		return;
 	}
-	else
-	{
-		GetWorld()->GetTimerManager().ClearTimer(handle);
-		target = NewActor;
-	}
+	
+	target = NewActor;
 }
 
 bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetLocation)
@@ -209,10 +200,13 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 	return true;
 }
 
-void UFSM_Chase_Component::OnMissingTimerExpired()
+void UFSM_Chase_Component::AIReturnFunc()
 {
+	ac->SetContext(EEnemystate::patrol);
 	bIsAttacking = false;
-	SenseNewActor(nullptr);
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Missing"));
+	target = nullptr;
+	bFind = false;
+	bEnemyMumble = false;
+
 }
 

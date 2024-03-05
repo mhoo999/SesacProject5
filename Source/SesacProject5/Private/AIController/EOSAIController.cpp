@@ -29,11 +29,15 @@ AEOSAIController::AEOSAIController()
 	AIPerception->SetDominantSense(sight->GetSenseImplementation());
 	AIPerception->SetDominantSense(hearing->GetSenseImplementation());
 
-	sight->SightRadius = 1500.f;
-	sight->LoseSightRadius = sight->SightRadius + 500.f;
+	sight->SightRadius = 3000.f;
+	sight->LoseSightRadius = sight->SightRadius + 250.f;
 	sight->PeripheralVisionAngleDegrees = 65.f;
 	sight->DetectionByAffiliation.bDetectNeutrals = true;
 	sight->DetectionByAffiliation.bDetectFriendlies = true;
+
+	hearing->HearingRange = 500.f;
+	hearing->DetectionByAffiliation.bDetectNeutrals = true;
+	hearing->DetectionByAffiliation.bDetectFriendlies = true;
 
 	bReplicates = true;
 }
@@ -51,7 +55,7 @@ void AEOSAIController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	FSMInterface->ExecuteBehavior();
-	printLog();
+	// printLog();
 }
 
 void AEOSAIController::ChangeDead(bool bNewIsDead)
@@ -70,19 +74,13 @@ void AEOSAIController::OnPerception(AActor* actor, FAIStimulus stimulus)
 	{
 		return;
 	}
-
-	// SetFocus 센싱 성공 ? chr 반환 : nullptr 반환
-	// 0219 (&& ai->TeamId != chr->TeamId && chr->TeamId != 255) 추가하여 적일 경우에만 chr 반환하도록 수정 
-	SetFocus(stimulus.WasSuccessfullySensed() && ai->TeamId != chr->TeamId && chr->TeamId != 255 ? chr  : nullptr);
-	// SetFocus(stimulus.WasSuccessfullySensed() ? chr : nullptr);
-
 	
-	// UE_LOG(LogTemp, Warning, TEXT("%ls"), (chr->TeamId == 1) ? TEXT("Friend") : TEXT("Enemy"));
+	// SetFocus(stimulus.WasSuccessfullySensed() ? chr  : nullptr);
 
-	if (chr)
+	if (stimulus.WasSuccessfullySensed() && chr->TeamId != ai->TeamId)
 	{
-		ai->StopAnimMontage();
-		FSMInterface->SenseNewActor(chr);
+		SetContext(EEnemystate::search);
+		FSMInterface->SenseNewActor(actor);
 	}
 }
 
