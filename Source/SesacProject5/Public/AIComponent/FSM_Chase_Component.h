@@ -48,6 +48,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float missingTime = 10.0f;
 
+	UPROPERTY()
 	FTimerHandle handle;
 
 	bool bIsAttacking;

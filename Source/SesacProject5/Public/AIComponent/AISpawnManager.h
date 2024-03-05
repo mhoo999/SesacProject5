@@ -33,6 +33,7 @@ private:
 
 	void RespawnScave(bool bNewIsDead);
 
+	UPROPERTY()
 	FTimerHandle respawnTimer;
 
 	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
