@@ -92,6 +92,8 @@ public:
 
 	// Getter
 	float GetTotalHealth() const;
+
+	AActor* GetAttackActor() const;
 	
 private:
 	UPROPERTY()
@@ -105,6 +107,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<EBodyParts, float> BlackOutDamageModifireMap;
 
+	UPROPERTY()
+	AActor* AttackActor;
+	
 	float HurtHealth = 200.f;
 	
 	// Sound

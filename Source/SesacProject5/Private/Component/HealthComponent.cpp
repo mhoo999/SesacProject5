@@ -67,6 +67,8 @@ void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 	
 	OnAttacked.Broadcast(DamageInterface->GetIndicator());
 
+	AttackActor = DamageInterface->GetIndicator();
+
 	EDamageType DamageType = DamageInterface->GetDamageType();
 	float Damage = DamageInterface->GetDamage();
 	if (DamageType == EDamageType::Bullet)
@@ -83,9 +85,16 @@ void UHealthComponent::ApplyDamage(AActor* DamageActor, FName BoneName)
 
 void UHealthComponent::MultiRPC_StartDieSound_Implementation()
 {
-	VoiceComponent->StopDelayed(0.3f);
-	VoiceComponent->SetSound(DieSound);
-	VoiceComponent->Play();
+	if (VoiceComponent)
+	{
+		VoiceComponent->StopDelayed(0.3f);
+		VoiceComponent->SetSound(DieSound);
+		VoiceComponent->Play();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::MultiRPC_StartDieSound) VoiceComp is not valid"));
+	}
 }
 
 void UHealthComponent::MultiRPC_StartHurtSound_Implementation()
@@ -140,6 +149,11 @@ float UHealthComponent::GetTotalHealth() const
 	}
 
 	return TotalHealth;
+}
+
+AActor* UHealthComponent::GetAttackActor() const
+{
+	return AttackActor;
 }
 
 void UHealthComponent::ClientRPC_ApplyDamage_Implementation(EBodyParts BodyParts, EDamageType DamageType, float Damage)
