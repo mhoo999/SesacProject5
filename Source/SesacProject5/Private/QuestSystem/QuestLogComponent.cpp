@@ -102,8 +102,13 @@ void UQuestLogComponent::ReleaseComplete(bool bNewIsDead)
 	{
 		for (FQuestManagement& quest : questList)
 		{
-			quest.isCompleted = false;
-			UE_LOG(LogTemp, Warning, TEXT("questID : %hhd"), quest.isCompleted);
+			for (FStageDetails& stage : quest.questDetails.stages)
+			{
+				for (FObjectiveDetails& objective : stage.Objectives)
+				{
+					objective.objectiveComplete = false;
+				}
+			}
 		}
 	}
 
@@ -124,10 +129,11 @@ void UQuestLogComponent::ClientRPCOnObjectiveIDCalled_Implementation(const FStri
 		{
 			for (FObjectiveDetails& objective : stage.Objectives)
 			{
-				if (objective.objectiveID.Equals(objectiveID, ESearchCase::IgnoreCase) && objective.Quantity == value)
+				if (objective.objectiveID.Equals(objectiveID, ESearchCase::IgnoreCase))
 				{
-					quest.isCompleted = true;
-					// UE_LOG(LogTemp, Warning, TEXT("questID : %s is COMPLETE"), *quest.questID.ToString());
+					objective.objectiveComplete = true;
+					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
+					UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
 				}
 			}
 		}

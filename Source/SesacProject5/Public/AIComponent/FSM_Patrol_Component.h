@@ -41,7 +41,7 @@ public:
 	AActor* NextWaypoint;
 
 	UPROPERTY(EditAnywhere, Category="MySettings")
-	float AcceptanceRadius = 1.0f;
+	float AcceptanceRadius = 10.0f;
 
 	bool bHasPerformedLookAround = false;
 	bool bHasNextWaypoint = false;

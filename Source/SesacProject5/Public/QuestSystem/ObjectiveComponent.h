@@ -30,4 +30,11 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ObjectInfo", meta=(AllowPrivateAccess))
 	int32 value;
+
+public:
+	UFUNCTION(Blueprintable)
+	FString GetObjectID();
+
+	UFUNCTION(Blueprintable)
+	int32 GetValue();
 };
