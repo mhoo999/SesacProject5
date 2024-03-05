@@ -46,7 +46,9 @@ public:
 	bool bHasPerformedLookAround = false;
 	bool bHasNextWaypoint = false;
 
+	UPROPERTY()
 	FTimerHandle LookAroundTimerhandle;
+	
 	UFUNCTION()
 	void OnLookAtroundTimerExpired();
 
@@ -58,6 +60,7 @@ private:
 	UPROPERTY(EditAnywhere, Category="MySettings", meta=(AllowPrivateAccess))
 	float mumblingTime = 5.f;
 
+	UPROPERTY()
 	FTimerHandle mumbleTimerhandle;
 	UFUNCTION()
 	void OnMumbleTimerExpired();
