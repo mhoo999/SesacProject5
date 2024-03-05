@@ -34,4 +34,15 @@ private:
 	UStaticMeshComponent* DoorFrameMeshComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UStaticMeshComponent* DoorMeshComponent;
+
+	UPROPERTY()
+	FRotator DoorMeshTargetRotation;
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
+	float RotationMultiplier;
+
+	// Sound
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	USoundBase* OpenSound;
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	USoundBase* CloseSound;
 };
