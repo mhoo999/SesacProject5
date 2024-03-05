@@ -32,3 +32,13 @@ void UObjectiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
+FString UObjectiveComponent::GetObjectID()
+{
+	return objectID;
+}
+
+int32 UObjectiveComponent::GetValue()
+{
+	return value;
+}
+
