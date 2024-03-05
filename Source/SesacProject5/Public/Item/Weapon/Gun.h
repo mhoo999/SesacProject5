@@ -10,6 +10,7 @@
 
 class UWeaponComponent;
 class AProjectileBase;
+class UFPSAnimInstance;
 
 UENUM()
 enum class EFireMode : uint8
@@ -49,10 +50,12 @@ public:
 	virtual void StartAim() override;
 	virtual void StopAim() override;
 
+	virtual FTransform GetLeftHandTransform() override;
+
 	// FireBullet
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation);
+	void ServerRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation);  
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation);
 	UFUNCTION(NetMulticast, Reliable)
@@ -97,6 +100,8 @@ private:
 	ACharacter* OwningCharacter;
 	UPROPERTY()
 	UWeaponComponent* WeaponComponent;
+	UPROPERTY()
+	UFPSAnimInstance* AnimInstance;
 	
 	UPROPERTY()
 	int32 AmmoCount = 30;

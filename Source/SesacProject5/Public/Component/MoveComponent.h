@@ -37,6 +37,7 @@ public:
 	void MoveEndAction(const FInputActionValue& Value);
 	
 	void LookAction(const FInputActionValue& Value);
+	void LookEndAction(const FInputActionValue& Value);
 	void CrouchAction(const FInputActionValue& Value);
 	void SprintStartAction(const FInputActionValue& Value);
 	void SprintEndAction(const FInputActionValue& Value);

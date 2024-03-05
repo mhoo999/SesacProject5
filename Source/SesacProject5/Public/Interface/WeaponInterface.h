@@ -41,4 +41,6 @@ public:
 	virtual float GetRecoilYaw() const {return 0;}
 
 	virtual void ToggleFireMode() = 0;
+
+	virtual FTransform GetLeftHandTransform() { return FTransform(); };
 };

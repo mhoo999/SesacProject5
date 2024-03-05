@@ -3,6 +3,7 @@
 
 #include "Item/Weapon/Gun.h"
 
+#include "AnimInstance/FPSAnimInstance.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -142,6 +143,11 @@ void AGun::StopAim()
 	AimStopAction();
 }
 
+FTransform AGun::GetLeftHandTransform()
+{
+	return GunMesh->GetSocketTransform("LeftHandIK");
+}
+
 void AGun::MultiRPC_FailToFire_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AGun::MultiRPC_FailToFire")); 
@@ -192,6 +198,7 @@ void AGun::OnRep_Owner()
 
 	OwningCharacter = GetOwner<ACharacter>();
 	WeaponComponent = OwningCharacter->GetComponentByClass<UWeaponComponent>();
+	AnimInstance =  Cast<UFPSAnimInstance>(OwningCharacter->GetMesh()->GetAnimInstance());
 }
 
 void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation)
@@ -200,6 +207,8 @@ void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVecto
 	
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleTransform.GetLocation());
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFire, MuzzleTransform);
+
+	AnimInstance->ProcedualRecoil(1.5f);
 
 	if (OwningCharacter->IsLocallyControlled())
 	{

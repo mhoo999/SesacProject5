@@ -56,11 +56,11 @@ private:
 	UMoveComponent* MoveComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInteractComponent* InteractComponent;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UHealthComponent* HealthComponent;
-	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UEscapeComponent* EscapeComponent;
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UEquipmentComponent* EquipmentComponent;

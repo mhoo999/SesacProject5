@@ -82,6 +82,11 @@ void UEscapeComponent::SetExitArray(TArray<AExitBase*> NewExitArray)
 	ExitArray = NewExitArray;
 }
 
+const TArray<AExitBase*>& UEscapeComponent::GetExitArray() const
+{
+	return ExitArray;
+}
+
 void UEscapeComponent::ClientRPC_Escape_Implementation()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::ClientRPC_Escape_Implementation"));

@@ -31,6 +31,11 @@ public:
 	void UpdateIsAiming(bool bNewIsAiming);
 	UFUNCTION()
 	void UpdateHandSwayFloats(float NewSidMove, float NewMouseX, float NewMouseY);
+	UFUNCTION()
+	void UpdateLeftHandIK(FTransform NewLeftHandIK);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void ProcedualRecoil(float Multiplier);
 
 private:
 	UPROPERTY()
@@ -47,6 +52,8 @@ private:
 	float MouseX;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float MouseY;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	FTransform LeftHandSocketTransform;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DieMontageArray;

@@ -87,4 +87,6 @@ private:
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_IsAiming, bool);
 	FDele_IsAiming OnIsAimingChanged;
+	DECLARE_DELEGATE_OneParam(FDele_LeftHandIK, FTransform);
+	FDele_LeftHandIK OnLeftHandIKChanged;
 };

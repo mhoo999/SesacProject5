@@ -61,6 +61,7 @@ void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &UMoveComponent::MoveAction);
 	PlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Completed, this, &UMoveComponent::MoveEndAction);
 	PlayerInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &UMoveComponent::LookAction);
+	PlayerInputComponent->BindAction(IA_Look, ETriggerEvent::Completed, this, &UMoveComponent::LookEndAction);
 	PlayerInputComponent->BindAction(IA_Crouch, ETriggerEvent::Started, this, &UMoveComponent::CrouchAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &UMoveComponent::SprintStartAction);
 	PlayerInputComponent->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &UMoveComponent::SprintEndAction);
@@ -116,8 +117,17 @@ void UMoveComponent::LookAction(const FInputActionValue& Value)
 
 	FVector2D Vector2DValue = Value.Get<FVector2D>();
 
+	MouseX = Vector2DValue.X;
+	MouseY = Vector2DValue.Y;
+
 	OwningCharacter->AddControllerPitchInput(-Vector2DValue.Y);
 	OwningCharacter->AddControllerYawInput(Vector2DValue.X);
+}
+
+void UMoveComponent::LookEndAction(const FInputActionValue& Value)
+{
+	MouseX = 0.f;
+	MouseY = 0.f;
 }
 
 void UMoveComponent::CrouchAction(const FInputActionValue& Value)
@@ -216,7 +226,7 @@ void UMoveComponent::SwayFloatTimerFunction()
 {
 	if (APlayerController* PC = OwningCharacter->GetController<APlayerController>())
 	{
-		PC->GetMousePosition(MouseX, MouseY);
+		// PC->GetMousePosition(MouseX, MouseY);
 		OnHandSwayFloatsChanged.ExecuteIfBound(SideMove, MouseX, MouseY);
 	}
 }
