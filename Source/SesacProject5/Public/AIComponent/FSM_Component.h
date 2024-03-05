@@ -47,5 +47,7 @@ protected:
 public:
 	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	TArray<AActor*> waypointArray;
+
+	bool bFocusTarget();
 	
 };

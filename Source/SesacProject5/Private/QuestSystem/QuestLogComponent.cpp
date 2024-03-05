@@ -108,6 +108,8 @@ void UQuestLogComponent::ReleaseComplete(bool bNewIsDead)
 	{
 		for (FQuestManagement& quest : questList)
 		{
+			quest.isCompleted = false;
+			
 			for (FStageDetails& stage : quest.questDetails.stages)
 			{
 				for (FObjectiveDetails& objective : stage.Objectives)
@@ -141,6 +143,8 @@ void UQuestLogComponent::OnInventoryChanged(const TArray<FStorage>& storageArray
 					objective.objectiveComplete = true;
 					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
 					UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
+
+					OnQuestComplete.Broadcast(objective.BonusXP);
 				}
 			}
 		}

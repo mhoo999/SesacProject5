@@ -42,7 +42,12 @@ class SESACPROJECT5_API UQuestLogComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FQuestCompleteEvent, float, QuestReward);
+
+	UPROPERTY(BlueprintAssignable, Category="QuestSystem")
+	FQuestCompleteEvent OnQuestComplete;
+	
 	UQuestLogComponent();
 
 protected:

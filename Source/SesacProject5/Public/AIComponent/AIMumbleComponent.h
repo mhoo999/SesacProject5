@@ -34,6 +34,9 @@ private:
 	USoundBase* Attackmumble;
 
 	UPROPERTY(EditDefaultsOnly, Category="MySettings")
+	USoundBase* Curiositymumble;
+
+	UPROPERTY(EditDefaultsOnly, Category="MySettings")
 	USoundBase* mumble1;
 
 	UPROPERTY(EditDefaultsOnly, Category="MySettings")
@@ -47,6 +50,9 @@ private:
 public:
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiRPCPlayAttackMumble();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPCPlayCuriosityMumble();
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPCPlayPatrolMumble();
