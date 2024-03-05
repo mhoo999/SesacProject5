@@ -38,4 +38,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
 	float respawnTime = 30.f;
+
+	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
+	FString objectID;
+
+	UPROPERTY(EditAnywhere, Category="MySettings", Meta = (AllowPrivateAccess))
+	int32 value;
 };

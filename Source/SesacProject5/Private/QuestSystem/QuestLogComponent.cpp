@@ -4,6 +4,7 @@
 #include "QuestSystem/QuestLogComponent.h"
 
 #include "Character/CharacterBase.h"
+#include "Component/EquipmentComponent.h"
 #include "Component/EscapeComponent.h"
 #include "Component/HealthComponent.h"
 #include "GameInstance/EFSGameInstance.h"
@@ -22,6 +23,9 @@ void UQuestLogComponent::BeginPlay()
 	auto escapeComp = player->GetComponentByClass<UEscapeComponent>();
 	escapeComp->OnEscape.AddUObject(this, &UQuestLogComponent::saveQuest);
 	player->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UQuestLogComponent::ReleaseComplete);
+
+	inventoryComp = player->GetComponentByClass<UEquipmentComponent>();
+	inventoryComp->OnInventoryChanged.AddUObject(this, &UQuestLogComponent::OnInventoryChanged);
 }
 
 void UQuestLogComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -107,6 +111,7 @@ void UQuestLogComponent::ReleaseComplete(bool bNewIsDead)
 				for (FObjectiveDetails& objective : stage.Objectives)
 				{
 					objective.objectiveComplete = false;
+					objective.objectiveProgress = 0;
 				}
 			}
 		}
@@ -114,6 +119,29 @@ void UQuestLogComponent::ReleaseComplete(bool bNewIsDead)
 
 	auto gameInstance = GetWorld()->GetGameInstance<UEFSGameInstance>();
 	gameInstance->questData->SaveQuestLog(questList);
+}
+
+void UQuestLogComponent::OnInventoryChanged(const TArray<FStorage>& storageArray)
+{
+	int32 ComparisonCount = 0;
+
+	for (FQuestManagement& quest : questList)
+	{
+		for (FStageDetails& stage : quest.questDetails.stages)
+		{
+			for (FObjectiveDetails& objective : stage.Objectives)
+			{
+				ComparisonCount = inventoryComp->GetItemCount(objective.objectiveID);
+				
+				if (ComparisonCount == objective.Quantity)
+				{
+					objective.objectiveComplete = true;
+					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
+					UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
+				}
+			}
+		}
+	}
 }
 
 void UQuestLogComponent::ClearQuestList()
@@ -131,9 +159,14 @@ void UQuestLogComponent::ClientRPCOnObjectiveIDCalled_Implementation(const FStri
 			{
 				if (objective.objectiveID.Equals(objectiveID, ESearchCase::IgnoreCase))
 				{
-					objective.objectiveComplete = true;
-					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
-					UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
+					objective.objectiveProgress += 1;
+
+					if (objective.objectiveProgress == objective.Quantity)
+					{
+						objective.objectiveComplete = true;
+						UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
+						UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
+					}
 				}
 			}
 		}

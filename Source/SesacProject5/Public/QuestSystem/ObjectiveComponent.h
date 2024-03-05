@@ -7,6 +7,8 @@
 #include "ObjectiveComponent.generated.h"
 
 
+class UHealthComponent;
+
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SESACPROJECT5_API UObjectiveComponent : public UActorComponent
 {
@@ -31,10 +33,22 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ObjectInfo", meta=(AllowPrivateAccess))
 	int32 value;
 
+	UHealthComponent* healthComp;
+
+	void OnReturnObjectID(bool bNewIsDead);
+
 public:
 	UFUNCTION(Blueprintable)
 	FString GetObjectID();
 
 	UFUNCTION(Blueprintable)
 	int32 GetValue();
+
+	UFUNCTION(Blueprintable)
+	void SetObjectID(FString ID);
+	
+	UFUNCTION(Blueprintable)
+	void SetValue(int32 integer);
+
+	void SetObserveHealth();
 };

@@ -7,7 +7,6 @@
 #include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
 #include "Character/CharacterBase.h"
-#include "Kismet/GameplayStatics.h"
 
 UFSM_Patrol_Component::UFSM_Patrol_Component()
 {
