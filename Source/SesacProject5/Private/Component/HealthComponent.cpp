@@ -45,6 +45,7 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UHealthComponent, bIsDead);
+	DOREPLIFETIME(UHealthComponent, AttackActor);
 }
 
 // Called every frame
@@ -99,6 +100,12 @@ void UHealthComponent::MultiRPC_StartDieSound_Implementation()
 
 void UHealthComponent::MultiRPC_StartHurtSound_Implementation()
 {
+	if (VoiceComponent == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UHealthComponent::MultiRPC_StartHurtSound) VoiceComp is not valid"));
+		return;
+	}
+	
 	if (VoiceComponent->IsPlaying())
 	{
 		if (VoiceComponent->GetSound() == HurtSound) return;

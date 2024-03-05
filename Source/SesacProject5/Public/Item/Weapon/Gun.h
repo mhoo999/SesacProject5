@@ -37,6 +37,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void StartFire() override; 
 	virtual void StopFire() override;
@@ -74,13 +75,18 @@ public:
 	// Check Wall
 	UFUNCTION()
 	void CheckWallFunction();
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_SetWallValue(float NewWallValue);
+
+	UFUNCTION()
+	void OnRep_WallDistance();
 
 	virtual void OnRep_Owner() override;
 private:
 	// Check Wall
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	float WeaponLength = 100.f;
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_WallDistance, Meta = (AllowPrivateAccess))
 	float WallDistance;
 	
 	// Recoil

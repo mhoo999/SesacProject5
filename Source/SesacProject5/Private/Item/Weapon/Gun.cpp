@@ -3,6 +3,7 @@
 
 #include "Item/Weapon/Gun.h"
 
+#include "../../../../../../../UnrealEngine-release/UnrealEngine-release/Engine/Source/Runtime/Engine/Public/Net/UnrealNetwork.h"
 #include "AnimInstance/FPSAnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Component/WeaponComponent.h"
@@ -82,12 +83,19 @@ void AGun::Tick(float DeltaTime)
 		}
 	}
 
-	if (OwningCharacter && OwningCharacter->HasAuthority())
+	if (OwningCharacter && OwningCharacter->IsLocallyControlled())
 	{
 		CheckWallFunction();
 	}
 
 	// DrawDebugLine(GetWorld(), GunMesh->GetSocketLocation("Muzzle"), WeaponComponent->GetTargetLocation(), FColor::Red);
+}
+
+void AGun::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AGun, WallDistance);
 }
 
 void AGun::StartFire()
@@ -106,7 +114,7 @@ void AGun::StopFire()
 
 void AGun::FireBullet(FVector TargetLocation)
 {
-	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation);
+	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation); 
 }
 
 void AGun::ToggleFireMode()
@@ -123,7 +131,7 @@ void AGun::Reload()
 
 void AGun::AttachToCharacter()
 {
-	AttachToComponent(GetOwner<ACharacter>()->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("WeaponSocket"));
+	AttachToComponent(GetOwner<ACharacter>()->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("WeaponSocket")); 
 }
 
 void AGun::DetachFromCharacter()
@@ -186,7 +194,7 @@ void AGun::ControllerRecoil(float Value)
 
 void AGun::Aiming(float Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AGun::Aim) Value : %f"), Value);
+	// UE_LOG(LogTemp, Warning, TEXT("AGun::Aim) Value : %f"), Value);
 	OwningCharacter->GetComponentByClass<USpringArmComponent>()->SetRelativeLocation(FMath::Lerp(FVector::ZeroVector, GunMesh->GetSocketLocation(FName("Sight")), Value));
 }
 
@@ -211,15 +219,24 @@ void AGun::CheckWallFunction()
 	Params.AddIgnoredActor(OwningCharacter);
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Camera, Params))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AGun::CheckWallFunction) Hit Actor : %s"), *OutHit.GetActor()->GetActorNameOrLabel());
+		// UE_LOG(LogTemp, Warning, TEXT("AGun::CheckWallFunction) Hit Actor : %s"), *OutHit.GetActor()->GetActorNameOrLabel());
 
-		WallDistance = FVector::Distance(OutHit.Location, Start) / WeaponLength;
+		ServerRPC_SetWallValue(FVector::Distance(OutHit.Location, Start) / WeaponLength);
 	}
 	else
 	{
-		WallDistance = 1.f;
+		ServerRPC_SetWallValue(1.f);
 	}
+}
 
+void AGun::ServerRPC_SetWallValue_Implementation(float NewWallValue)
+{
+	WallDistance = NewWallValue;
+	OnRep_WallDistance();
+}
+
+void AGun::OnRep_WallDistance()
+{
 	AnimInstance->SetWallTargetValue(WallDistance);
 }
 
