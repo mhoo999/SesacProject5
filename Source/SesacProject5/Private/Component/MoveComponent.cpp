@@ -54,6 +54,8 @@ void UMoveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UMoveComponent, bIsSprint);
+	DOREPLIFETIME(UMoveComponent, bLeanLeft);
+	DOREPLIFETIME(UMoveComponent, bLeanRight);
 }
 
 void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
@@ -171,18 +173,22 @@ void UMoveComponent::JumpAction(const FInputActionValue& Value)
 
 void UMoveComponent::LeanLeftStartAction(const FInputActionValue& Value)
 {
+	ServerRPC_SetLeanLeft(true);
 }
 
 void UMoveComponent::LeanLeftEndAction(const FInputActionValue& Value)
 {
+	ServerRPC_SetLeanLeft(false);
 }
 
 void UMoveComponent::LeanRightStartAction(const FInputActionValue& Value)
 {
+	ServerRPC_SetLeanRight(true);
 }
 
 void UMoveComponent::LeanRightEndAction(const FInputActionValue& Value)
 {
+	ServerRPC_SetLeanRight(false);
 }
 
 void UMoveComponent::ServerRPC_StartSprint_Implementation()
@@ -197,6 +203,18 @@ void UMoveComponent::ServerRPC_StopSprint_Implementation()
 	// Todo : Check Sprint
 	bIsSprint = false;
 	OnRep_IsSprint();
+}
+
+void UMoveComponent::ServerRPC_SetLeanLeft_Implementation(bool bNewLeanLeft)
+{
+	bLeanLeft = bNewLeanLeft;
+	OnRep_Lean();
+}
+
+void UMoveComponent::ServerRPC_SetLeanRight_Implementation(bool bNewLeanRight)
+{
+	bLeanRight = bNewLeanRight;
+	OnRep_Lean();
 }
 
 void UMoveComponent::OnRep_IsSprint()
@@ -229,4 +247,9 @@ void UMoveComponent::SwayFloatTimerFunction()
 		// PC->GetMousePosition(MouseX, MouseY);
 		OnHandSwayFloatsChanged.ExecuteIfBound(SideMove, MouseX, MouseY);
 	}
+}
+
+void UMoveComponent::OnRep_Lean()
+{
+	OnLeanChanged.ExecuteIfBound(bLeanLeft, bLeanRight);
 }

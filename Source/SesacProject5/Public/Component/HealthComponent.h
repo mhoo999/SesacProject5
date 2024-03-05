@@ -107,7 +107,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<EBodyParts, float> BlackOutDamageModifireMap;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	AActor* AttackActor;
 	
 	float HurtHealth = 200.f;

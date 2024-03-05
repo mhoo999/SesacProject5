@@ -51,6 +51,11 @@ public:
 	void ServerRPC_StartSprint();
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_StopSprint();
+
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_SetLeanLeft(bool bNewLeanLeft);
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_SetLeanRight(bool bNewLeanRight);
 	
 	UFUNCTION()
 	void OnRep_IsSprint();
@@ -59,8 +64,17 @@ public:
 
 	UFUNCTION()
 	void SwayFloatTimerFunction();
+
+	UFUNCTION()
+	void OnRep_Lean();
 	
 private:
+	// Lean
+	UPROPERTY(ReplicatedUsing = OnRep_Lean, Meta = (AllowPrivateAccess))
+	bool bLeanLeft = false;
+	UPROPERTY(ReplicatedUsing = OnRep_Lean, Meta = (AllowPrivateAccess))
+	bool bLeanRight = false;
+	
 	UPROPERTY()
 	FTimerHandle SwayFloatTimerHandle;
 
@@ -96,4 +110,8 @@ public:
 	// Side Move, MouseX, MouseY
 	DECLARE_DELEGATE_ThreeParams(FDele_HandSway, float, float, float);
 	FDele_HandSway OnHandSwayFloatsChanged;
+
+	// LeanLeft, LeanRight
+	DECLARE_DELEGATE_TwoParams(FDele_Lean, bool, bool);
+	FDele_Lean OnLeanChanged;
 };

@@ -37,9 +37,21 @@ void UObjectiveComponent::OnReturnObjectID(bool bNewIsDead)
 {
 	if (bNewIsDead)
 	{
-		auto returnTarget = healthComp->GetAttackActor();
-		auto questLogComp = returnTarget->GetComponentByClass<UQuestLogComponent>();
-		questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
+		if (auto returnTarget = healthComp->GetAttackActor())
+		{
+			if (auto questLogComp = returnTarget->GetComponentByClass<UQuestLogComponent>())
+			{
+				questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("UObjectiveComponent::OnReturnObjectID) QuestLogComp is not valid"));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("UObjectiveComponent::OnReturnObjectID) ReturnTarget is not valid"));
+		}
 	}
 }
 
@@ -63,9 +75,8 @@ void UObjectiveComponent::SetValue(int32 integer)
 	value = integer;
 }
 
-inline void UObjectiveComponent::SetObserveHealth()
+void UObjectiveComponent::SetObserveHealth()
 {
 	healthComp = GetOwner()->GetComponentByClass<UHealthComponent>();
 	healthComp->OnIsDeadChanged.AddUObject(this, &UObjectiveComponent::OnReturnObjectID);
 }
-
