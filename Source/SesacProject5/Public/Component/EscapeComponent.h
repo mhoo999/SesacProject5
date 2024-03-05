@@ -33,8 +33,11 @@ public:
 
 	void SetExitArray(TArray<AExitBase*> NewExitArray);
 
+	UFUNCTION(BlueprintCallable)
+	const TArray<AExitBase*>& GetExitArray() const;
+
 	UFUNCTION(Client, Reliable)
-	void ClientRPC_Escape(); 
+	void ClientRPC_Escape();
 
 	UFUNCTION()
 	void OnRep_IsEscaping();

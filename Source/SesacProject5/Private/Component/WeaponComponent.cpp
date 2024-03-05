@@ -62,6 +62,13 @@ void UWeaponComponent::BeginPlay()
 			Gun->OnRep_Owner();
 			WeaponInterface = Gun;
 			WeaponInterface->AttachToCharacter();
+
+			// Set LeftHandTransform
+			FTransform LeftHandTransform = WeaponInterface->GetLeftHandTransform();
+			FVector OutLocation;
+			FRotator OutRotation;
+			OwningCharacter->GetMesh()->TransformToBoneSpace(FName("hand_r"), LeftHandTransform.GetLocation(), LeftHandTransform.Rotator(), OutLocation, OutRotation);
+			OnLeftHandIKChanged.ExecuteIfBound(FTransform(OutRotation.Quaternion(), OutLocation));
 		}
 	}
 }
@@ -107,6 +114,7 @@ void UWeaponComponent::AimStartAction(const FInputActionValue& Value)
 	if (true == bIsAiming) return;
 	bIsAiming = true;
 	if (WeaponInterface) WeaponInterface->StartAim();
+	OnIsAimingChanged.Broadcast(bIsAiming);
 }
 
 void UWeaponComponent::AimEndAction(const FInputActionValue& Value)
@@ -115,6 +123,7 @@ void UWeaponComponent::AimEndAction(const FInputActionValue& Value)
 	if (false == bIsAiming) return;
 	bIsAiming = false;
 	if (WeaponInterface) WeaponInterface->StopAim();
+	OnIsAimingChanged.Broadcast(bIsAiming);
 }
 
 void UWeaponComponent::ToggleFireModeAction(const FInputActionValue& Value)

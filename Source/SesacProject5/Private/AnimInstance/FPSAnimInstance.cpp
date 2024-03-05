@@ -13,10 +13,20 @@ void UFPSAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	GetOwningActor()->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);
-	GetOwningActor()->GetComponentByClass<UMoveComponent>()->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
-	GetOwningActor()->GetComponentByClass<UMoveComponent>()->OnHandSwayFloatsChanged.BindUObject(this, &UFPSAnimInstance::UpdateHandSwayFloats);
-	GetOwningActor()->GetComponentByClass<UWeaponComponent>()->OnIsAimingChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsAiming);
+	if (auto HealthComponent = GetOwningActor()->GetComponentByClass<UHealthComponent>())
+	{
+		HealthComponent->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);	
+	}
+	if (auto MoveComponent = GetOwningActor()->GetComponentByClass<UMoveComponent>())
+	{
+		MoveComponent->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
+        MoveComponent->OnHandSwayFloatsChanged.BindUObject(this, &UFPSAnimInstance::UpdateHandSwayFloats);
+	}
+	if (auto WeaponComponent = GetOwningActor()->GetComponentByClass<UWeaponComponent>())
+	{
+		WeaponComponent->OnIsAimingChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsAiming);
+		WeaponComponent->OnLeftHandIKChanged.BindUObject(this, &UFPSAnimInstance::UpdateLeftHandIK);
+	}
 }
 
 void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -72,4 +82,13 @@ void UFPSAnimInstance::UpdateHandSwayFloats(float NewSidMove, float NewMouseX, f
 	SideMove = NewSidMove;
 	MouseX = NewMouseX;
 	MouseY = NewMouseY;
+}
+
+void UFPSAnimInstance::UpdateLeftHandIK(FTransform NewLeftHandIK)
+{
+	LeftHandSocketTransform = NewLeftHandIK;
+}
+
+void UFPSAnimInstance::ProcedualRecoil_Implementation(float Multiplier)
+{
 }

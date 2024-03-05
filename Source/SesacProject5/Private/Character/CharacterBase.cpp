@@ -77,6 +77,8 @@ void ACharacterBase::BeginPlay()
 void ACharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// WeaponComponent->AimStartAction(FInputActionValue());
 }
 
 // Called to bind functionality to input
