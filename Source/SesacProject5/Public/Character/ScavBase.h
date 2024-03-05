@@ -6,6 +6,7 @@
 #include "Character/CharacterBase.h"
 #include "ScavBase.generated.h"
 
+class UObjectiveComponent;
 class UAIMumbleComponent;
 class UAIMontageComponent;
 /**
@@ -26,4 +27,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
 	UAIMumbleComponent* AIMumbleComp;
 
+	UPROPERTY(EditDefaultsOnly, Category="MySettings|FSM", meta=(AllowAbstract))
+	UObjectiveComponent* ObjectiveComp;
 };

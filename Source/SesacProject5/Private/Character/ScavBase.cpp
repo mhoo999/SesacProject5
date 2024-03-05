@@ -6,6 +6,7 @@
 #include "AIComponent/AIMontageComponent.h"
 #include "AIComponent/AIMumbleComponent.h"
 #include "AIController/EOSAIController.h"
+#include "QuestSystem/ObjectiveComponent.h"
 
 AScavBase::AScavBase()
 {
@@ -21,5 +22,7 @@ AScavBase::AScavBase()
 
 	AIMontageComp = CreateDefaultSubobject<UAIMontageComponent>(TEXT("Montage Component"));
 	AIMumbleComp = CreateDefaultSubobject<UAIMumbleComponent>(TEXT("Mumble Component"));
-	
+	ObjectiveComp = CreateDefaultSubobject<UObjectiveComponent>(TEXT("Objective Component"));
+
+	ObjectiveComp->SetObserveHealth();
 }

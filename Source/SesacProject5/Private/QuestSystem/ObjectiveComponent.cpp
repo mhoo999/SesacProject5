@@ -3,6 +3,9 @@
 
 #include "QuestSystem/ObjectiveComponent.h"
 
+#include "Component/HealthComponent.h"
+#include "QuestSystem/QuestLogComponent.h"
+
 // Sets default values for this component's properties
 UObjectiveComponent::UObjectiveComponent()
 {
@@ -18,8 +21,6 @@ UObjectiveComponent::UObjectiveComponent()
 void UObjectiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
 }
 
@@ -32,6 +33,16 @@ void UObjectiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
+void UObjectiveComponent::OnReturnObjectID(bool bNewIsDead)
+{
+	if (bNewIsDead)
+	{
+		auto returnTarget = healthComp->GetAttackActor();
+		auto questLogComp = returnTarget->GetComponentByClass<UQuestLogComponent>();
+		questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
+	}
+}
+
 FString UObjectiveComponent::GetObjectID()
 {
 	return objectID;
@@ -40,5 +51,21 @@ FString UObjectiveComponent::GetObjectID()
 int32 UObjectiveComponent::GetValue()
 {
 	return value;
+}
+
+void UObjectiveComponent::SetObjectID(FString ID)
+{
+	objectID = ID;
+}
+
+void UObjectiveComponent::SetValue(int32 integer)
+{
+	value = integer;
+}
+
+inline void UObjectiveComponent::SetObserveHealth()
+{
+	healthComp = GetOwner()->GetComponentByClass<UHealthComponent>();
+	healthComp->OnIsDeadChanged.AddUObject(this, &UObjectiveComponent::OnReturnObjectID);
 }
 
