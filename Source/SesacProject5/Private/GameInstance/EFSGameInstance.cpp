@@ -104,6 +104,7 @@ void UEFSGameInstance::FindSessionAndJoin()
 	// SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	// SessionSearch->QuerySettings.Set(SEARCH_LOBBIES, false, EOnlineComparisonOp::Equals);
 	SessionSearch->MaxSearchResults = 20;
+	DestroyEOSSession();
 	SessionPtrRef->FindSessions(0, SessionSearch.ToSharedRef());
 }
 
@@ -142,7 +143,7 @@ void UEFSGameInstance::OnFindSessionCompleted(bool bWasSuccessful)
 			// 	Iter.Session.SessionSettings.Get(FName("ROOM_NAME"), Value);
 			// 	UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Room Name : %s"), *Value);
 			// }
-
+			
 			SessionPtrRef->JoinSession(0, FName("MainSession"), SessionSearch->SearchResults[0]);
 		}
 		else
