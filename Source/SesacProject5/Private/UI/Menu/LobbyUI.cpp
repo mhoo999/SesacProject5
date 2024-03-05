@@ -25,8 +25,8 @@ void ULobbyUI::OpenCityTab()
 
 void ULobbyUI::MovetoField()
 {
-	pc->ShowGameLoading();
-	pc->HiddenLobby();
+	// pc->ShowGameLoading();
+	// pc->HiddenLobby();
 }
 
 void ULobbyUI::OpenWorkBenchTab()
