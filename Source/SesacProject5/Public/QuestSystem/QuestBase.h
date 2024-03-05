@@ -28,7 +28,7 @@ struct FObjectiveDetails
 	FText objectiveName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
-	FText Description;
+	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	EObjectiveType type;
