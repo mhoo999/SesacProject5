@@ -58,4 +58,12 @@ public:
 private:
 	bool bEnemyMumble;
 
+	UPROPERTY()
+	FTimerHandle missingHandle;
+
+	UFUNCTION()
+	void OnMissingTimerExpired();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	float missingDuration = 5.f;
 };

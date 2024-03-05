@@ -72,15 +72,17 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
+		ac->SetContext(EEnemystate::patrol);
 
-		if (bIsAttacking)
-		{
-			bIsAttacking = false;
-			SenseNewActor(nullptr);
-		}
-		
-		WeaponComp->EndFireAction(FInputActionValue());
-		ac->MoveToLocation(targetLastLoc, 0.f, true, true);
+		// if (bIsAttacking)
+		// {
+		// 	bIsAttacking = false;
+		// 	GetWorld()->GetTimerManager().ClearTimer(missingHandle);
+		// 	GetWorld()->GetTimerManager().SetTimer(missingHandle, this, &UFSM_Chase_Component::OnMissingTimerExpired, missingDuration, false);
+		// }
+		//
+		// WeaponComp->EndFireAction(FInputActionValue());
+		// ac->MoveToLocation(targetLastLoc, 10.f, true, true);
 	}
 }
 
@@ -205,5 +207,12 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 	TargetLocation = currentTarget.partLoc;
 	// UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(targetLoc.ToString()));
 	return true;
+}
+
+void UFSM_Chase_Component::OnMissingTimerExpired()
+{
+	bIsAttacking = false;
+	SenseNewActor(nullptr);
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Missing"));
 }
 
