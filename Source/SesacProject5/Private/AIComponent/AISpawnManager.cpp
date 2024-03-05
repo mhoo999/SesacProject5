@@ -36,6 +36,7 @@ void AAISpawnManager::MakeScave()
 
 		if (SpawnActor)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Spawn Scav!"));
 			SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray);
 			SpawnActor->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AAISpawnManager::RespawnScave);
 		}

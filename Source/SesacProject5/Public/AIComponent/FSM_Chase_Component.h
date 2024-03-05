@@ -54,4 +54,7 @@ public:
 	
 	bool FocusTargetPart(AActor* targetActor, FVector& TargetLocation);
 
+private:
+	bool bEnemyMumble;
+
 };
