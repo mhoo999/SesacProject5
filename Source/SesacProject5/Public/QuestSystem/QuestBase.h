@@ -43,6 +43,9 @@ struct FObjectiveDetails
 	bool isOptional;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	bool objectiveComplete;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	int32 BonusXP;
 };
 

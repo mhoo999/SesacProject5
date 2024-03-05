@@ -4,6 +4,7 @@
 #include "Object/QuestLocationBase.h"
 
 #include "Components/BoxComponent.h"
+#include "QuestSystem/ObjectiveComponent.h"
 #include "QuestSystem/QuestLogComponent.h"
 
 // Sets default values
@@ -37,7 +38,13 @@ void AQuestLocationBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* O
 {
 	if (UQuestLogComponent* questLogComp = OtherActor->GetComponentByClass<UQuestLogComponent>())
 	{
-		questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
+		if (auto objectiveComp = GetComponentByClass<UObjectiveComponent>())
+		{
+			objectID = objectiveComp->GetObjectID();
+			value = objectiveComp->GetValue();
+			
+			questLogComp->ClientRPCOnObjectiveIDCalled(objectID, value);
+		}
 	}
 }
 
