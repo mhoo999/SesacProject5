@@ -37,6 +37,9 @@ struct FObjectiveDetails
 	FString objectiveID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
+	int32 objectiveProgress = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")
 	int32 Quantity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="QuestSystem")

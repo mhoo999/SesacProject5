@@ -6,6 +6,7 @@
 #include "AIController/EOSAIController.h"
 #include "Character/ScavBase.h"
 #include "Component/HealthComponent.h"
+#include "QuestSystem/ObjectiveComponent.h"
 
 AAISpawnManager::AAISpawnManager()
 {
@@ -39,6 +40,12 @@ void AAISpawnManager::MakeScave()
 			UE_LOG(LogTemp, Warning, TEXT("Spawn Scav!"));
 			SpawnActor->GetController<AEOSAIController>()->SetWaypoint(waypointArray);
 			SpawnActor->GetComponentByClass<UHealthComponent>()->OnIsDeadChanged.AddUObject(this, &AAISpawnManager::RespawnScave);
+
+			if (auto objectiveComp = SpawnActor->GetComponentByClass<UObjectiveComponent>())
+			{
+				objectiveComp->SetObjectID(objectID);
+				objectiveComp->SetValue(value);
+			}
 		}
 	}
 }

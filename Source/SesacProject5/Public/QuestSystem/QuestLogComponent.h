@@ -8,6 +8,7 @@
 #include "QuestLogComponent.generated.h"
 
 
+struct FStorage;
 class AQuestBase;
 USTRUCT(BlueprintType)
 struct FQuestManagement
@@ -101,4 +102,10 @@ private:
 	void saveQuest();
 
 	void ReleaseComplete(bool bNewIsDead);
+
+	UPROPERTY()
+	class UEquipmentComponent* inventoryComp;
+	
+	UFUNCTION()
+	void OnInventoryChanged(const TArray<FStorage>& storageArray);
 };
