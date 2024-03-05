@@ -89,6 +89,14 @@ void UFPSAnimInstance::UpdateLeftHandIK(FTransform NewLeftHandIK)
 	LeftHandSocketTransform = NewLeftHandIK;
 }
 
+void UFPSAnimInstance::LeanInterpolaction(float TargetFloat, float DeltaSeconds)
+{
+	LeanAmount = FMath::FInterpTo(LeanAmount, TargetFloat, DeltaSeconds, LeanSpeed);
+
+	LeanRotator.Pitch = LeanAmount * LeanMultiplier;
+}
+
 void UFPSAnimInstance::ProcedualRecoil_Implementation(float Multiplier)
 {
+
 }

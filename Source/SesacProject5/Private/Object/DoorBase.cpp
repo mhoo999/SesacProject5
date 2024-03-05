@@ -19,7 +19,7 @@ ADoorBase::ADoorBase()
 	DoorMeshComponent->SetupAttachment(DoorFrameMeshComponent);
 	DoorMeshComponent->SetCollisionProfileName(TEXT("Pawn"));
 	DoorMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-	DoorFrameMeshComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	DoorFrameMeshComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block); 
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +28,7 @@ void ADoorBase::BeginPlay()
 	Super::BeginPlay();
 
 	SetActorTickEnabled(false);
+	SetReplicates(true);
 }
 
 // Called every frame
@@ -75,7 +76,7 @@ void ADoorBase::Close()
 {
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), CloseSound, GetActorLocation(), GetActorRotation());
 	// DoorMeshComponent->SetRelativeRotation(FRotator(0, 0, 0));
-	
+
 	DoorMeshTargetRotation = FRotator(0, 0, 0);
 	SetActorTickEnabled(true);
 }

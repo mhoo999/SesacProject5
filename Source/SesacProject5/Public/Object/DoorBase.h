@@ -23,6 +23,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
 	virtual const TArray<FText>& GetInteractionNameArray() override;
 	virtual FText GetActorName() const override;
 
@@ -37,8 +38,9 @@ private:
 
 	UPROPERTY()
 	FRotator DoorMeshTargetRotation;
+	
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
-	float RotationMultiplier;
+	float RotationMultiplier = 1.5f;
 
 	// Sound
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
