@@ -27,4 +27,19 @@ public:
 	virtual void ExecuteBehavior() override;
 	virtual void StopExecute() override;
 	virtual void SenseNewActor(AActor* NewActor) override;
+
+private:
+	bool bFind;
+	
+	UPROPERTY()
+	FTimerHandle returnHandle;
+
+	UFUNCTION()
+	void AIReturnFunc();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings", meta=(AllowPrivateAccess))
+	float retrunDuration = 10.f;
+
+	bool bCuriosityMumble;
+
 };

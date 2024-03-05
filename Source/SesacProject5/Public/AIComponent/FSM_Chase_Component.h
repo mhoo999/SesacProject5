@@ -44,13 +44,6 @@ public:
 	virtual void StopExecute() override;
 	virtual void SenseNewActor(AActor* NewActor) override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float missingTime = 10.0f;
-
-	UPROPERTY()
-	FTimerHandle handle;
-
 	bool bIsAttacking;
 	
 	bool FocusTargetPart(AActor* targetActor, FVector& TargetLocation);
@@ -58,12 +51,17 @@ public:
 private:
 	bool bEnemyMumble;
 
-	UPROPERTY()
-	FTimerHandle missingHandle;
-
-	UFUNCTION()
-	void OnMissingTimerExpired();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	float missingDuration = 5.f;
+
+	bool bFind;
+
+	UPROPERTY()
+	FTimerHandle returnHandle;
+
+	UFUNCTION()
+	void AIReturnFunc();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings", meta=(AllowPrivateAccess))
+	float retrunDuration = 15.f;
 };

@@ -13,6 +13,9 @@
 #include "Item/Weapon/Gun.h"
 #include "Item/Weapon/GunBase.h"
 #include "Net/UnrealNetwork.h"
+#include "Perception/AIPerceptionSystem.h"
+#include "Perception/AISenseEvent.h"
+#include "Perception/AISense_Hearing.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent() 
@@ -95,6 +98,8 @@ void UWeaponComponent::StartFireAction(const FInputActionValue& Value)
 	{
 		MoveComponent->StopSprint();
 		WeaponInterface->StartFire();
+		
+		UAISense_Hearing::ReportNoiseEvent(GetWorld(), OwningCharacter->GetActorLocation(), 10.f, OwningCharacter, 200.f);
 	}
 }
 
