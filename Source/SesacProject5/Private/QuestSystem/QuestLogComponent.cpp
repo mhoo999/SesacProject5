@@ -51,6 +51,8 @@ void UQuestLogComponent::AddNewQuest(FName questID, FDataTableRowHandle questRow
 void UQuestLogComponent::CompleteQuest(FQuestManagement questData)
 {
 	questData.isProgress = false;
+
+	// UE_LOG(LogTemp, Warning, TEXT("UQuestLogComponent::CompleteQuest : %hhd"), questData.isProgress);
 }
 
 void UQuestLogComponent::QueryActiveQuest()
