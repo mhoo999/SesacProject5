@@ -45,6 +45,7 @@ void AMainMenuPlayerController::OnLoginSuccess()
 
 void AMainMenuPlayerController::OnJoinSessionFail()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AMainMenuPlayerController::OnJoinSessionFail"));
 	HiddenGameLoading();
 	ShowLobby();
 }
@@ -78,12 +79,12 @@ void AMainMenuPlayerController::ShowGameLoading()
 {
 	gameLoading->SetVisibility(ESlateVisibility::Visible);
 
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
-	{
-		// GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
-		UGameplayStatics::OpenLevel(GetWorld(), "Test_YMH");
-	}), 10.0f, false, 5.f);
+	// FTimerHandle TimerHandle;
+	// GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([this]()
+	// {
+	// 	// GetWorld()->ServerTravel("/Game/YMH/Level/Test_YMH?listen", true);
+	// 	UGameplayStatics::OpenLevel(GetWorld(), "Test_YMH");
+	// }), 10.0f, false, 5.f);
 }
 
 void AMainMenuPlayerController::HiddenGameLoading()

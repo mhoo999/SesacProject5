@@ -135,6 +135,7 @@ void UEFSGameInstance::OnFindSessionCompleted(bool bWasSuccessful)
 		UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Success to find session"));
 		if (SessionSearch->SearchResults.Num() > 0)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) Has Valid Session"));
 			// for (auto Iter : SessionSearch->SearchResults)
 			// {
 			// 	FString Value;
@@ -146,6 +147,7 @@ void UEFSGameInstance::OnFindSessionCompleted(bool bWasSuccessful)
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("UEOSGameInstance::OnFindSessionCompleted) No Valid Session"));
 			GetWorld()->GetFirstPlayerController<AMainMenuPlayerController>()->OnJoinSessionFail();	
 		}
 	}
