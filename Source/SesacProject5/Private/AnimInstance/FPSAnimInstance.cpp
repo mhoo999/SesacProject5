@@ -21,6 +21,7 @@ void UFPSAnimInstance::NativeBeginPlay()
 	{
 		MoveComponent->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
         MoveComponent->OnHandSwayFloatsChanged.BindUObject(this, &UFPSAnimInstance::UpdateHandSwayFloats);
+		MoveComponent->OnLeanChanged.BindUObject(this, &UFPSAnimInstance::UpdateLeanBoolean);
 	}
 	if (auto WeaponComponent = GetOwningActor()->GetComponentByClass<UWeaponComponent>())
 	{
@@ -40,6 +41,8 @@ void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		bIsCrouch = Character->bIsCrouched;
 	}
+
+	LeanInterpolaction(DeltaSeconds);
 }
 
 void UFPSAnimInstance::Die(bool bNewIsDead)
@@ -89,14 +92,38 @@ void UFPSAnimInstance::UpdateLeftHandIK(FTransform NewLeftHandIK)
 	LeftHandSocketTransform = NewLeftHandIK;
 }
 
-void UFPSAnimInstance::LeanInterpolaction(float TargetFloat, float DeltaSeconds)
+void UFPSAnimInstance::LeanInterpolaction(float DeltaSeconds)
 {
-	LeanAmount = FMath::FInterpTo(LeanAmount, TargetFloat, DeltaSeconds, LeanSpeed);
+	LeanAmount = FMath::FInterpTo(LeanAmount, LeanTarget, DeltaSeconds, LeanSpeed);
 
 	LeanRotator.Pitch = LeanAmount * LeanMultiplier;
+	UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::UpdateLeanBoolean) Total Lean Amount : %f"), LeanAmount * LeanMultiplier);
+}
+
+void UFPSAnimInstance::UpdateLeanBoolean(bool bNewLeanLeft, bool bNewLeanRight)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::UpdateLeanBoolean) LeanLeft : %d, LeanRight : %d"), bNewLeanLeft, bNewLeanRight);
+	if (bNewLeanLeft == bNewLeanRight)
+	{
+		LeanTarget = 0.f;
+		return;
+	}
+
+	if (bNewLeanLeft)
+	{
+		LeanTarget = -1.f;
+	}
+	else
+	{
+		LeanTarget = 1.f;
+	}
+}
+
+void UFPSAnimInstance::SetWallTargetValue(float NewWallTargetValue)
+{
+	WallValue = NewWallTargetValue;
 }
 
 void UFPSAnimInstance::ProcedualRecoil_Implementation(float Multiplier)
 {
-
 }

@@ -71,8 +71,18 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void AimStopAction();
 
+	// Check Wall
+	UFUNCTION()
+	void CheckWallFunction();
+
 	virtual void OnRep_Owner() override;
 private:
+	// Check Wall
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	float WeaponLength = 100.f;
+	UPROPERTY()
+	float WallDistance;
+	
 	// Recoil
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	FTimeline ControllerRecoilTimeline;

@@ -37,9 +37,18 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ProcedualRecoil(float Multiplier);
 
-	void LeanInterpolaction(float TargetFloat, float DeltaSeconds);
+	void LeanInterpolaction(float DeltaSeconds);
 
+	UFUNCTION()
+	void UpdateLeanBoolean(bool bNewLeanLeft, bool bNewLeanRight);
+
+	void SetWallTargetValue(float NewWallTargetValue);
+	
 private:
+	// Check Wall
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float WallValue;
+	
 	UPROPERTY()
 	bool bIsDead = false;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
@@ -58,13 +67,15 @@ private:
 
 	// Lean Function
 	UPROPERTY()
-	bool bLeanLeft;
+	bool bLeanLeft = false;
 	UPROPERTY()
-	bool bLeanRight;
+	bool bLeanRight = false;
 	UPROPERTY()
-	float LeanAmount;
+	float LeanAmount = 0.f;
 	UPROPERTY()
-	float LeanSpeed;
+	float LeanTarget = 0.f;
+	UPROPERTY()
+	float LeanSpeed = 10.f;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float LeanMultiplier = 15.f;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))

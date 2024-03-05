@@ -4,6 +4,7 @@
 #include "Item/Weapon/Gun.h"
 
 #include "AnimInstance/FPSAnimInstance.h"
+#include "Camera/CameraComponent.h"
 #include "Component/WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -79,6 +80,11 @@ void AGun::Tick(float DeltaTime)
 				bIsAttacking = false;
 			}
 		}
+	}
+
+	if (OwningCharacter && OwningCharacter->HasAuthority())
+	{
+		CheckWallFunction();
 	}
 
 	// DrawDebugLine(GetWorld(), GunMesh->GetSocketLocation("Muzzle"), WeaponComponent->GetTargetLocation(), FColor::Red);
@@ -190,6 +196,31 @@ void AGun::AimStartAction_Implementation()
 
 void AGun::AimStopAction_Implementation()
 {
+}
+
+void AGun::CheckWallFunction()
+{
+	UCameraComponent* CameraComponent = OwningCharacter->GetComponentByClass<UCameraComponent>();
+	FVector Start = CameraComponent->GetComponentLocation();
+	FVector ForwardVector = CameraComponent->GetForwardVector();
+	Start += ForwardVector;
+	FVector End = Start + ForwardVector  * WeaponLength;
+	FHitResult OutHit;
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(OwningCharacter);
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Camera, Params))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGun::CheckWallFunction) Hit Actor : %s"), *OutHit.GetActor()->GetActorNameOrLabel());
+
+		WallDistance = FVector::Distance(OutHit.Location, Start) / WeaponLength;
+	}
+	else
+	{
+		WallDistance = 1.f;
+	}
+
+	AnimInstance->SetWallTargetValue(WallDistance);
 }
 
 void AGun::OnRep_Owner()

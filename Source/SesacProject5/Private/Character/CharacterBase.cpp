@@ -56,6 +56,7 @@ void ACharacterBase::BeginPlay()
 		if (IsLocallyControlled())
 		{
 			SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Camera"));
+			// SpringArmComponent->SetRelativeLocation(FVector(0, 0, 100));
 			HealthComponent->OnIsDeadChanged.AddUObject(this, &ACharacterBase::Die);
 			if (DefaultIMC)
 			{
