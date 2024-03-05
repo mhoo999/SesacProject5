@@ -69,7 +69,7 @@ public:
 		int32 ItemCount = 0;
 		for (const FItemInstance& Iter : ItemArray)
 		{
-			if (Iter.ItemRow.ToString().Equals(ItemName))
+			if (Iter.ItemRow.ToString().Equals(ItemName, ESearchCase::IgnoreCase))
 			{
 				ItemCount += Iter.CurrentStack;
 			}

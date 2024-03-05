@@ -132,6 +132,7 @@ void UQuestLogComponent::OnInventoryChanged(const TArray<FStorage>& storageArray
 			for (FObjectiveDetails& objective : stage.Objectives)
 			{
 				ComparisonCount = inventoryComp->GetItemCount(objective.objectiveID);
+				UE_LOG(LogTemp, Warning, TEXT("UQuestLogComponent::OnInventoryChanged : %s, %d"), *objective.objectiveID, ComparisonCount);
 				
 				if (ComparisonCount == objective.Quantity)
 				{
