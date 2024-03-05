@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ProcedualRecoil(float Multiplier);
 
+	void LeanInterpolaction(float TargetFloat, float DeltaSeconds);
+
 private:
 	UPROPERTY()
 	bool bIsDead = false;
@@ -52,6 +54,22 @@ private:
 	float MouseX;
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float MouseY;
+
+
+	// Lean Function
+	UPROPERTY()
+	bool bLeanLeft;
+	UPROPERTY()
+	bool bLeanRight;
+	UPROPERTY()
+	float LeanAmount;
+	UPROPERTY()
+	float LeanSpeed;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float LeanMultiplier = 15.f;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	FRotator LeanRotator;
+	
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	FTransform LeftHandSocketTransform;
 
