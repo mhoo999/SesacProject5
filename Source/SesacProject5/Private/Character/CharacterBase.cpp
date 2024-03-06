@@ -13,6 +13,7 @@
 #include "Component/InteractComponent.h"
 #include "Component/MoveComponent.h"
 #include "Component/WeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameInstance/EFSGameInstance.h"
@@ -109,6 +110,7 @@ FVector ACharacterBase::GetCameraLocation() const
 
 void ACharacterBase::Die(bool bIsDead)
 {
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DisableInput(GetController<APlayerController>());
 	CameraComponent->PostProcessSettings.ColorSaturation = FVector::ZeroVector;
 	CameraComponent->PostProcessSettings.bOverride_ColorSaturation = true;
