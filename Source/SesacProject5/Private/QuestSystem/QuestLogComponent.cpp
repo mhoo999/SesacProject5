@@ -144,7 +144,7 @@ void UQuestLogComponent::OnInventoryChanged(const TArray<FStorage>& storageArray
 					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);
 					UE_LOG(LogTemp, Warning, TEXT("objective Name : %s /n isComplete : %hhd"), *objective.objectiveName.ToString(), objective.objectiveComplete);
 
-					OnQuestComplete.Broadcast(objective.BonusXP);
+					OnQuestComplete.Broadcast(quest.questID);
 				}
 			}
 		}

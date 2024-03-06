@@ -43,7 +43,7 @@ class SESACPROJECT5_API UQuestLogComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FQuestCompleteEvent, float, QuestReward);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FQuestCompleteEvent, FName, QuestName);
 
 	UPROPERTY(BlueprintAssignable, Category="QuestSystem")
 	FQuestCompleteEvent OnQuestComplete;
@@ -113,4 +113,5 @@ private:
 	
 	UFUNCTION()
 	void OnInventoryChanged(const TArray<FStorage>& storageArray);
+
 };
