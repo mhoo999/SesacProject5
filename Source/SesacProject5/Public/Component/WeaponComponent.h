@@ -64,6 +64,8 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_MakeNoise();
 
+	void DestroyWeapon();
+
 protected:
 	UPROPERTY()
 	UMoveComponent* MoveComponent;

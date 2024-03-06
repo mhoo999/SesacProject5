@@ -87,6 +87,7 @@ public:
 	void OnRep_CurrentAmmoCount();
 
 	virtual void OnRep_Owner() override;
+
 private:
 	// Check Wall
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))

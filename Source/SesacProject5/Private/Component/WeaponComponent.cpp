@@ -166,6 +166,14 @@ void UWeaponComponent::AddAmmo(int32 AmmoCount)
 	WeaponInterface->AddAmmo(AmmoCount);
 }
 
+void UWeaponComponent::DestroyWeapon()
+{
+	if (Weapon)
+	{
+		Weapon->Destroy();
+	}
+}
+
 void UWeaponComponent::ServerRPC_MakeNoise_Implementation()
 {
 	UAISense_Hearing::ReportNoiseEvent(GetWorld(), OwningCharacter->GetActorLocation(), 10.f, OwningCharacter, 200.f);

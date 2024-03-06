@@ -51,6 +51,11 @@ void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HasAuthority())
+	{
+		EscapeComponent->OnEscape.AddUObject(this, &ACharacterBase::Escape);
+	}
+
 	if (APlayerController* PC = GetController<APlayerController>())
 	{
 		if (IsLocallyControlled())
@@ -112,6 +117,12 @@ void ACharacterBase::Die(bool bIsDead)
 void ACharacterBase::DieEnd()
 {
 	ServerRPC_MissingInAction();
+}
+
+void ACharacterBase::Escape()
+{
+	WeaponComponent->DestroyWeapon();
+	EscapeComponent->ClientRPC_Escape();
 }
 
 void ACharacterBase::ServerRPC_MissingInAction_Implementation()
