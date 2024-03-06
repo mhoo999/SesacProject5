@@ -6,11 +6,13 @@
 #include "Blueprint/UserWidget.h"
 #include "InGameWidget.generated.h"
 
+class UHurtWidget;
 class UEscapeWidget;
 class UHealthWidget;
 class UInteractWidget;
 class UWidgetSwitcher;
 class UTabWidget;
+class UHurtWidget;
 /**
  * 
  */
@@ -31,6 +33,8 @@ private:
 	UTabWidget* TabWidget;
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UHealthWidget* HealthWidget;
+	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
+	UHurtWidget* HurtWidget;
 	UPROPERTY(Meta = (AllowPrivateAccess, BindWidget))
 	UEscapeWidget* EscapeWidget;
 	

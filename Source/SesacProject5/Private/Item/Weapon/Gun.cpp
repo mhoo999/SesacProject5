@@ -247,7 +247,10 @@ void AGun::ServerRPC_SetWallValue_Implementation(float NewWallValue)
 
 void AGun::OnRep_WallDistance()
 {
-	AnimInstance->SetWallTargetValue(WallDistance);
+	if (AnimInstance)
+	{
+		AnimInstance->SetWallTargetValue(WallDistance);
+	}
 }
 
 void AGun::OnRep_CurrentAmmoCount()

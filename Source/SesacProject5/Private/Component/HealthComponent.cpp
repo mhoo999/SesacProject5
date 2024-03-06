@@ -129,6 +129,11 @@ FHealth& UHealthComponent::GetHealth(EBodyParts BodyParts)
 	return HealthArray[(uint8)BodyParts];
 }
 
+bool UHealthComponent::IsDead() const
+{
+	return bIsDead;
+}
+
 void UHealthComponent::OnRep_IsDead()
 {
 	OnIsDeadChanged.Broadcast(bIsDead);

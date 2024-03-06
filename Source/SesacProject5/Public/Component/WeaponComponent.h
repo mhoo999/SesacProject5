@@ -61,6 +61,9 @@ public:
 
 	void AddAmmo(int32 AmmoCount);
 
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_MakeNoise();
+
 protected:
 	UPROPERTY()
 	UMoveComponent* MoveComponent;
