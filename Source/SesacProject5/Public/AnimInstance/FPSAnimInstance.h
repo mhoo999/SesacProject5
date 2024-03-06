@@ -44,6 +44,9 @@ public:
 	void UpdateLeanBoolean(bool bNewLeanLeft, bool bNewLeanRight);
 
 	void SetWallTargetValue(float NewWallTargetValue);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLeftHandIKAlpha(float NewLeftHandIKAlpha);
 	
 private:
 	UPROPERTY()
@@ -87,6 +90,11 @@ private:
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	FTransform LeftHandSocketTransform;
+
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float LeftHandIKAlpha = 1.f;
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
+	float LeftHandIKAlphaTarget = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TArray<UAnimMontage*> DieMontageArray;

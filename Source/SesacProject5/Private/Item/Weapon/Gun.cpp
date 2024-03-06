@@ -115,7 +115,8 @@ void AGun::StopFire()
 
 void AGun::FireBullet(FVector TargetLocation)
 {
-	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation, WeaponComponent->GetSpreadMultiflier());
+	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation,
+		FireMode == EFireMode::Auto ? WeaponComponent->GetSpreadMultiflier() : 0.1f );
 }
 
 void AGun::ToggleFireMode()
