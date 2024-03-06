@@ -159,3 +159,8 @@ FVector UWeaponComponent::GetTargetLocation() const
 {
 	return OwningCharacter->GetCameraLocation() + (OwningCharacter->GetComponentByClass<UCameraComponent>()->GetForwardVector() * 2500.f);
 }
+
+void UWeaponComponent::AddAmmo(int32 AmmoCount)
+{
+	WeaponInterface->AddAmmo(AmmoCount);
+}

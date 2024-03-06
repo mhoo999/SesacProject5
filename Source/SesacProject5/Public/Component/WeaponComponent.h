@@ -59,6 +59,8 @@ public:
 
 	virtual FVector GetTargetLocation() const;
 
+	void AddAmmo(int32 AmmoCount);
+
 protected:
 	UPROPERTY()
 	UMoveComponent* MoveComponent;
