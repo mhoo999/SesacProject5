@@ -73,6 +73,7 @@ public:
 
 	void AddRecoil();
 	virtual void ToggleFireMode() override;
+	virtual bool IsAttacking() const override;
 
 private:
 	// Recoil Property

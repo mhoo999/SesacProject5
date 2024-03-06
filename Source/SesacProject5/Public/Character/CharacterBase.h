@@ -48,6 +48,8 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_MissingInAction();
 
+	void Escape();
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess))
 	UQuestLogComponent* QuestLogComponent;

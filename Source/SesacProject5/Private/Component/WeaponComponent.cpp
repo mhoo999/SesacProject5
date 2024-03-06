@@ -142,6 +142,16 @@ float UWeaponComponent::GetWeaponAttackRange() const
 	return 1000.f;
 }
 
+void UWeaponComponent::SetSpreadMultiflier(float NewSpreadMultiflier)
+{
+	SpreadMultiflier = NewSpreadMultiflier;
+}
+
+float UWeaponComponent::GetSpreadMultiflier() const
+{
+	return SpreadMultiflier;
+}
+
 void UWeaponComponent::OnRep_Weapon()
 {
 	WeaponInterface = Cast<IWeaponInterface>(Weapon);
@@ -164,6 +174,14 @@ FVector UWeaponComponent::GetTargetLocation() const
 void UWeaponComponent::AddAmmo(int32 AmmoCount)
 {
 	WeaponInterface->AddAmmo(AmmoCount);
+}
+
+void UWeaponComponent::DestroyWeapon()
+{
+	if (Weapon)
+	{
+		Weapon->Destroy();
+	}
 }
 
 void UWeaponComponent::ServerRPC_MakeNoise_Implementation()

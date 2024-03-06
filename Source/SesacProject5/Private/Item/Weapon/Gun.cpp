@@ -115,7 +115,7 @@ void AGun::StopFire()
 
 void AGun::FireBullet(FVector TargetLocation)
 {
-	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation); 
+	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation, WeaponComponent->GetSpreadMultiflier());
 }
 
 void AGun::ToggleFireMode()
@@ -258,13 +258,18 @@ void AGun::OnRep_CurrentAmmoCount()
 	// Connect to widget
 }
 
-void AGun::OnRep_Owner()
+void AGun::OnRep_Owner() 
 {
 	Super::OnRep_Owner();
 
 	OwningCharacter = GetOwner<ACharacter>();
 	WeaponComponent = OwningCharacter->GetComponentByClass<UWeaponComponent>();
 	AnimInstance =  Cast<UFPSAnimInstance>(OwningCharacter->GetMesh()->GetAnimInstance());
+}
+
+bool AGun::IsAttacking() const
+{
+	return bIsAttacking;
 }
 
 void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation)
@@ -282,12 +287,19 @@ void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVecto
 	}
 }
 
-void AGun::ServerRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation)
+void AGun::ServerRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation, float SpreadMultiflier)
 {
 	if (CurrentAmmoCount > 0)
 	{
 		CurrentAmmoCount--;
+		
+		// Right Vector
+		FVector RightSpreadVector = FRotationMatrix(MuzzleTransform.Rotator()).GetScaledAxis(EAxis::Y) * FMath::RandRange(-StartSpreadAmount, StartSpreadAmount) * SpreadMultiflier;
+		// Up Vector
+		FVector UpSpreadVector = FRotationMatrix(MuzzleTransform.Rotator()).GetScaledAxis(EAxis::Z) * FMath::RandRange(-StartSpreadAmount, StartSpreadAmount) * SpreadMultiflier;
 
+		TargetLocation += (RightSpreadVector + UpSpreadVector);
+		
 		if (BulletClass)
 		{
 			FActorSpawnParameters Params;

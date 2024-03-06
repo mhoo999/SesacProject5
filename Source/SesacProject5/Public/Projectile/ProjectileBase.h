@@ -57,6 +57,9 @@ private:
 	// Decal
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<FName, UMaterialInstance*> DecalMap;
+	// Decal Wall
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TArray<UMaterialInstance*> FleshWallDeaclArray;
 	// Emitter
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TMap<FName, UParticleSystem*> EmitterMap;

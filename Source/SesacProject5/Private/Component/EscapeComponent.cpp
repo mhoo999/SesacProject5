@@ -43,7 +43,10 @@ void UEscapeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		EscapeTime = 0.f;
 
-		ClientRPC_Escape();
+		if (GetOwner()->HasAuthority())
+		{
+			OnEscape.Broadcast();
+		}
 	}
 	OnRep_EscapeTime();
 }
@@ -91,8 +94,10 @@ void UEscapeComponent::ClientRPC_Escape_Implementation()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("UEscapeComponent::ClientRPC_Escape_Implementation"));
 
-	OnEscape.Broadcast();
-	
+	if (GetOwner()->HasAuthority() == false)
+	{
+		OnEscape.Broadcast();	
+	}
 	GetWorld()->GetFirstPlayerController()->ClientTravel("/Game/YMH/Level/Result_YMH", TRAVEL_Absolute);
 }
 

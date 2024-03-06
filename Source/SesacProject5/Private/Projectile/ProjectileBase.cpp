@@ -54,8 +54,9 @@ void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* Over
 	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
 	
 	if (OtherActor == GetOwner()) return;
+			
 	
-	MultRPC_SpawnBulletDecal(OtherActor, SweepResult.Location, FRotationMatrix::MakeFromX(SweepResult.ImpactNormal).Rotator());
+	MultRPC_SpawnBulletDecal(OtherActor, SweepResult.Location, FRotationMatrix::MakeFromX(GetActorForwardVector()).Rotator());
 
 	if (UHealthComponent* HealthComponent = OtherActor->GetComponentByClass<UHealthComponent>())
 	{
@@ -88,18 +89,40 @@ void AProjectileBase::Init(AActor* NewOwner)
 
 void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation)
 {
+	if (IsRunningDedicatedServer()) return;
+	
 	FName Material;
 	if (HitActor->ActorHasTag(FName("Flesh")))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Flesh"), *HitActor->GetActorNameOrLabel());
 		Material = FName("Flesh");
+
+		FHitResult OutHit;
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(HitActor);
+		if (GetWorld()->LineTraceSingleByChannel(OutHit, SpawnLocation, SpawnLocation + (this->GetActorForwardVector() * 500.f), ECC_Visibility,
+            			Params))
+		{
+			// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Hitted"), *OutHit.GetActor()->GetActorNameOrLabel());
+
+			int32 FleshWallDecalNum = FleshWallDeaclArray.Num();
+			if (FleshWallDecalNum > 0)
+			{
+				UGameplayStatics::SpawnDecalAtLocation(GetWorld(), FleshWallDeaclArray[FMath::RandRange(0, FleshWallDecalNum - 1)], FVector(1.f,FMath::RandRange(20.f, 50.f),FMath::RandRange(20.f, 50.f))
+								, OutHit.Location, (-OutHit.Normal).Rotation()); 
+			}
+			
+		}
+		// DrawDebugLine(GetWorld(), SpawnLocation, SpawnLocation + (this->GetActorForwardVector() * 500.f), FColor::Red, true);
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Other"), *HitActor->GetActorNameOrLabel());
 		Material = FName("Other");
 	}
 
 	UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalMap[Material], FVector(5,5,5)
     							, SpawnLocation, SpawnRotation);
-    		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMap[Material], SpawnLocation, SpawnRotation);
+    		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMap[Material], SpawnLocation, (-GetActorForwardVector()).Rotation());
     		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundMap[Material], SpawnLocation, SpawnRotation);
 }
