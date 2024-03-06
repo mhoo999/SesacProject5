@@ -105,13 +105,21 @@ FVector ACharacterBase::GetCameraLocation() const
 void ACharacterBase::Die(bool bIsDead)
 {
 	DisableInput(GetController<APlayerController>());
+	CameraComponent->PostProcessSettings.ColorSaturation = FVector::ZeroVector;
+	CameraComponent->PostProcessSettings.bOverride_ColorSaturation = true;
 }
 
 void ACharacterBase::DieEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ACharacterBase::DieEnd"));
+	ServerRPC_MissingInAction();
+}
+
+void ACharacterBase::ServerRPC_MissingInAction_Implementation()
+{
 	if (APlayerController* PlayerController = GetController<APlayerController>())
 	{
+		PlayerController->UnPossess();
+		SetOwner(nullptr);
 		PlayerController->ClientTravel("/Game/YMH/Level/ResultFailed_YMH", TRAVEL_Absolute);
 	}
 }

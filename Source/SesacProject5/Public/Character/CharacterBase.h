@@ -45,6 +45,9 @@ public:
 
 	void DieEnd();
 
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_MissingInAction();
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess))
 	UQuestLogComponent* QuestLogComponent;
