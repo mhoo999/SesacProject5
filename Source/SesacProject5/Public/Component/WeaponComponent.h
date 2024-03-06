@@ -68,6 +68,15 @@ public:
 	void ServerRPC_MakeNoise(); 
 
 	void DestroyWeapon();
+	
+	UFUNCTION()
+	void OnRep_LeftHandIK();
+
+	UFUNCTION()
+	void LeftHandIKTimerFunction();
+
+private:
+	FTimerHandle LeftHandIKTimerHandle;
 
 protected:
 	UPROPERTY()
@@ -97,6 +106,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<class AGun> GunClass;
 
+	UPROPERTY(ReplicatedUsing = OnRep_LeftHandIK, Meta = (AllowPrivateAccess))
+	FTransform LeftHandIK;
+	
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FDele_IsAiming, bool);
 	FDele_IsAiming OnIsAimingChanged;

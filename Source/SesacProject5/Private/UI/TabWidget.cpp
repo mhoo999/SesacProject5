@@ -38,3 +38,8 @@ void UTabWidget::SwitchToGearWidget()
 {
 	WidgetSwitcher->SetActiveWidget(GearWidget);
 }
+
+void UTabWidget::RefreshQuestWidget_Implementation()
+{
+	
+}
