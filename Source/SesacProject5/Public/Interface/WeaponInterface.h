@@ -46,4 +46,6 @@ public:
 	virtual void AddAmmo(int32 AmmoCount) {};
 
 	virtual FTransform GetLeftHandTransform() { return FTransform(); };
+
+	virtual float GetAttackRange() const = 0;
 };

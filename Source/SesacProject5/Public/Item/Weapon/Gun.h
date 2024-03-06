@@ -88,8 +88,12 @@ public:
 
 	virtual void OnRep_Owner() override;
 	virtual bool IsAttacking() const override;
+	virtual float GetAttackRange() const override;
 
 private:
+	// Range
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	float AttackRange = 65000.f;
 	// Spread
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	float StartSpreadAmount = 100.f;

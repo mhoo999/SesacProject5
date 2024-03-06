@@ -74,6 +74,7 @@ public:
 	void AddRecoil();
 	virtual void ToggleFireMode() override;
 	virtual bool IsAttacking() const override;
+	virtual float GetAttackRange() const override;
 
 private:
 	// Recoil Property

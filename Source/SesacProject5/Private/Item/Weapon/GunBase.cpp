@@ -126,6 +126,11 @@ bool AGunBase::IsAttacking() const
 	return false;
 }
 
+float AGunBase::GetAttackRange() const
+{
+	return 0.f;
+}
+
 void AGunBase::ServerRPC_Reload_Implementation()
 {
 	MultiRPC_Reload();

@@ -51,7 +51,7 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::OnCollisionComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::OnCollisionComponentBeginOverlap) %s, %s, %s"), *OtherActor->GetActorNameOrLabel(), *OtherComp->GetName(), *SweepResult.BoneName.ToString());
 	
 	if (OtherActor == GetOwner()) return;
 			
@@ -94,7 +94,7 @@ void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, 
 	FName Material;
 	if (HitActor->ActorHasTag(FName("Flesh")))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Flesh"), *HitActor->GetActorNameOrLabel());
+		// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Flesh"), *HitActor->GetActorNameOrLabel());
 		Material = FName("Flesh");
 
 		FHitResult OutHit;
@@ -117,7 +117,7 @@ void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, 
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Other"), *HitActor->GetActorNameOrLabel());
+		// UE_LOG(LogTemp, Warning, TEXT("AProjectileBase::MultRPC_SpawnBulletDecal) %s is Other"), *HitActor->GetActorNameOrLabel());
 		Material = FName("Other");
 	}
 

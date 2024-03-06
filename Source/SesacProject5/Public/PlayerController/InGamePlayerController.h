@@ -29,6 +29,6 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<UInGameWidget> InGameWidgetClass;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	UInGameWidget* InGameWidget;
 };

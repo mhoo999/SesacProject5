@@ -27,6 +27,9 @@ public:
 
 	void SwitchToGearWidget();
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void RefreshQuestWidget();
+
 private:
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess, BindWidget))
 	UWidgetSwitcher* WidgetSwitcher;
