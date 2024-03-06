@@ -7,6 +7,7 @@
 #include "UI/HealthWidget.h"
 #include "UI/TabWidget.h"
 #include "UI/InGame/EscapeWidget.h"
+#include "UI/InGame/HurtWidget.h"
 #include "UI/InGame/InteractWidget.h"
 
 void UInGameWidget::InitWidget(APawn* Pawn)
@@ -15,6 +16,7 @@ void UInGameWidget::InitWidget(APawn* Pawn)
 	HealthWidget->InitWidget(Pawn);
 	EscapeWidget->InitWidget(Pawn);
 	TabWidget->InitWidget(Pawn);
+	HurtWidget->InitWidget(Pawn);
 }
 
 void UInGameWidget::ToggleTabWidget()

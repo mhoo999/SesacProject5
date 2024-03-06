@@ -13,10 +13,8 @@ void UFPSAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	if (auto HealthComponent = GetOwningActor()->GetComponentByClass<UHealthComponent>())
-	{
-		HealthComponent->OnIsDeadChanged.AddUObject(this, &UFPSAnimInstance::Die);	
-	}
+	HealthComponent = GetOwningActor()->GetComponentByClass<UHealthComponent>();
+	
 	if (auto MoveComponent = GetOwningActor()->GetComponentByClass<UMoveComponent>())
 	{
 		MoveComponent->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
@@ -35,12 +33,12 @@ void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (bIsDead) return;
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	// bIsCrouch = Cast<ACharacter>(GetOwningActor())->bIsCrouched;
-
 	if (ACharacter* Character = Cast<ACharacter>(GetOwningActor()))
 	{
 		bIsCrouch = Character->bIsCrouched;
 	}
+
+	if(HealthComponent) Die(HealthComponent->IsDead());
 
 	LeanInterpolaction(DeltaSeconds);
 }
@@ -51,6 +49,7 @@ void UFPSAnimInstance::Die(bool bNewIsDead)
 
 	if (bIsDead)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::Die) %s "), *GetOwningActor()->GetActorNameOrLabel());
 		if (DieMontageArray.Num() > 0)
 		{
 			Montage_Play(DieMontageArray[FMath::RandRange(0, DieMontageArray.Num()-1)]);

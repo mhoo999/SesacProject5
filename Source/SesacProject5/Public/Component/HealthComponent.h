@@ -84,6 +84,8 @@ public:
 
 	FHealth& GetHealth(EBodyParts BodyParts);
 
+	bool IsDead() const;
+
 	UFUNCTION()
 	void OnRep_IsDead();
 

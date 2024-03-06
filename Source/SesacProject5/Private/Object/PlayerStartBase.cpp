@@ -46,7 +46,8 @@ APlayerStartBase* APlayerStartBase::SetOccupied()
 
 	if (false == bIsOccupied)
 	{
-		bIsOccupied = true;
+		// Todo : This is for test remove under line comment symbol
+		// bIsOccupied = true;
 		return this;
 	}
 

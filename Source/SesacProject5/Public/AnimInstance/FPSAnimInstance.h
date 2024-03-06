@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "FPSAnimInstance.generated.h"
 
+class UHealthComponent;
 /**
  * 
  */
@@ -45,6 +46,9 @@ public:
 	void SetWallTargetValue(float NewWallTargetValue);
 	
 private:
+	UPROPERTY()
+	UHealthComponent* HealthComponent;
+	
 	// Check Wall
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
 	float WallValue;
