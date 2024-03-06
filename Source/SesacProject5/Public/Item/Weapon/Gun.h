@@ -59,7 +59,7 @@ public:
 	// FireBullet
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation);  
+	void ServerRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation, float SpreadMultiflier);  
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiRPC_FireBullet(FTransform MuzzleTransform, FVector TargetLocation);
 	UFUNCTION(NetMulticast, Reliable)
@@ -87,8 +87,13 @@ public:
 	void OnRep_CurrentAmmoCount();
 
 	virtual void OnRep_Owner() override;
+	virtual bool IsAttacking() const override;
 
 private:
+	// Spread
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	float StartSpreadAmount = 100.f;
+
 	// Check Wall
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	float WeaponLength = 100.f;

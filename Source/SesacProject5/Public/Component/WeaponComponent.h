@@ -48,6 +48,9 @@ public:
 
 	float GetWeaponAttackRange() const;
 
+	void SetSpreadMultiflier(float NewSpreadMultiflier);
+	float GetSpreadMultiflier() const;
+
 	UFUNCTION()
 	void OnRep_Weapon();
 
@@ -62,11 +65,14 @@ public:
 	void AddAmmo(int32 AmmoCount);
 
 	UFUNCTION(Server, Reliable)
-	void ServerRPC_MakeNoise();
+	void ServerRPC_MakeNoise(); 
 
 	void DestroyWeapon();
 
 protected:
+	UPROPERTY()
+	float SpreadMultiflier = 1.f;
+	
 	UPROPERTY()
 	UMoveComponent* MoveComponent;
 	UPROPERTY()

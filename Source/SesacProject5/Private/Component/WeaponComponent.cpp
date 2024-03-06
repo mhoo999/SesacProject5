@@ -142,6 +142,16 @@ float UWeaponComponent::GetWeaponAttackRange() const
 	return 1000.f;
 }
 
+void UWeaponComponent::SetSpreadMultiflier(float NewSpreadMultiflier)
+{
+	SpreadMultiflier = NewSpreadMultiflier;
+}
+
+float UWeaponComponent::GetSpreadMultiflier() const
+{
+	return SpreadMultiflier;
+}
+
 void UWeaponComponent::OnRep_Weapon()
 {
 	WeaponInterface = Cast<IWeaponInterface>(Weapon);

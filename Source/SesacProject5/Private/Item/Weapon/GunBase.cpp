@@ -121,6 +121,11 @@ void AGunBase::ToggleFireMode()
 {
 }
 
+bool AGunBase::IsAttacking() const
+{
+	return false;
+}
+
 void AGunBase::ServerRPC_Reload_Implementation()
 {
 	MultiRPC_Reload();
