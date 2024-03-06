@@ -124,7 +124,7 @@ private:
 	UPROPERTY()
 	UFPSAnimInstance* AnimInstance;
 	
-	UPROPERTY(ReplicatedUsing = OnRep_CurrentAmmoCount, Meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_CurrentAmmoCount, Meta = (AllowPrivateAccess))
 	int32 CurrentAmmoCount = 30;
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	EFireMode FireMode = EFireMode::Single;
