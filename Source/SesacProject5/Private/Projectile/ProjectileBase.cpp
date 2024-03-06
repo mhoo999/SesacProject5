@@ -123,6 +123,6 @@ void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, 
 
 	UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalMap[Material], FVector(5,5,5)
     							, SpawnLocation, SpawnRotation);
-    		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMap[Material], SpawnLocation, SpawnRotation);
+    		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMap[Material], SpawnLocation, (-GetActorForwardVector()).Rotation());
     		UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundMap[Material], SpawnLocation, SpawnRotation);
 }
