@@ -123,6 +123,11 @@ void UFPSAnimInstance::SetWallTargetValue(float NewWallTargetValue)
 	WallValue = NewWallTargetValue;
 }
 
+void UFPSAnimInstance::SetLeftHandIKAlpha(float NewLeftHandIKAlpha)
+{
+	LeftHandIKAlpha = NewLeftHandIKAlpha;
+}
+
 void UFPSAnimInstance::ProcedualRecoil_Implementation(float Multiplier)
 {
 }

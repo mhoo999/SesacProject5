@@ -115,7 +115,8 @@ void AGun::StopFire()
 
 void AGun::FireBullet(FVector TargetLocation)
 {
-	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation, WeaponComponent->GetSpreadMultiflier());
+	ServerRPC_FireBullet(GunMesh->GetSocketTransform("Muzzle"), TargetLocation,
+		FireMode == EFireMode::Auto ? WeaponComponent->GetSpreadMultiflier() : 0.1f );
 }
 
 void AGun::ToggleFireMode()
@@ -272,6 +273,11 @@ bool AGun::IsAttacking() const
 	return bIsAttacking;
 }
 
+float AGun::GetAttackRange() const
+{
+	return AttackRange;
+}
+
 void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation)
 {
 	// if (OwningCharacter->IsLocallyControlled()) return;
@@ -279,9 +285,12 @@ void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVecto
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzleTransform.GetLocation());
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFire, MuzzleTransform);
 
-	AnimInstance->ProcedualRecoil(1.5f);
+	if (AnimInstance)
+	{
+		AnimInstance->ProcedualRecoil(1.5f);
+	}
 
-	if (OwningCharacter->IsLocallyControlled())
+	if (OwningCharacter && OwningCharacter->IsLocallyControlled())
 	{
 		ControllerRecoilTimeline.PlayFromStart();
 	}

@@ -32,6 +32,7 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UWeaponComponent, Weapon);
+	DOREPLIFETIME(UWeaponComponent, LeftHandIK);
 }
 
 void UWeaponComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
@@ -71,7 +72,12 @@ void UWeaponComponent::BeginPlay()
 			FVector OutLocation;
 			FRotator OutRotation;
 			OwningCharacter->GetMesh()->TransformToBoneSpace(FName("hand_r"), LeftHandTransform.GetLocation(), LeftHandTransform.Rotator(), OutLocation, OutRotation);
-			OnLeftHandIKChanged.ExecuteIfBound(FTransform(OutRotation.Quaternion(), OutLocation));
+
+			LeftHandIK = FTransform(OutRotation.Quaternion(), OutLocation);
+
+			if (IsRunningDedicatedServer()) return;
+
+			OnRep_LeftHandIK();
 		}
 	}
 }
@@ -139,7 +145,8 @@ void UWeaponComponent::ToggleFireModeAction(const FInputActionValue& Value)
 
 float UWeaponComponent::GetWeaponAttackRange() const
 {
-	return 1000.f;
+	if (WeaponInterface) return WeaponInterface->GetAttackRange();
+	return 100.f;
 }
 
 void UWeaponComponent::SetSpreadMultiflier(float NewSpreadMultiflier)
@@ -182,6 +189,29 @@ void UWeaponComponent::DestroyWeapon()
 	{
 		Weapon->Destroy();
 	}
+}
+
+void UWeaponComponent::OnRep_LeftHandIK()
+{
+	if (OnLeftHandIKChanged.IsBound() == false)
+	{
+		if (LeftHandIKTimerHandle.IsValid()) return;
+		
+		GetWorld()->GetTimerManager().SetTimer(LeftHandIKTimerHandle, this, &UWeaponComponent::LeftHandIKTimerFunction, 3.0f, true);
+		
+		// UE_LOG(LogTemp, Warning, TEXT("UWeaponComponent::OnRep_LeftHandIK) Is not bounded"));
+	}
+	OnLeftHandIKChanged.ExecuteIfBound(LeftHandIK);
+}
+
+void UWeaponComponent::LeftHandIKTimerFunction()
+{
+	if (OnLeftHandIKChanged.IsBound() == false) return;
+
+	GetWorld()->GetTimerManager().ClearTimer(LeftHandIKTimerHandle);
+	OnLeftHandIKChanged.ExecuteIfBound(LeftHandIK);
+	
+	UE_LOG(LogTemp, Warning, TEXT("UWeaponComponent::LeftHandIKTimerFunction) Finally it is bounded"));
 }
 
 void UWeaponComponent::ServerRPC_MakeNoise_Implementation()
