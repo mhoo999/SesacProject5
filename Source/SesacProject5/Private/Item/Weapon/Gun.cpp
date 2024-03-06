@@ -3,7 +3,7 @@
 
 #include "Item/Weapon/Gun.h"
 
-#include "../../../../../../../UnrealEngine-release/UnrealEngine-release/Engine/Source/Runtime/Engine/Public/Net/UnrealNetwork.h"
+#include "Net/UnrealNetwork.h"
 #include "AnimInstance/FPSAnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Component/WeaponComponent.h"
@@ -96,6 +96,7 @@ void AGun::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProp
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AGun, WallDistance);
+	DOREPLIFETIME(AGun, CurrentAmmoCount);
 }
 
 void AGun::StartFire()
@@ -162,6 +163,15 @@ FTransform AGun::GetLeftHandTransform()
 	return GunMesh->GetSocketTransform("LeftHandIK");
 }
 
+void AGun::AddAmmo(int32 AmmoCount)
+{
+	CurrentAmmoCount += AmmoCount;
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		OnRep_CurrentAmmoCount();
+	}
+}
+
 void AGun::MultiRPC_FailToFire_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AGun::MultiRPC_FailToFire")); 
@@ -214,7 +224,7 @@ void AGun::CheckWallFunction()
 	Start += ForwardVector;
 	FVector End = Start + ForwardVector  * WeaponLength;
 	FHitResult OutHit;
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	// DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(OwningCharacter);
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Camera, Params))
@@ -238,6 +248,11 @@ void AGun::ServerRPC_SetWallValue_Implementation(float NewWallValue)
 void AGun::OnRep_WallDistance()
 {
 	AnimInstance->SetWallTargetValue(WallDistance);
+}
+
+void AGun::OnRep_CurrentAmmoCount()
+{
+	// Connect to widget
 }
 
 void AGun::OnRep_Owner()
@@ -266,9 +281,9 @@ void AGun::MultiRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVecto
 
 void AGun::ServerRPC_FireBullet_Implementation(FTransform MuzzleTransform, FVector TargetLocation)
 {
-	if (AmmoCount > 0)
+	if (CurrentAmmoCount > 0)
 	{
-		// AmmoCount--;
+		CurrentAmmoCount--;
 
 		if (BulletClass)
 		{

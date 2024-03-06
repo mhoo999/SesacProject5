@@ -42,5 +42,7 @@ public:
 
 	virtual void ToggleFireMode() = 0;
 
+	virtual void AddAmmo(int32 AmmoCount) {};
+
 	virtual FTransform GetLeftHandTransform() { return FTransform(); };
 };

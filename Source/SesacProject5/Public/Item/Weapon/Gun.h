@@ -53,6 +53,9 @@ public:
 
 	virtual FTransform GetLeftHandTransform() override;
 
+	// Ammo
+	virtual void AddAmmo(int32 AmmoCount) override;
+
 	// FireBullet
 
 	UFUNCTION(Server, Reliable)
@@ -80,6 +83,8 @@ public:
 
 	UFUNCTION()
 	void OnRep_WallDistance();
+	UFUNCTION()
+	void OnRep_CurrentAmmoCount();
 
 	virtual void OnRep_Owner() override;
 private:
@@ -119,8 +124,8 @@ private:
 	UPROPERTY()
 	UFPSAnimInstance* AnimInstance;
 	
-	UPROPERTY()
-	int32 AmmoCount = 30;
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentAmmoCount, Meta = (AllowPrivateAccess))
+	int32 CurrentAmmoCount = 30;
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	EFireMode FireMode = EFireMode::Single;
 	UPROPERTY()
