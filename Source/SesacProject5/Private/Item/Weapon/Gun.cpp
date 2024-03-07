@@ -129,6 +129,7 @@ void AGun::ToggleFireMode()
 
 void AGun::Reload()
 {
+	ServerRPC_Reload();
 }
 
 void AGun::AttachToCharacter()
@@ -139,6 +140,18 @@ void AGun::AttachToCharacter()
 void AGun::DetachFromCharacter()
 {
 	bIsAiming = false;
+}
+
+void AGun::ServerRPC_Reload_Implementation()
+{
+	MultiRPC_Reload();
+}
+
+void AGun::MultiRPC_Reload_Implementation()
+{
+	if (IsRunningDedicatedServer()) return;
+	AnimInstance->SetLeftHandIKAlpha(0.f);
+	if (ReloadMontage) AnimInstance->Montage_Play(ReloadMontage);
 }
 
 void AGun::StartAim()
@@ -219,6 +232,8 @@ void AGun::AimStopAction_Implementation()
 
 void AGun::CheckWallFunction()
 {
+	if (OwningCharacter->GetController<APlayerController>() == nullptr) return;
+	
 	UCameraComponent* CameraComponent = OwningCharacter->GetComponentByClass<UCameraComponent>();
 	FVector Start = CameraComponent->GetComponentLocation();
 	FVector ForwardVector = CameraComponent->GetForwardVector();

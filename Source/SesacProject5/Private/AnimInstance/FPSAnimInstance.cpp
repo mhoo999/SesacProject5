@@ -12,16 +12,20 @@
 void UFPSAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-
-	HealthComponent = GetOwningActor()->GetComponentByClass<UHealthComponent>();
 	
-	if (auto MoveComponent = GetOwningActor()->GetComponentByClass<UMoveComponent>())
+	OwningCharacter = Cast<ACharacterBase>(GetOwningActor());
+
+	HealthComponent = OwningCharacter->GetComponentByClass<UHealthComponent>();
+	
+	if (auto MoveComponent = OwningCharacter->GetComponentByClass<UMoveComponent>())
 	{
 		MoveComponent->OnIsSprintChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsSprint);
         MoveComponent->OnHandSwayFloatsChanged.BindUObject(this, &UFPSAnimInstance::UpdateHandSwayFloats);
 		MoveComponent->OnLeanChanged.BindUObject(this, &UFPSAnimInstance::UpdateLeanBoolean);
 	}
-	if (auto WeaponComponent = GetOwningActor()->GetComponentByClass<UWeaponComponent>())
+
+	WeaponComponent = OwningCharacter->GetComponentByClass<UWeaponComponent>();
+	if (WeaponComponent)
 	{
 		WeaponComponent->OnIsAimingChanged.AddUObject(this, &UFPSAnimInstance::UpdateIsAiming);
 		WeaponComponent->OnLeftHandIKChanged.BindUObject(this, &UFPSAnimInstance::UpdateLeftHandIK);
@@ -33,12 +37,14 @@ void UFPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (bIsDead) return;
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (ACharacter* Character = Cast<ACharacter>(GetOwningActor()))
-	{
-		bIsCrouch = Character->bIsCrouched;
-	}
+	if (OwningCharacter == nullptr) return;
+	
+	bIsCrouch = OwningCharacter->bIsCrouched;
 
-	if(HealthComponent) Die(HealthComponent->IsDead());
+	if(HealthComponent)
+	{
+		Die(HealthComponent->IsDead());
+	}
 
 	LeanInterpolaction(DeltaSeconds);
 }
@@ -60,13 +66,17 @@ void UFPSAnimInstance::Die(bool bNewIsDead)
 void UFPSAnimInstance::AnimNotify_OnDieEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::AnimNotify_OnDieEnd) %s"), *GetOwningActor()->GetActorNameOrLabel());
-	if (ACharacterBase* Character = Cast<ACharacterBase>(GetOwningActor()))
+	if (OwningCharacter->IsLocallyControlled())
 	{
-		if (Character->IsLocallyControlled())
-		{
-			Character->DieEnd();
-		}
+		OwningCharacter->DieEnd();
 	}
+}
+
+void UFPSAnimInstance::AnimNotify_OnReloadEnd()
+{
+	SetLeftHandIKAlpha(1.f);
+
+	WeaponComponent->OnReloadComplete();
 }
 
 void UFPSAnimInstance::UpdateIsSprint(bool bNewIsSprint)

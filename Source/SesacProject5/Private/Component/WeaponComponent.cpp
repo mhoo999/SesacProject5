@@ -33,6 +33,7 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(UWeaponComponent, Weapon);
 	DOREPLIFETIME(UWeaponComponent, LeftHandIK);
+	DOREPLIFETIME(UWeaponComponent, RemainAmmo);
 }
 
 void UWeaponComponent::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent)
@@ -117,7 +118,10 @@ void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
 
 void UWeaponComponent::ReloadAction(const FInputActionValue& Value)
 {
-	if (WeaponInterface) WeaponInterface->Reload();
+	if (WeaponInterface && RemainAmmo > 0)
+	{
+		WeaponInterface->Reload();
+	}
 }
 
 void UWeaponComponent::AimStartAction(const FInputActionValue& Value)
@@ -178,9 +182,32 @@ FVector UWeaponComponent::GetTargetLocation() const
 	return OwningCharacter->GetCameraLocation() + (OwningCharacter->GetComponentByClass<UCameraComponent>()->GetForwardVector() * 2500.f);
 }
 
+void UWeaponComponent::OnReloadComplete()
+{
+	if (OwningCharacter->IsLocallyControlled() == false) return;
+
+	ServerRPC_ReloadAmmo();
+}
+
 void UWeaponComponent::AddAmmo(int32 AmmoCount)
 {
+	RemainAmmo += AmmoCount;
+}
+
+void UWeaponComponent::AddAmmoToWeapon(int32 AmmoCount)
+{
 	WeaponInterface->AddAmmo(AmmoCount);
+}
+
+void UWeaponComponent::ServerRPC_ReloadAmmo_Implementation()
+{
+	int32 AddCount = RemainAmmo > 30 ? 30 : RemainAmmo;
+	AddAmmoToWeapon(AddCount);
+	AddAmmo(-AddCount);
+}
+
+void UWeaponComponent::OnRep_RemainAmmo()
+{
 }
 
 void UWeaponComponent::DestroyWeapon()

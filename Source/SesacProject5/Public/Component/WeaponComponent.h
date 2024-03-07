@@ -62,7 +62,15 @@ public:
 
 	virtual FVector GetTargetLocation() const;
 
+	// Reload
+	void OnReloadComplete();
 	void AddAmmo(int32 AmmoCount);
+	void AddAmmoToWeapon(int32 AmmoCount);
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_ReloadAmmo();
+	UFUNCTION()
+	void OnRep_RemainAmmo();
+	
 
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_MakeNoise(); 
@@ -92,6 +100,8 @@ protected:
 private:
 	UPROPERTY()
 	bool bIsAiming;
+	UPROPERTY(ReplicatedUsing = "OnRep_RemainAmmo", Meta = (AllowPrivateAccess))
+	int32 RemainAmmo = 0;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	UInputAction* IA_Fire;

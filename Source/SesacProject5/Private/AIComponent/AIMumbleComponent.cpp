@@ -76,9 +76,8 @@ void UAIMumbleComponent::MultiRPCPlayPatrolMumble_Implementation(int32 randValue
 		mumbleSound = nullptr;
 	}
 
-	if (mumbleSound != nullptr)
+	if (mumbleSound != nullptr && ai != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), mumbleSound, ai->GetActorLocation(), ai->GetActorRotation());
 	}
 }
-

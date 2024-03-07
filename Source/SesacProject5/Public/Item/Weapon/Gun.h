@@ -47,6 +47,11 @@ public:
 	virtual void Reload() override;
 	virtual void AttachToCharacter() override;
 	virtual void DetachFromCharacter() override;
+
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_Reload();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiRPC_Reload();
 	
 	virtual void StartAim() override;
 	virtual void StopAim() override;
@@ -164,4 +169,8 @@ private:
 	// Bullet
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
 	TSubclassOf<AProjectileBase> BulletClass;
+
+	// Reload
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess))
+	UAnimMontage* ReloadMontage;
 };
