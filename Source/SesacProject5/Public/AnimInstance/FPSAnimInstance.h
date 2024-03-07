@@ -7,6 +7,8 @@
 #include "FPSAnimInstance.generated.h"
 
 class UHealthComponent;
+class ACharacterBase;
+class UWeaponComponent;
 /**
  * 
  */
@@ -25,6 +27,9 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_OnDieEnd();
+
+	UFUNCTION()
+	void AnimNotify_OnReloadEnd();
 
 	UFUNCTION()
 	void UpdateIsSprint(bool bNewIsSprint);
@@ -50,7 +55,11 @@ public:
 	
 private:
 	UPROPERTY()
+	ACharacterBase* OwningCharacter;
+	UPROPERTY()
 	UHealthComponent* HealthComponent;
+	UPROPERTY()
+	UWeaponComponent* WeaponComponent;
 	
 	// Check Wall
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
