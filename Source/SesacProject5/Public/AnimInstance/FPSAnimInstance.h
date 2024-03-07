@@ -63,7 +63,7 @@ private:
 	
 	// Check Wall
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess))
-	float WallValue;
+	float WallValue = 1.f;
 	
 	UPROPERTY()
 	bool bIsDead = false;
