@@ -107,7 +107,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	float WeaponLength = 100.f;
 	UPROPERTY(ReplicatedUsing = OnRep_WallDistance, Meta = (AllowPrivateAccess))
-	float WallDistance;
+	float WallDistance = 1.f;
 	
 	// Recoil
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
