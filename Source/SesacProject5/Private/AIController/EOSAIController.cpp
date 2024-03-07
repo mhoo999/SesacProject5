@@ -133,12 +133,13 @@ IFSMInterface* AEOSAIController::GetFSM()
 
 void AEOSAIController::printLog()
 {
+	FColor textColor = FSMChaseComp->bIsAttacking ? FColor::Red : FColor::Silver;
 	FString StateString = UEnum::GetValueAsString(state);
 	FString CleanStateString = StateString.Mid(StateString.Find(TEXT("."), ESearchCase::IgnoreCase, ESearchDir::FromEnd) + 1);
 
 	if (ai)
 	{
-		DrawDebugString(GetWorld(), ai->GetActorLocation(), CleanStateString, nullptr, FColor::Yellow, 0, true, 1);
+		DrawDebugString(GetWorld(), ai->GetActorLocation(), TEXT("Attacking"), nullptr, textColor, 0, true, 1);
 	}
 }
 
