@@ -64,4 +64,5 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MySettings", meta=(AllowPrivateAccess))
 	float retrunDuration = 15.f;
+	
 };

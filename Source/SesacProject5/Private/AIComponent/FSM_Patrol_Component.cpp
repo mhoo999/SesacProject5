@@ -124,7 +124,8 @@ void UFSM_Patrol_Component::SenseNewActor(AActor* NewActor)
 	{
 		return;
 	}
-	
+
+	ac->StopMovement();
 	ac->SetContext(EEnemystate::search);
 	ac->GetFSM()->SenseNewActor(NewActor);
 }

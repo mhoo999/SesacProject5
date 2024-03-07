@@ -41,7 +41,6 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		
 		if (dist <= attackDist)
 		{
-			// ac->SetFocalPoint(target->GetActorLocation() + FVector(500, 0, 0));
 			if (bIsAttacking == false)
 			{
 				bIsAttacking = true;
@@ -56,13 +55,14 @@ void UFSM_Chase_Component::ExecuteBehavior()
 				WeaponComp->StartFireAction(FInputActionValue());
 				ai->FaceRotation(ai->GetControlRotation() + FRotator(0, 0, 0));
 			}
+			else
+			{
+				WeaponComp->StartFireAction(FInputActionValue());
+			}
 		}
 		else
 		{
-			if (bIsAttacking)
-			{
-				bIsAttacking = false;
-			}
+			bIsAttacking = false;
 			
 			WeaponComp->EndFireAction(FInputActionValue());
 			ac->MoveToActor(target, attackDist - 100.0f, true, true, true);
@@ -74,12 +74,8 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	else
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
+		bIsAttacking = false;
 		ac->MoveToLocation(targetLastLoc, 10.0f, true, true, true);
-
-		if (bIsAttacking)
-		{
-			bIsAttacking = false;
-		}
 		
 		if (!bFind)
 		{
