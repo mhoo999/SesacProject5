@@ -138,7 +138,7 @@ void UQuestLogComponent::OnInventoryChanged(const TArray<FStorage>& storageArray
 				ComparisonCount = inventoryComp->GetItemCount(objective.objectiveID);
 				UE_LOG(LogTemp, Warning, TEXT("UQuestLogComponent::OnInventoryChanged : %s, %d"), *objective.objectiveID, ComparisonCount);
 				
-				if (ComparisonCount == objective.Quantity)
+				if (objective.Quantity == ComparisonCount && objective.isOptional != false)
 				{
 					objective.objectiveComplete = true;
 					UE_LOG(LogTemp, Warning, TEXT("Quest Name : %s /n isComplete : %hhd"), *quest.questID.ToString(), quest.isCompleted);

@@ -35,7 +35,7 @@ void UFSM_Chase_Component::ExecuteBehavior()
 		float dist = FVector::Dist(target->GetActorLocation(), ai->GetActorLocation());
 		float attackDist = WeaponComp->GetWeaponAttackRange();
 
-		DrawDebugLine(GetWorld(), ai->GetActorLocation(), TargetLocation, FColor::Red);
+		// DrawDebugLine(GetWorld(), ai->GetActorLocation(), TargetLocation, FColor::Red);
 
 		// UE_LOG(LogTemp, Warning, TEXT("Dist : %f, attackDist : %f"), dist, attackDist);
 		
@@ -75,6 +75,11 @@ void UFSM_Chase_Component::ExecuteBehavior()
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Target Missing..."))
 		ac->MoveToLocation(targetLastLoc, 10.0f, true, true, true);
+
+		if (bIsAttacking)
+		{
+			bIsAttacking = false;
+		}
 		
 		if (!bFind)
 		{
@@ -97,7 +102,8 @@ void UFSM_Chase_Component::SenseNewActor(AActor* NewActor)
 	{
 		return;
 	}
-	
+
+	StopExecute();
 	target = NewActor;
 }
 
@@ -202,11 +208,10 @@ bool UFSM_Chase_Component::FocusTargetPart(AActor* targetActor, FVector& TargetL
 
 void UFSM_Chase_Component::AIReturnFunc()
 {
-	ac->SetContext(EEnemystate::patrol);
 	bIsAttacking = false;
 	target = nullptr;
 	bFind = false;
 	bEnemyMumble = false;
-
+	ac->SetContext(EEnemystate::patrol);
 }
 
