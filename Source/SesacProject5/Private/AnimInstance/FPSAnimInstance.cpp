@@ -66,10 +66,7 @@ void UFPSAnimInstance::Die(bool bNewIsDead)
 void UFPSAnimInstance::AnimNotify_OnDieEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("UFPSAnimInstance::AnimNotify_OnDieEnd) %s"), *GetOwningActor()->GetActorNameOrLabel());
-	if (OwningCharacter->IsLocallyControlled())
-	{
-		OwningCharacter->DieEnd();
-	}
+	OwningCharacter->DieEnd();
 }
 
 void UFPSAnimInstance::AnimNotify_OnReloadEnd()
