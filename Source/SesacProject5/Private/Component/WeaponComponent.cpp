@@ -118,10 +118,7 @@ void UWeaponComponent::EndFireAction(const FInputActionValue& Value)
 
 void UWeaponComponent::ReloadAction(const FInputActionValue& Value)
 {
-	if (WeaponInterface && RemainAmmo > 0)
-	{
-		WeaponInterface->Reload();
-	}
+	ServerRPC_ReloadAction();
 }
 
 void UWeaponComponent::AimStartAction(const FInputActionValue& Value)
@@ -197,6 +194,15 @@ void UWeaponComponent::AddAmmo(int32 AmmoCount)
 void UWeaponComponent::AddAmmoToWeapon(int32 AmmoCount)
 {
 	WeaponInterface->AddAmmo(AmmoCount);
+}
+
+void UWeaponComponent::ServerRPC_ReloadAction_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UWeaponComponent::ReloadAction) RemainAmmo : %d"), RemainAmmo);
+	if (WeaponInterface && RemainAmmo > 0)
+	{
+		WeaponInterface->Reload();
+	}
 }
 
 void UWeaponComponent::ServerRPC_ReloadAmmo_Implementation()
