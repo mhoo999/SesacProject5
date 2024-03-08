@@ -52,11 +52,13 @@ void UFSM_Search_Component::SenseNewActor(AActor* NewActor)
 		ac->SetContext(EEnemystate::patrol);
 	}
 
+	ac->StopMovement();
 	target = NewActor;
 	targetLastLoc = NewActor->GetActorLocation();
 
 	if (bFocusTarget())
 	{
+		ac->StopMovement();
 		ac->SetContext(EEnemystate::chase);
 		ac->GetFSM()->SenseNewActor(NewActor);
 	}
