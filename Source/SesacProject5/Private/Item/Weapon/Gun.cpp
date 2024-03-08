@@ -272,6 +272,8 @@ void AGun::OnRep_WallDistance()
 void AGun::OnRep_CurrentAmmoCount()
 {
 	// Connect to widget
+
+	UE_LOG(LogTemp, Warning, TEXT("AGun::OnRep_CurrentAmmoCount) %d"), CurrentAmmoCount);
 }
 
 void AGun::OnRep_Owner() 

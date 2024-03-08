@@ -43,6 +43,10 @@ public:
 	void OnRep_IsEscaping();
 	UFUNCTION()
 	void OnRep_EscapeTime();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnRep_ExitArray();
+	
 private:
 	UPROPERTY(ReplicatedUsing = "OnRep_IsEscaping", Meta = (AllowPrivateAccess))
 	bool bIsEscaping = false;
@@ -51,8 +55,10 @@ private:
 	UPROPERTY(ReplicatedUsing = "OnRep_EscapeTime", Meta = (AllowPrivateAccess))
 	float EscapeTime = 0.f;
 
-	UPROPERTY(VisibleInstanceOnly, Meta = (AllowPrivateAccess))
+	UPROPERTY(ReplicatedUsing = "OnRep_ExitArray", VisibleInstanceOnly, Meta = (AllowPrivateAccess))
 	TArray<AExitBase*> ExitArray;
+
+	
 	
 public:
 	// Delegate

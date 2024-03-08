@@ -67,6 +67,8 @@ public:
 	void AddAmmo(int32 AmmoCount);
 	void AddAmmoToWeapon(int32 AmmoCount);
 	UFUNCTION(Server, Reliable)
+	void ServerRPC_ReloadAction();
+	UFUNCTION(Server, Reliable)
 	void ServerRPC_ReloadAmmo();
 	UFUNCTION()
 	void OnRep_RemainAmmo();

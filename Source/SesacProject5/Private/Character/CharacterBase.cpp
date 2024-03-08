@@ -110,7 +110,6 @@ FVector ACharacterBase::GetCameraLocation() const
 
 void ACharacterBase::Die(bool bIsDead)
 {
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DisableInput(GetController<APlayerController>());
 	CameraComponent->PostProcessSettings.ColorSaturation = FVector::ZeroVector;
 	CameraComponent->PostProcessSettings.bOverride_ColorSaturation = true;
@@ -118,7 +117,11 @@ void ACharacterBase::Die(bool bIsDead)
 
 void ACharacterBase::DieEnd()
 {
-	ServerRPC_MissingInAction();
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (IsLocallyControlled())
+	{
+		ServerRPC_MissingInAction();
+	}
 }
 
 void ACharacterBase::Escape()
