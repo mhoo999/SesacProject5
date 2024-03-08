@@ -111,3 +111,8 @@ void UEscapeComponent::OnRep_EscapeTime()
 {
 	OnEscapeTimeChanged.ExecuteIfBound(EscapeTime);
 }
+
+void UEscapeComponent::OnRep_ExitArray_Implementation()
+{
+	
+}

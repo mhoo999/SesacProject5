@@ -89,7 +89,7 @@ void AProjectileBase::Init(AActor* NewOwner)
 
 void AProjectileBase::MultRPC_SpawnBulletDecal_Implementation(AActor* HitActor, FVector SpawnLocation, FRotator SpawnRotation)
 {
-	if (IsRunningDedicatedServer()) return;
+	if (HitActor == nullptr || IsRunningDedicatedServer()) return;
 	
 	FName Material;
 	if (HitActor->ActorHasTag(FName("Flesh")))
