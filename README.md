@@ -1,12 +1,12 @@
 # Escape from SeSac
 
-## 기간
+## Duration
 2024년 2월 1일 ~ 2024년 3월 8일
 
-## 팀 크기
+## Team size
 2명
 
-## 사용 기술
+## Skill
 - Unreal Engine 5.3
 - Blueprint
 - C++
