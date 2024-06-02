@@ -18,10 +18,10 @@
 - AI 및 퀘스트 디자인
 - 전반적인 게임 기획
 
-## 프로젝트 디렉토리
-`./Source/SesacProject5`
+## 작업 내용
 
-## 주요 컴포넌트
+[state 패턴을 활용하여 제작한 AI컨트롤러](Source/SesacProject5/Private/AIController/EOSAIController.cpp)
+
 - `AIComponent`
 - `AIController`
 - `NPC`
