@@ -23,5 +23,5 @@
 ## 작업 내용
 
 - [state 패턴을 활용하여 제작한 AI컨트롤러](Source/SesacProject5/Private/AIController/EOSAIController.cpp)
-- [적 spawn 후, 웨이포인트를 지정하는 함수](Source/SesacProject5/Private/AIComponent/AISpawnManager.cpp#L30)
-- [캐릭터 부위별 타격 가능하도록 조준하는 함수](Source/SesacProject5/Private/AIComponent/FSM_Chase_Component.cpp#L106)
+- [적 spawn 후, 웨이포인트를 지정하는 기능](Source/SesacProject5/Private/AIComponent/AISpawnManager.cpp#L30)
+- [캐릭터 부위별 타격 가능하도록 조준하는 기능](Source/SesacProject5/Private/AIComponent/FSM_Chase_Component.cpp#L106)
